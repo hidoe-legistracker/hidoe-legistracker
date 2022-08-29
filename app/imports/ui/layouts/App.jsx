@@ -5,6 +5,8 @@ import { Roles } from 'meteor/alanning:roles';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
+import Directory from '../pages/Directory';
+import AddBill from '../pages/AddBill';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import AddStuff from '../pages/AddStuff';
@@ -14,6 +16,7 @@ import SignUp from '../pages/SignUp';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
 import SignIn from '../pages/SignIn';
+import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 
@@ -27,7 +30,9 @@ const App = () => (
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signout" element={<SignOut />} />
-        <Route path="/home" element={<ProtectedRoute><Landing /></ProtectedRoute>} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
+        <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
         <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
         <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
