@@ -10,10 +10,7 @@ const Footer = () => {
       <Container style={divStyle}>
         <img style={doeLogo} src="https://www.pbshawaii.org/wp-content/uploads/2016/03/hawaii-doe.png" alt="Hawaii DOE Logo" />
         <Row>
-          <Col className="text-center">Hawaii State Department of Education</Col>
-        </Row>
-        <Row>
-          <Col className="text-center">Legislative Bill Tracker</Col>
+          <Col className="text-center">Hawaii State Department of Education<br/>Legislative Bill Tracker</Col>
         </Row>
       </Container>
     </footer>
