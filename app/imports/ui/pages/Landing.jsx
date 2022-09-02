@@ -18,7 +18,7 @@ const Landing = () => (
 
     </Row>
 
-    <ConfirmationModal type={{ name: 'Add' }} />
+    <ConfirmationModal modal={{ type: 'Add' }} />
   </Container>
 );
 
