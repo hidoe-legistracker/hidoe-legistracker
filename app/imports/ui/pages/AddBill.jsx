@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Col, Container, Row, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -13,29 +13,28 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 // Create a schema to specify the structure of the data to appear in the form.
 const formSchema = new SimpleSchema({
-  billNumber: String,
-  office: String,
+  year: Number,
+  measureType: {
+    type: String,
+    allowedValues: ['HB', 'SB', 'HR', 'SR', 'HCR', 'SCR', 'GM'],
+  },
+  measureNumber: Number,
+  lastUpdated: { type: Date, optional: true },
+  office: { type: String, optional: true },
   action: {
     type: String,
     allowedValues: ['Testimony', 'Monitor'],
   },
-  status: {
-    type: String,
-    allowedValues: ['Complete', 'Incomplete'],
-    defaultValue: 'Incomplete',
-  },
-  actNumber: String,
-  companion: String,
-  reportTitle: String,
-  legType: {
-    type: String,
-    allowedValues: ['Bill'],
-    defaultValue: 'Bill',
-  },
-  committeeReferral: String,
-  measureTitle: String,
-  introducedBy: String,
-  description: String,
+  status: { type: String, optional: true },
+  actNumber: { type: String, optional: true },
+  companion: { type: String, optional: true },
+  reportTitle: { type: String, optional: true },
+  currentReferral: { type: String, optional: true },
+  measureTitle: { type: String, optional: true },
+  introducer: { type: String, optional: true },
+  description: { type: String, optional: true },
+  measurePdfUrl: { type: String, optional: true },
+  measureArchiveUrl: { type: String, optional: true },
 });
 
 const bridge = new SimpleSchema2Bridge(formSchema);
@@ -84,54 +83,97 @@ const AddBill = () => {
       <Container id={PAGE_IDS.ADD_BILL} className="py-3">
         <Row className="justify-content-center">
           <Col>
-            <Col className="text-center"><h1>Create Bill</h1></Col>
             <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => confirm(data, fRef)}>
               <Card>
                 <Card.Body>
                   <Row>
+                    <h4>Measure Details</h4>
+                  </Row>
+                  <Row>
                     <Col>
-                      <TextField name="billNumber" label="Bill / Resolution Number" required />
+                      <TextField name="year" label="Year *" required />
                     </Col>
                     <Col>
-                      <TextField name="office" required />
+                      <TextField name="measureNumber" label="Measure Number *" required />
                     </Col>
                     <Col>
-                      <SelectField name="action" required />
+                      <SelectField name="measureType" label="Measure Type *" required />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TextField name="status" />
                     </Col>
                     <Col>
                       <TextField name="actNumber" label="Act Number" />
                     </Col>
+                    <Col>
+                      <DateField name="lastUpdated" label="Last Updated" />
+                    </Col>
+                  </Row>
+
+                  <br />
+                  <Row>
+                    <h4>Titles</h4>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TextField name="measureTitle" label="Measure Title" />
+                    </Col>
+                    <Col>
+                      <TextField name="reportTitle" label="Report Title" />
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <h4>Assignees</h4>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <TextField name="office" />
+                    </Col>
+                    <Col>
+                      <SelectField name="action" label="Action *" required />
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <h4>Logistics</h4>
                   </Row>
                   <Row>
                     <Col>
                       <TextField name="companion" />
                     </Col>
                     <Col>
-                      <TextField name="reportTitle" />
+                      <TextField name="currentReferral" label="Referral" />
                     </Col>
                     <Col>
-                      <SelectField name="legType" label="Leg Type" />
+                      <TextField name="introducer" label="Introduced By" />
                     </Col>
+                  </Row>
+
+                  <br />
+                  <Row>
+                    <h4>Description</h4>
                   </Row>
                   <Row>
                     <Col>
-                      <TextField name="committeeReferral" />
+                      <LongTextField name="description" label="" />
                     </Col>
-                    <Col>
-                      <TextField name="measureTitle" label="Measure Title" />
-                    </Col>
+                  </Row>
+
+                  <br />
+                  <Row>
+                    <h4>Misc</h4>
                   </Row>
                   <Row>
-                    <Col>
-                      <TextField name="introducedBy" label="Introduced By" />
-                    </Col>
+                    <TextField name="measurePdfUrl" label="Measure PDF URL" />
                   </Row>
                   <Row>
-                    <Col>
-                      <LongTextField name="description" />
-                    </Col>
+                    <TextField name="measureArchiveUrl" label="Measure Archive URL" />
                   </Row>
-                  <SubmitField className="d-flex justify-content-end" value="Create Bill" />
+
+                  <SubmitField className="d-flex justify-content-end" value="Create Measure" />
                   <ErrorsField />
                 </Card.Body>
               </Card>
@@ -141,7 +183,7 @@ const AddBill = () => {
       </Container>
 
       <Modal show={show} onHide={modalClose} centered>
-        <ConfirmationModal modal={{ title: 'Create Bill', body: 'Are you sure you want to add this bill to the database?' }} />
+        <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
           <Button variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
