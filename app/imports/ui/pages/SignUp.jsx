@@ -19,10 +19,9 @@ const SignUp = () => {
   const [redirectToReferer, setRedirectToRef] = useState(false);
 
   const schema = new SimpleSchema({
-    firstName: String,
-    lastName: String,
     email: String,
     password: String,
+    confirmPassword: String,
   });
   const bridge = new SimpleSchema2Bridge(schema);
 
@@ -47,38 +46,37 @@ const SignUp = () => {
       .catch((err) => setError(err.reason));
   };
 
-  /* Display the signup form. Redirect to add page after successful registration and login. */
-  // if correct authentication, redirect to from: page instead of signup screen
+  /* Display the change password form. Redirect to add page after successful password change and login. */
+  // if correct authentication, redirect to from: page instead of change password screen
   if (redirectToReferer) {
     return <Navigate to="/add" />;
   }
   return (
-    <Container id={PAGE_IDS.SIGN_UP} className="py-3">
+    <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
       <Row className="justify-content-center">
         <Col xs={5}>
           <Col className="text-center">
-            <h2>Register your account</h2>
+            <h2>Change your password</h2>
           </Col>
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_FIRST_NAME} name="firstName" placeholder="First name" />
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_LAST_NAME} name="lastName" placeholder="Last name" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="Password" type="password" />
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
                 <ErrorsField />
                 <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} />
               </Card.Body>
             </Card>
           </AutoForm>
           <Alert variant="secondary">
-            Already have an account? Login <Link to="/signin">here</Link>
+            Remember your password? Click <Link to="/signin">here</Link>
           </Alert>
           {error === '' ? (
             ''
           ) : (
             <Alert variant="danger">
-              <Alert.Heading>Registration was not successful</Alert.Heading>
+              <Alert.Heading>Password change was not successful</Alert.Heading>
               {error}
             </Alert>
           )}
