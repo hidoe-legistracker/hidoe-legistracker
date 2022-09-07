@@ -18,7 +18,7 @@
     "simpl-schema": "^1.12.2",
     "sweetalert": "^2.1.2",
     "uniforms": "^3.9.1",
-    "uniforms-bootstrap5": "^3.9.1",
+    "uniforms-bootstrap5": "^3.10.0",
     "uniforms-bridge-simple-schema-2": "^3.9.1"
   },
   "devDependencies": {
