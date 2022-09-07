@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Col, Container, Row, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField } from 'uniforms-bootstrap5';
+import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField, NumField } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -10,6 +10,15 @@ import { Stuffs } from '../../api/stuff/StuffCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
+
+const committees = [];
+Object.values(houseCommittees).forEach(function (committee) {
+  committees.push(`House: ${committee.name}`);
+});
+Object.values(senateCommittees).forEach(function (committee) {
+  committees.push(`Senate: ${committee.name}`);
+});
 
 // Create a schema to specify the structure of the data to appear in the form.
 const formSchema = new SimpleSchema({
@@ -20,7 +29,11 @@ const formSchema = new SimpleSchema({
   },
   measureNumber: Number,
   lastUpdated: { type: Date, optional: true },
-  office: { type: String, optional: true },
+  office: {
+    type: String,
+    allowedValues: committees,
+    optional: true,
+  },
   action: {
     type: String,
     allowedValues: ['Testimony', 'Monitor'],
@@ -91,10 +104,10 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <TextField name="year" label="Year *" required />
+                      <NumField name="year" label="Year *" required decimal="false" min="1900" />
                     </Col>
                     <Col>
-                      <TextField name="measureNumber" label="Measure Number *" required />
+                      <NumField name="measureNumber" label="Measure Number *" required decimal="false" />
                     </Col>
                     <Col>
                       <SelectField name="measureType" label="Measure Type *" required />
@@ -130,7 +143,7 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <TextField name="office" />
+                      <SelectField name="office" />
                     </Col>
                     <Col>
                       <SelectField name="action" label="Action *" required />
