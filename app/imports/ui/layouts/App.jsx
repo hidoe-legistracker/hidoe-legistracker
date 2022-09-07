@@ -33,7 +33,7 @@ const App = () => (
         <Route path="/signout" element={<SignOut />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-        <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
+        <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
         <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
         <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />

@@ -2,10 +2,10 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
-// import { Roles } from 'meteor/alanning:roles';
+import { Roles } from 'meteor/alanning:roles';
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { BoxArrowRight, PersonFill, PersonPlusFill, House, Bell } from 'react-bootstrap-icons';
-// import { ROLE } from '../../api/role/Role';
+import { ROLE } from '../../api/role/Role';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const NavBar = () => {
@@ -27,14 +27,10 @@ const NavBar = () => {
             </Nav.Link>
             {currentUser ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>,
             ]) : ''}
-            {/* {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ( */}
-            {/*  [<Nav.Link id={COMPONENT_IDS.NAVBAR_LIST_STUFF_ADMIN} as={NavLink} to="/admin" key="admin">Admin</Nav.Link>, */}
-            {/*    <NavDropdown id={COMPONENT_IDS.NAVBAR_MANAGE_DROPDOWN} title="Manage" key="manage-dropdown"> */}
-            {/*      <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MANAGE_DROPDOWN_DATABASE} key="manage-database" as={NavLink} to="/manage-database"><CloudDownload /> Database</NavDropdown.Item> */}
-            {/*    </NavDropdown>] */}
-            {/* ) : ''} */}
+            {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+              [<Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>]
+            ) : ''}
           </Nav>
           <Nav className="justify-content-end">
             {currentUser === '' ? (

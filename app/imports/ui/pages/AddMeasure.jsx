@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { _ } from 'meteor/underscore';
 import { Card, Col, Container, Row, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField, NumField } from 'uniforms-bootstrap5';
@@ -64,14 +65,22 @@ const AddMeasure = () => {
   const confirm = (data, formRef) => {
     submitData = data;
     submitRef = formRef;
+
+    if (submitData.office.indexOf('House: ') >= 0) {
+      const committeeStr = submitData.office.substring(7);
+      submitData.office = _.find(houseCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    } else {
+      const committeeStr = submitData.office.substring(8);
+      submitData.office = _.find(senateCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    }
     modalShow();
   };
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
-    const { year, measureType, measureNumber, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion } = data;
+    const { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion } = data;
     const collectionName = Measures.getCollectionName();
-    const definitionData = { year, measureType, measureNumber, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion };
+    const definitionData = { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -141,7 +150,7 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <SelectField name="office" />
+                      <SelectField name="office" multiple />
                     </Col>
                     <Col>
                       <SelectField name="action" label="Action *" required />
@@ -193,7 +202,7 @@ const AddMeasure = () => {
         </Row>
       </Container>
 
-      <Modal show={show} onHide={modalClose} centered>
+      <Modal show={show} onHide={modalClose} centered="true">
         <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
