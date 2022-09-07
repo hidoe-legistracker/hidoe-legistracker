@@ -43,7 +43,7 @@ let submitData = null;
 let submitRef = null;
 
 /* Renders the AddStuff page for adding a document. */
-const AddBill = () => {
+const AddMeasure = () => {
 
   const [show, setShow] = useState(false);
   const modalClose = () => setShow(false);
@@ -193,4 +193,4 @@ const AddBill = () => {
   );
 };
 
-export default AddBill;
+export default AddMeasure;

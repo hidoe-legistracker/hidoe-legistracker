@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import Directory from '../pages/Directory';
-import AddBill from '../pages/AddBill';
+import AddMeasure from '../pages/AddMeasure';
 import Inbox from '../pages/Inbox';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
@@ -33,7 +33,7 @@ const App = () => (
         <Route path="/signout" element={<SignOut />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-        <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
+        <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
         <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
         <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
