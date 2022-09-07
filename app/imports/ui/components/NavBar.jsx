@@ -28,6 +28,8 @@ const NavBar = () => {
             {currentUser ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_BILL} as={NavLink} to="/create-bill" key="create-bill">Create Bill</Nav.Link>,
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_MYFOLDERS} as={NavLink} to="/MyFolders" key="my-folders">My Folders</Nav.Link>,
+
             ]) : ''}
             {/* {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ( */}
             {/*  [<Nav.Link id={COMPONENT_IDS.NAVBAR_LIST_STUFF_ADMIN} as={NavLink} to="/admin" key="admin">Admin</Nav.Link>, */}
