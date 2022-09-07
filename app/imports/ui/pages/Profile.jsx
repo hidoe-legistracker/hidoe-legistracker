@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import { AutoForm, ErrorsField, NumField, SelectField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { AutoForm } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -22,8 +22,10 @@ const formSchema = new SimpleSchema({
 
 const bridge = new SimpleSchema2Bridge(formSchema);
 
-/* Renders the AddStuff page for adding a document. */
+/* Renders the Profile page for viewing your profile. */
 const Profile = () => {
+
+  const profilePic = { float: 'left', width: '50px' };
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
@@ -49,6 +51,8 @@ const Profile = () => {
           <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => submit(data, fRef)}>
             <Card>
               <Card.Body>
+                <Card.Title>Profile Picture:</Card.Title>
+                <Card.Img variant="top" style={profilePic} src="https://www.pbshawaii.org/wp-content/uploads/2016/03/hawaii-doe.png" alt="Hawaii DOE Logo" />
                 <Card.Title>First Name:</Card.Title>
                 <Card.Text>john</Card.Text>
                 <Card.Title>Last Name:</Card.Title>
