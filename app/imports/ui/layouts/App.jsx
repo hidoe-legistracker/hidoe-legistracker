@@ -16,6 +16,7 @@ import NotFound from '../pages/NotFound';
 import SignUp from '../pages/SignUp';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
+import ViewBill from '../pages/ViewBill';
 import SignIn from '../pages/SignIn';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
@@ -36,6 +37,7 @@ const App = () => (
         <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
         <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
+        <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
         <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
         <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
         <Route path="/admin" element={<AdminProtectedRoute><ListStuffAdmin /></AdminProtectedRoute>} />

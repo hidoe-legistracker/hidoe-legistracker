@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-/* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row. */
+/* Renders a table containing all of the Measure documents. */
 const Directory = () => (
-  <Container id={PAGE_IDS.LIST_STUFF} className="py-3">
+  <Container id={PAGE_IDS.DIRECTORY} className="py-3">
     <Row className="justify-content-center">
       <Col className="folder-section">
         <h6 align="center">Legislative Tracking System 2022</h6>

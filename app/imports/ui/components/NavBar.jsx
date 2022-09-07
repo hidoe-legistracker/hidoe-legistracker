@@ -4,7 +4,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
 // import { Roles } from 'meteor/alanning:roles';
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { BoxArrowRight, PersonFill, PersonPlusFill, House, Bell } from 'react-bootstrap-icons';
+import { BoxArrowRight, PersonFill, House, Bell } from 'react-bootstrap-icons';
 // import { ROLE } from '../../api/role/Role';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
@@ -28,6 +28,7 @@ const NavBar = () => {
             {currentUser ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_BILL} as={NavLink} to="/create-bill" key="create-bill">Create Bill</Nav.Link>,
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_VIEW_BILL} as={NavLink} to="/view-bill" key="view-bill">View Bill</Nav.Link>,
             ]) : ''}
             {/* {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ( */}
             {/*  [<Nav.Link id={COMPONENT_IDS.NAVBAR_LIST_STUFF_ADMIN} as={NavLink} to="/admin" key="admin">Admin</Nav.Link>, */}
