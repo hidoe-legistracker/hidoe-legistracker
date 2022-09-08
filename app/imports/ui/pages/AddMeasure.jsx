@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
+import { _ } from 'meteor/underscore';
 import { Card, Col, Container, Row, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField } from 'uniforms-bootstrap5';
+import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField, NumField } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
-import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
-import { Stuffs } from '../../api/stuff/StuffCollection';
+import { Measures } from '../../api/measure/MeasureCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
+
+const committees = [];
+Object.values(houseCommittees).forEach(function (committee) {
+  committees.push(`House: ${committee.name}`);
+});
+Object.values(senateCommittees).forEach(function (committee) {
+  committees.push(`Senate: ${committee.name}`);
+});
 
 // Create a schema to specify the structure of the data to appear in the form.
 const formSchema = new SimpleSchema({
@@ -20,7 +29,11 @@ const formSchema = new SimpleSchema({
   },
   measureNumber: Number,
   lastUpdated: { type: Date, optional: true },
-  office: { type: String, optional: true },
+  office: {
+    type: String,
+    allowedValues: committees,
+    optional: true,
+  },
   action: {
     type: String,
     allowedValues: ['Testimony', 'Monitor'],
@@ -43,7 +56,7 @@ let submitData = null;
 let submitRef = null;
 
 /* Renders the AddStuff page for adding a document. */
-const AddBill = () => {
+const AddMeasure = () => {
 
   const [show, setShow] = useState(false);
   const modalClose = () => setShow(false);
@@ -52,15 +65,22 @@ const AddBill = () => {
   const confirm = (data, formRef) => {
     submitData = data;
     submitRef = formRef;
+
+    if (submitData.office.indexOf('House: ') >= 0) {
+      const committeeStr = submitData.office.substring(7);
+      submitData.office = _.find(houseCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    } else {
+      const committeeStr = submitData.office.substring(8);
+      submitData.office = _.find(senateCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    }
     modalShow();
   };
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
-    const { name, quantity, condition } = data;
-    const owner = Meteor.user().username;
-    const collectionName = Stuffs.getCollectionName();
-    const definitionData = { name, quantity, condition, owner };
+    const { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion } = data;
+    const collectionName = Measures.getCollectionName();
+    const definitionData = { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -91,10 +111,10 @@ const AddBill = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <TextField name="year" label="Year *" required />
+                      <NumField name="year" label="Year *" required decimal="false" min="1900" />
                     </Col>
                     <Col>
-                      <TextField name="measureNumber" label="Measure Number *" required />
+                      <NumField name="measureNumber" label="Measure Number *" required decimal="false" />
                     </Col>
                     <Col>
                       <SelectField name="measureType" label="Measure Type *" required />
@@ -130,7 +150,7 @@ const AddBill = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <TextField name="office" />
+                      <SelectField name="office" multiple />
                     </Col>
                     <Col>
                       <SelectField name="action" label="Action *" required />
@@ -182,7 +202,7 @@ const AddBill = () => {
         </Row>
       </Container>
 
-      <Modal show={show} onHide={modalClose} centered>
+      <Modal show={show} onHide={modalClose} centered="true">
         <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
@@ -193,4 +213,4 @@ const AddBill = () => {
   );
 };
 
-export default AddBill;
+export default AddMeasure;
