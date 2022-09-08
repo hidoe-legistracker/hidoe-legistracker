@@ -19,10 +19,10 @@ const MyFolders = () => (
         <Col sm={3}>
           <Nav variant="pills" className="flex-column">
             <Nav.Item>
-              <Nav.Link eventKey="first">Placeholder</Nav.Link>
+              <Nav.Link eventKey="first">Folder 1</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="second">Placeholder</Nav.Link>
+              <Nav.Link eventKey="second">Folder 2</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>
@@ -48,7 +48,7 @@ const MyFolders = () => (
                     <td>EDU, JDC</td>
                     <td>This bill ...</td>
                     <td>N/A</td>
-                    <td>2nd Crossover</td>
+                    <td>N/A</td>
                     <td>
                       <ToggleButton
                         className="mb-2"
@@ -63,11 +63,11 @@ const MyFolders = () => (
 
                   </tr>
                   <tr>
-                    <th scope="row">SB 2296</th>
+                    <th scope="row">SCR 0028</th>
                     <td>OCID, OITS</td>
-                    <td>EDU, JDC</td>
+                    <td>CPC</td>
                     <td>This bill ...</td>
-                    <td>N/A</td>
+                    <td>04/14/2022</td>
                     <td>2nd Crossover</td>
                     <td>
                       <ToggleButton
@@ -82,12 +82,12 @@ const MyFolders = () => (
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">SB 2296</th>
+                    <th scope="row">HCR 0053</th>
                     <td>OCID, OITS</td>
-                    <td>EDU, JDC</td>
+                    <td>EDU</td>
                     <td>This bill ...</td>
-                    <td>N/A</td>
-                    <td>2nd Crossover</td>
+                    <td>04/05/2022</td>
+                    <td>1st Crossover</td>
                     <td>
                       <ToggleButton
                         className="mb-2"
@@ -118,12 +118,12 @@ const MyFolders = () => (
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">SB 2296</th>
-                    <td>OCID, OITS</td>
-                    <td>EDU, JDC</td>
+                    <th scope="row">HB 1222</th>
+                    <td>OCID, OITS, </td>
+                    <td>EDN, FIN</td>
                     <td>This bill ...</td>
+                    <td>02/09/2021</td>
                     <td>N/A</td>
-                    <td>2nd Crossover</td>
                     <td>
                       <ToggleButton
                         className="mb-2"
@@ -138,11 +138,11 @@ const MyFolders = () => (
 
                   </tr>
                   <tr>
-                    <th scope="row">SB 2296</th>
-                    <td>OCID, OITS</td>
+                    <th scope="row">SB 2184</th>
+                    <td>OCID, Digital</td>
                     <td>EDU, JDC</td>
                     <td>This bill ...</td>
-                    <td>N/A</td>
+                    <td>04/28/2022</td>
                     <td>2nd Crossover</td>
                     <td>
                       <ToggleButton
@@ -157,12 +157,12 @@ const MyFolders = () => (
                     </td>
                   </tr>
                   <tr>
-                    <th scope="row">SB 2296</th>
-                    <td>OCID, OITS</td>
-                    <td>EDU, JDC</td>
+                    <th scope="row">HCR 0040</th>
+                    <td>OCID, OITS, OSIP</td>
+                    <td>OCID, OSIP</td>
                     <td>This bill ...</td>
                     <td>N/A</td>
-                    <td>2nd Crossover</td>
+                    <td>N/A</td>
                     <td>
                       <ToggleButton
                         className="mb-2"
