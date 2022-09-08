@@ -3,6 +3,7 @@ import { Col, Container, Row, Table } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import { PAGE_IDS } from '../utilities/PageIDs';
+import ViewBill from './ViewBill';
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => (
@@ -95,22 +96,28 @@ const Directory = () => (
               <th>Proposed</th>
             </tr>
           </thead>
+        </Table>
+        <Table>
           <tbody>
-            <tr>
-              <th>1234</th>
-              <th>...</th>
-              <th>OCID BOE</th>
-              <th>Testimony</th>
-              <th>...</th>
-              <th>EDU, FIN</th>
-              <th>12/02/2022</th>
-              <th>Hearing</th>
-              <th>Support</th>
-              <th>John Doe</th>
-              <th>1st Crossover</th>
-              <th>123</th>
-              <th>...</th>
-            </tr>
+            <div className="d-grid gap-2">
+              <Button href={ViewBill} variant="outline-secondary" size="sm">
+                <Table>
+                  <th>1234</th>
+                  <th>...</th>
+                  <th>OCID BOE</th>
+                  <th>Testimony</th>
+                  <th>...</th>
+                  <th>EDU, FIN</th>
+                  <th>12/02/2022</th>
+                  <th>Hearing</th>
+                  <th>Support</th>
+                  <th>John Doe</th>
+                  <th>1st Crossover</th>
+                  <th>123</th>
+                  <th>...</th>
+                </Table>
+              </Button>
+            </div>
           </tbody>
         </Table>
       </Col>
