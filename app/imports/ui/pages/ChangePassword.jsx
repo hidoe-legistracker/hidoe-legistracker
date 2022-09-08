@@ -31,19 +31,19 @@ const ChangePassword = () => {
     const definitionData = doc;
     // create the new UserProfile
     defineMethod.callPromise({ collectionName, definitionData })
-        .then(() => {
-          // log the new user in.
-          const { email, password } = doc;
-          Meteor.loginWithPassword(email, password, (err) => {
-            if (err) {
-              setError(err.reason);
-            } else {
-              setError('');
-              setRedirectToRef(true);
-            }
-          });
-        })
-        .catch((err) => setError(err.reason));
+      .then(() => {
+        // log the new user in.
+        const { email, password } = doc;
+        Meteor.loginWithPassword(email, password, (err) => {
+          if (err) {
+            setError(err.reason);
+          } else {
+            setError('');
+            setRedirectToRef(true);
+          }
+        });
+      })
+      .catch((err) => setError(err.reason));
   };
 
   /* Display the change password form. Redirect to add page after successful password change and login. */
@@ -52,37 +52,37 @@ const ChangePassword = () => {
     return <Navigate to="/add" />;
   }
   return (
-      <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
-        <Row className="justify-content-center">
-          <Col xs={5}>
-            <Col className="text-center">
-              <h2>Change your password</h2>
-            </Col>
-            <AutoForm schema={bridge} onSubmit={data => submit(data)}>
-              <Card>
-                <Card.Body>
-                  <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
-                  <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
-                  <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
-                  <ErrorsField />
-                  <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} />
-                </Card.Body>
-              </Card>
-            </AutoForm>
-            <Alert variant="secondary">
-              Remember your password? Click <Link to="/signin">here</Link>
-            </Alert>
-            {error === '' ? (
-                ''
-            ) : (
-                <Alert variant="danger">
-                  <Alert.Heading>Password change was not successful</Alert.Heading>
-                  {error}
-                </Alert>
-            )}
+    <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
+      <Row className="justify-content-center">
+        <Col xs={5}>
+          <Col className="text-center">
+            <h2>Change your password</h2>
           </Col>
-        </Row>
-      </Container>
+          <AutoForm schema={bridge} onSubmit={data => submit(data)}>
+            <Card>
+              <Card.Body>
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
+                <ErrorsField />
+                <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} />
+              </Card.Body>
+            </Card>
+          </AutoForm>
+          <Alert variant="secondary">
+            Remember your password? Click <Link to="/signin">here</Link>
+          </Alert>
+          {error === '' ? (
+            ''
+          ) : (
+            <Alert variant="danger">
+              <Alert.Heading>Password change was not successful</Alert.Heading>
+              {error}
+            </Alert>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
