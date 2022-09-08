@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
+import MyFolders from '../pages/MyFolders';
 import Inbox from '../pages/Inbox';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
@@ -20,6 +21,7 @@ import SignIn from '../pages/SignIn';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
+import ChangePassword from '../pages/ChangePassword';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => (
@@ -29,11 +31,12 @@ const App = () => (
       <Routes>
         <Route exact path="/" element={<Landing />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/changepassword" element={<ChangePassword />} />
         <Route path="/signout" element={<SignOut />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
         <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+        <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
         <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
         <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
