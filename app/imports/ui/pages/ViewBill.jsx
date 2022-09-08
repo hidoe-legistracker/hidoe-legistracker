@@ -27,20 +27,32 @@ import { PAGE_IDS } from '../utilities/PageIDs';
   *  <LoadingSpinner message="Loading Stuff" />
 *
 * */
+
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="py-3">
     <Row className="justify-content-center">
       <Col md={7}>
         <Col className="text-center">
-          <h2>View Bill</h2>
+          <h2>Bill #1234</h2>
         </Col>
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>...</th>
+              <th>OCID BOE</th>
+              <th>Testimony</th>
+              <th>...</th>
+              <th>EDU, FIN</th>
+              <th>12/02/2022</th>
+              <th>Hearing</th>
+              <th>Support</th>
+              <th>John Doe</th>
+              <th>1st Crossover</th>
+              <th> </th>
+              <th>123</th>
+              <th>...</th>
             </tr>
           </thead>
-          <tbody />
         </Table>
       </Col>
     </Row>

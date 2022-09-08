@@ -7,6 +7,7 @@ import ViewBill from './ViewBill';
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => (
+
   <Container id={PAGE_IDS.DIRECTORY} className="py-3">
     <Row className="justify-content-center">
       <Col className="folder-section">
@@ -102,19 +103,22 @@ const Directory = () => (
             <div className="d-grid gap-2">
               <Button href={ViewBill} variant="outline-secondary" size="sm">
                 <Table>
-                  <th>1234</th>
-                  <th>...</th>
-                  <th>OCID BOE</th>
-                  <th>Testimony</th>
-                  <th>...</th>
-                  <th>EDU, FIN</th>
-                  <th>12/02/2022</th>
-                  <th>Hearing</th>
-                  <th>Support</th>
-                  <th>John Doe</th>
-                  <th>1st Crossover</th>
-                  <th>123</th>
-                  <th>...</th>
+                  <tbody>
+                    <th>1234</th>
+                    <th>...</th>
+                    <th>OCID BOE</th>
+                    <th>Testimony</th>
+                    <th>...</th>
+                    <th>EDU, FIN</th>
+                    <th>12/02/2022</th>
+                    <th>Hearing</th>
+                    <th>Support</th>
+                    <th>John Doe</th>
+                    <th>1st Crossover</th>
+                    <th> </th>
+                    <th>123</th>
+                    <th>...</th>
+                  </tbody>
                 </Table>
               </Button>
             </div>
