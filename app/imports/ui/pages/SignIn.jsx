@@ -39,7 +39,7 @@ const SignIn = () => {
   // console.log('render', error, redirect);
   // if correct authentication, redirect to page instead of login screen
   if (redirect) {
-    return (<Navigate to="/" />);
+    return (<Navigate to="/directory" />);
   }
   // Otherwise return the Login form.
   return (
@@ -59,6 +59,9 @@ const SignIn = () => {
               </Card.Body>
             </Card>
           </AutoForm>
+          <Alert variant="secondary">
+            <Link to="/changepassword">Forgot Password?</Link>
+          </Alert>
           {error === '' ? (
             ''
           ) : (
