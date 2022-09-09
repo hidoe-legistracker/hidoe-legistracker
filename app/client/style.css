@@ -93,6 +93,9 @@ body {
 
 .view-bill-columns {
   margin: 2px 2px 4px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .col .row {

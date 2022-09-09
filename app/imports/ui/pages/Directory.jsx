@@ -111,7 +111,6 @@ const Directory = () => (
                 <Col>Support</Col>
                 <Col>John Doe</Col>
                 <Col>1st Crossover</Col>
-                <Col>--</Col>
               </Row>
             </a>
           </div>
