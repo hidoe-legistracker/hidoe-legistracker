@@ -1,8 +1,8 @@
 export const COMPONENT_IDS = {
   NAVBAR_HOME: 'navbar-home',
   NAVBAR_DIRECTORY: 'navbar-directory',
+  NAVBAR_ADD_MEASURE: 'navbar-add-measure',
   NAVBAR_MYFOLDERS: 'navbar-my-folders',
-  NAVBAR_ADD_BILL: 'navbar-add-bill',
   NAVBAR_INBOX: 'navbar-inbox',
   NAVBAR_PROFILE: 'navbar-profile',
   NAVBAR_VIEW_BILL: 'navbar-view-bill',
