@@ -2,6 +2,7 @@
 export const PAGE_IDS = {
   ADD_BILL: 'add-bill',
   VIEW_BILL: 'view-bill',
+  VIEW_TESTIMONY: 'view-testimony',
 
   ADD_STUFF: 'add-stuff',
   EDIT_STUFF: 'edit-stuff',

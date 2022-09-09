@@ -23,6 +23,7 @@ import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
+import Testimony from '../pages/Testimony';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
+          <Route path="/view-testimony" element={<ProtectedRoute><Testimony /></ProtectedRoute>} />
           <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
           <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
           <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />

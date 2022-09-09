@@ -1,10 +1,11 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
 // import LoadingSpinner from '../components/LoadingSpinner';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -102,6 +103,42 @@ const ViewBill = () => (
         <Row>Hearing</Row>
       </Col>
     </Row>
+    <Container>
+      <h4>Testimonies</h4>
+      <Row>
+        <Table>
+          <thead>
+            <tr>
+              <th>Hearing Date</th>
+              <th>Bill #</th>
+              <th>Status</th>
+              <th>Prepared by</th>
+              <th>DOE Position</th>
+              <th>Same</th>
+            </tr>
+          </thead>
+        </Table>
+        <Table>
+          <tbody>
+            <div className="d-grid gap-2">
+              <Button href="http://localhost:3000/view-testimony" variant="outline-secondary" size="sm">
+                <Table>
+                  <tbody>
+                    <th>04/05/2006</th>
+                    <th>SB 2319847</th>
+                    <th>Approved</th>
+                    <th>Jane Doe</th>
+                    <th>Support</th>
+                    <th>Testimony same as ...</th>
+                  </tbody>
+                </Table>
+              </Button>
+            </div>
+          </tbody>
+        </Table>
+      </Row>
+    </Container>
+
     <Row style={{ marginTop: 10 }}>
       <Form>
         <Form.Check
