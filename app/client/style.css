@@ -47,7 +47,7 @@ body {
 }
 
 .bill-button-spacing {
-  margin: 3px 5px 3px 0;
+  margin: 3px 8px 3px 0;
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
@@ -58,13 +58,24 @@ body {
   margin-bottom: 1px;
 }
 
+.view-bill-container1 {
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  border-style: outset;
+  border-spacing: inherit;
+  padding: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .view-bill-container {
   align-content: center;
   justify-content: center;
   align-items: center;
   border-style: outset;
   border-spacing: inherit;
-  padding: 80px;
+  padding: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -75,12 +86,41 @@ body {
   align-items: center;
   border-style: outset;
   border-spacing: inherit;
+  margin: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .view-bill-columns {
   margin: 2px 2px 4px;
 }
 
-.col {
+.col .row {
   margin: 4px;
+}
+
+a:link th {
+  margin: auto;
+  text-decoration: none!important;
+  font-weight: normal;
+}
+
+.testimonies-table, .bill-table {
+  border-style: solid;
+  border-width: thin;
+  text-decoration: none!important;
+  color: black;
+  padding: 5px;
+}
+
+.testimonies-table-header, .bill-table-header {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+h1, h3 {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }

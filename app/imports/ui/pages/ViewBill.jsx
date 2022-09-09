@@ -1,11 +1,10 @@
 import React from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
 // import LoadingSpinner from '../components/LoadingSpinner';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -103,47 +102,56 @@ const ViewBill = () => (
         <Row>Hearing</Row>
       </Col>
     </Row>
-    <Container>
-      <h4>Testimonies</h4>
+
+    <hr
+      style={{
+        background: 'black',
+        color: 'black',
+        borderColor: 'black',
+        height: '1px',
+      }}
+    />
+    <Container className="view-testimony-container">
+      <h3>Testimonies</h3>
       <Row>
-        <Table>
-          <thead>
-            <tr>
-              <th>Hearing Date</th>
-              <th>Bill #</th>
-              <th>Status</th>
-              <th>Prepared by</th>
-              <th>DOE Position</th>
-              <th>Same</th>
-            </tr>
-          </thead>
-        </Table>
-        <Table>
-          <tbody>
-            <div className="d-grid gap-2">
-              <Button href="http://localhost:3000/view-testimony" variant="outline-secondary" size="sm">
-                <Table>
-                  <tbody>
-                    <th>04/05/2006</th>
-                    <th>SB 2319847</th>
-                    <th>Approved</th>
-                    <th>Jane Doe</th>
-                    <th>Support</th>
-                    <th>Testimony same as ...</th>
-                  </tbody>
-                </Table>
-              </Button>
-            </div>
-          </tbody>
-        </Table>
+        <div className="testimonies-table-header">
+          <Row>
+            <Col>Hearing Date</Col>
+            <Col>Bill #</Col>
+            <Col>Status</Col>
+            <Col>Prepared by</Col>
+            <Col>DOE Position</Col>
+            <Col>Same</Col>
+          </Row>
+        </div>
+        <div className="d-grid gap-2">
+          <a href="http://localhost:3000/view-testimony" className="testimonies-table">
+            <Row>
+              <Col>04/05/2006</Col>
+              <Col>SB 2319847</Col>
+              <Col>Approved</Col>
+              <Col>Jane Doe</Col>
+              <Col>Support</Col>
+              <Col>Testimony same as ...</Col>
+            </Row>
+          </a>
+        </div>
       </Row>
     </Container>
 
+    <hr
+      style={{
+        background: 'black',
+        color: 'black',
+        borderColor: 'black',
+        height: '1px',
+      }}
+    />
     <Row style={{ marginTop: 10 }}>
       <Form>
         <Form.Check
           inline
-          label="I want to receive notifications for this bill"
+          label="I want to receive hearing notifications for this bill"
         />
       </Form>
     </Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 // import { Link, withRouter } from 'react-router-dom';
@@ -68,7 +68,7 @@ const Directory = () => (
           </Accordion.Item>
         </Accordion>
       </Col>
-      <Col xs={9} className="bill-section">
+      <Col xs={10} className="bill-section">
         <Button variant="secondary" size="sm" className="bill-button-spacing">
           View Bill by Status
         </Button>
@@ -81,51 +81,41 @@ const Directory = () => (
         <Button variant="secondary" size="sm" className="bill-button-spacing">
           Export to XL
         </Button>
-        <Table striped bordered>
-          <thead>
-            <tr>
-              <th>Bill #</th>
-              <th>Bill / Resolution</th>
-              <th>Office</th>
-              <th>Action</th>
-              <th>Rationale</th>
-              <th>Committee</th>
-              <th>Hearing</th>
-              <th>Hearing Type</th>
-              <th>DOE Position</th>
-              <th>Testifier</th>
-              <th>Status</th>
-              <th>Act #</th>
-              <th>Proposed</th>
-            </tr>
-          </thead>
-        </Table>
-        <Table>
-          <tbody>
-            <div className="d-grid gap-2">
-              <Button href="http://localhost:3000/view-bill" variant="outline-secondary" size="sm">
-                <Table>
-                  <tbody>
-                    <th>1234</th>
-                    <th>...</th>
-                    <th>OCID BOE</th>
-                    <th>Testimony</th>
-                    <th>...</th>
-                    <th>EDU, FIN</th>
-                    <th>12/02/2022</th>
-                    <th>Hearing</th>
-                    <th>Support</th>
-                    <th>John Doe</th>
-                    <th>1st Crossover</th>
-                    <th>--</th>
-                    <th>123</th>
-                    <th>...</th>
-                  </tbody>
-                </Table>
-              </Button>
-            </div>
-          </tbody>
-        </Table>
+        <Row>
+          <div className="bill-table-header">
+            <Row>
+              <Col>Bill #</Col>
+              <Col>Bill</Col>
+              <Col>Office</Col>
+              <Col>Action</Col>
+              <Col>Rationale</Col>
+              <Col>Committee</Col>
+              <Col>Hearing</Col>
+              <Col>Type</Col>
+              <Col>Position</Col>
+              <Col>Testifier</Col>
+              <Col>Status</Col>
+            </Row>
+          </div>
+          <div className="d-grid gap-2">
+            <a href="http://localhost:3000/view-bill" className="bill-table">
+              <Row>
+                <Col>1234</Col>
+                <Col>...</Col>
+                <Col>OCID BOE</Col>
+                <Col>Testimony</Col>
+                <Col>...</Col>
+                <Col>EDU, FIN</Col>
+                <Col>12/02/2022</Col>
+                <Col>Hearing</Col>
+                <Col>Support</Col>
+                <Col>John Doe</Col>
+                <Col>1st Crossover</Col>
+                <Col>--</Col>
+              </Row>
+            </a>
+          </div>
+        </Row>
       </Col>
     </Row>
   </Container>
