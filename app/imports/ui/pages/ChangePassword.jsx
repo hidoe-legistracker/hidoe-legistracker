@@ -12,9 +12,9 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 
 /**
- * SignUp component is similar to signin component, but we create a new user instead.
+ * ChangePassword component is similar to signin component, but we change the user's password instead.
  */
-const SignUp = () => {
+const ChangePassword = () => {
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToRef] = useState(false);
 
@@ -25,7 +25,7 @@ const SignUp = () => {
   });
   const bridge = new SimpleSchema2Bridge(schema);
 
-  /* Handle SignUp submission. Create user account and a profile entry, then redirect to the home page. */
+  /* Handle ChangePassword submission. Change password of corresponding email, then redirect to the home page. */
   const submit = (doc) => {
     const collectionName = UserProfiles.getCollectionName();
     const definitionData = doc;
@@ -86,4 +86,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ChangePassword;
