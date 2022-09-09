@@ -7,14 +7,14 @@ import { useTracker } from 'meteor/react-meteor-data';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import Directory from '../pages/Directory';
-import AddBill from '../pages/AddBill';
+import AddMeasure from '../pages/AddMeasure';
+import MyFolders from '../pages/MyFolders';
 import Inbox from '../pages/Inbox';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import AddStuff from '../pages/AddStuff';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
-import SignUp from '../pages/SignUp';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
 import SignIn from '../pages/SignIn';
@@ -24,32 +24,6 @@ import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
-<<<<<<< Updated upstream
-const App = () => (
-  <Router>
-    <div className="d-flex flex-column min-vh-100">
-      <NavBar />
-      <Routes>
-        <Route exact path="/" element={<Landing />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
-        <Route path="/signout" element={<SignOut />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-        <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
-        <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-        <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
-        <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
-        <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
-        <Route path="/admin" element={<AdminProtectedRoute><ListStuffAdmin /></AdminProtectedRoute>} />
-        <Route path="/notauthorized" element={<NotAuthorized />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </div>
-  </Router>
-);
-=======
 
 const App = () => {
   const { currentUser } = useTracker(() => ({
@@ -84,7 +58,6 @@ const App = () => {
     </Router>
   );
 };
->>>>>>> Stashed changes
 
 /*
  * ProtectedRoute (see React Router v6 sample)
