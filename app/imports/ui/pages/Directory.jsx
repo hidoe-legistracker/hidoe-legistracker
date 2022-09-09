@@ -117,7 +117,7 @@ const Directory = () => (
                     <th>Support</th>
                     <th>John Doe</th>
                     <th>1st Crossover</th>
-                    <th> </th>
+                    <th>--</th>
                     <th>123</th>
                     <th>...</th>
                   </tbody>

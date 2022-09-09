@@ -29,22 +29,76 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 * */
 
 const ViewBill = () => (
-  <Container id={PAGE_IDS.VIEW_BILL} className="py-3">
-    <h2>Bill #1234</h2>
-    <Row className="justify-content-md-center">
-      <Col xs lg="2">
-        1 of 3
+  <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+    <h1>Bill #1234</h1>
+    <Row>
+      <Col>
+        <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
+        <Row>...............</Row>
       </Col>
-      <Col md="auto">Variable width content</Col>
-      <Col xs lg="2">
-        3 of 3
+    </Row>
+    <Row style={{ alignContent: 'center', margin: 0 }}>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Office</Row>
+        <Row>OCID BOE</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Action</Row>
+        <Row>Testimony</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Act #</Row>
+        <Row>--</Row>
+      </Col>
+    </Row>
+    <Row style={{ alignContent: 'center', margin: 0 }}>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Rationale</Row>
+        <Row>..............</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Committee Referral</Row>
+        <Row>EDU, FIN</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Committee</Row>
+        <Row>Conference</Row>
+      </Col>
+    </Row>
+    <Row style={{ alignContent: 'center', margin: 0 }}>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>DOE Position</Row>
+        <Row>Support</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Testifier(s)</Row>
+        <Row>John Doe</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Status</Row>
+        <Row>1st Crossover</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Proposed</Row>
+        <Row>..........</Row>
       </Col>
     </Row>
     <Row>
-      <Col>1 of 3</Col>
-      <Col md="auto">Variable width content</Col>
-      <Col xs lg="2">
-        3 of 3
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Hearing Date</Row>
+        <Row>12/02/2022</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Hearing Time</Row>
+        <Row>12:00pm</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Hearing Location</Row>
+        <Row>CR 229</Row>
+      </Col>
+      <Col className="view-bill-columns">
+        <Row style={{ fontWeight: 'bold' }}>Hearing Type</Row>
+        <Row>Hearing</Row>
       </Col>
     </Row>
   </Container>

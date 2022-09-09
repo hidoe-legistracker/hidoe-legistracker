@@ -49,3 +49,32 @@ body {
 .table {
   margin-bottom: 1px;
 }
+
+.view-bill-container {
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  border-style: outset;
+  border-spacing: inherit;
+  padding: 100px;
+}
+
+.view-bill-columns {
+  margin: 2px 2px 4px;
+}
+
+.row {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-.5 * var(--bs-gutter-x));
+  margin-left: calc(-.5 * var(--bs-gutter-x));
+  align-items: center;
+  justify-content: center;
+}
+
+.col {
+  margin: 4px;
+}
