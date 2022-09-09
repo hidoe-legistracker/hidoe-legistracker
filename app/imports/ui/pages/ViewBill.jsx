@@ -4,6 +4,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
 // import LoadingSpinner from '../components/LoadingSpinner';
+import Form from 'react-bootstrap/Form';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -31,13 +32,13 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
     <h1>Bill #1234</h1>
-    <Row>
+    <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
       <Col>
         <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
         <Row>...............</Row>
       </Col>
     </Row>
-    <Row style={{ alignContent: 'center', margin: 0 }}>
+    <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
       <Col className="view-bill-columns">
         <Row style={{ fontWeight: 'bold' }}>Office</Row>
         <Row>OCID BOE</Row>
@@ -51,7 +52,7 @@ const ViewBill = () => (
         <Row>--</Row>
       </Col>
     </Row>
-    <Row style={{ alignContent: 'center', margin: 0 }}>
+    <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
       <Col className="view-bill-columns">
         <Row style={{ fontWeight: 'bold' }}>Rationale</Row>
         <Row>..............</Row>
@@ -65,7 +66,7 @@ const ViewBill = () => (
         <Row>Conference</Row>
       </Col>
     </Row>
-    <Row style={{ alignContent: 'center', margin: 0 }}>
+    <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
       <Col className="view-bill-columns">
         <Row style={{ fontWeight: 'bold' }}>DOE Position</Row>
         <Row>Support</Row>
@@ -83,7 +84,7 @@ const ViewBill = () => (
         <Row>..........</Row>
       </Col>
     </Row>
-    <Row>
+    <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
       <Col className="view-bill-columns">
         <Row style={{ fontWeight: 'bold' }}>Hearing Date</Row>
         <Row>12/02/2022</Row>
@@ -100,6 +101,14 @@ const ViewBill = () => (
         <Row style={{ fontWeight: 'bold' }}>Hearing Type</Row>
         <Row>Hearing</Row>
       </Col>
+    </Row>
+    <Row style={{ marginTop: 10 }}>
+      <Form>
+        <Form.Check
+          inline
+          label="I want to receive notifications for this bill"
+        />
+      </Form>
     </Row>
   </Container>
 );
