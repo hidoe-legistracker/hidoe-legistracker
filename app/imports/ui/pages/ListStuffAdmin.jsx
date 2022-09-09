@@ -29,10 +29,11 @@ const ListStuffAdmin = () => {
           <Table striped bordered hover>
             <thead>
               <tr>
+                <th>Profile</th>
                 <th>Name</th>
-                <th>Quantity</th>
-                <th>Condition</th>
-                <th>Owner</th>
+                <th>Phone #</th>
+                <th>Email</th>
+                <th>Role</th>
               </tr>
             </thead>
             <tbody>
