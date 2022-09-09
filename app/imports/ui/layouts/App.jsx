@@ -13,7 +13,6 @@ import ListStuffAdmin from '../pages/ListStuffAdmin';
 import AddStuff from '../pages/AddStuff';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
-import SignUp from '../pages/SignUp';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
 import SignIn from '../pages/SignIn';
@@ -29,7 +28,6 @@ const App = () => (
       <Routes>
         <Route exact path="/" element={<Landing />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/signout" element={<SignOut />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
