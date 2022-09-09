@@ -57,32 +57,6 @@ const App = () => {
     </Router>
   );
 };
-=======
-const App = () => (
-  <Router>
-    <div className="d-flex flex-column min-vh-100">
-      <NavBar />
-      <Routes>
-        <Route exact path="/" element={<SignIn />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
-        <Route path="/signout" element={<SignOut />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-        <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
-        <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
-        <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-        <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
-        <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
-        <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
-        <Route path="/admin" element={<AdminProtectedRoute><ListStuffAdmin /></AdminProtectedRoute>} />
-        <Route path="/notauthorized" element={<NotAuthorized />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </div>
-  </Router>
-);
 
 /*
  * ProtectedRoute (see React Router v6 sample)
