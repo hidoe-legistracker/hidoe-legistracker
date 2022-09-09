@@ -26,3 +26,22 @@ body {
   padding-top: 10px;
   padding-bottom: 20px;
 }
+
+.folder-section {
+  align-content: center;
+  margin-right: 5px;
+  overflow-y: auto;
+}
+
+.bill-section {
+  outline: gray solid thin;
+  overflow-y: auto;
+}
+
+.bill-button-spacing {
+  margin: 3px 5px 3px 0;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  font-weight: normal;
+}
