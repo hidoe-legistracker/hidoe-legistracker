@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
@@ -30,30 +30,21 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="py-3">
-    <Row className="justify-content-center">
-      <Col md={7}>
-        <Col className="text-center">
-          <h2>Bill #1234</h2>
-        </Col>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>...</th>
-              <th>OCID BOE</th>
-              <th>Testimony</th>
-              <th>...</th>
-              <th>EDU, FIN</th>
-              <th>12/02/2022</th>
-              <th>Hearing</th>
-              <th>Support</th>
-              <th>John Doe</th>
-              <th>1st Crossover</th>
-              <th> </th>
-              <th>123</th>
-              <th>...</th>
-            </tr>
-          </thead>
-        </Table>
+    <h2>Bill #1234</h2>
+    <Row className="justify-content-md-center">
+      <Col xs lg="2">
+        1 of 3
+      </Col>
+      <Col md="auto">Variable width content</Col>
+      <Col xs lg="2">
+        3 of 3
+      </Col>
+    </Row>
+    <Row>
+      <Col>1 of 3</Col>
+      <Col md="auto">Variable width content</Col>
+      <Col xs lg="2">
+        3 of 3
       </Col>
     </Row>
   </Container>

@@ -2,8 +2,10 @@ import React from 'react';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
+// import { Link, withRouter } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import ViewBill from './ViewBill';
+// import ViewBill from './ViewBill';
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => (
@@ -101,7 +103,7 @@ const Directory = () => (
         <Table>
           <tbody>
             <div className="d-grid gap-2">
-              <Button href={ViewBill} variant="outline-secondary" size="sm">
+              <Button href="http://localhost:3000/view-bill" variant="outline-secondary" size="sm">
                 <Table>
                   <tbody>
                     <th>1234</th>

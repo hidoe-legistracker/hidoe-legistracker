@@ -45,3 +45,7 @@ body {
 .table-striped>tbody>tr:nth-of-type(odd)>* {
   font-weight: normal;
 }
+
+.table {
+  margin-bottom: 1px;
+}
