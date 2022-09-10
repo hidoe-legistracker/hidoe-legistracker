@@ -97,7 +97,7 @@ class TestimonyCollection extends BaseCollection {
       // get the StuffCollection instance.
       const instance = this;
       /** This subscription publishes only the documents associated with the logged in user */
-      Meteor.publish(testimonyPublications.testimonies, function publish() {
+      Meteor.publish(testimonyPublications.testimony, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
           return instance._collection.find({ owner: username });
@@ -134,6 +134,10 @@ class TestimonyCollection extends BaseCollection {
       return Meteor.subscribe(testimonyPublications.testimonyAdmin);
     }
     return null;
+  }
+
+  assertValidRoleForMethod(userId) {
+    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   /**
