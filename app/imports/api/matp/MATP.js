@@ -28,6 +28,7 @@ class MATPClass {
       AdminProfiles,
       UserProfiles,
       Stuffs,
+      Emails,
       Measures,
     ];
 
