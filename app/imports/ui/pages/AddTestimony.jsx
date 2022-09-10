@@ -43,7 +43,7 @@ const formSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  writtenBy: String,
+  testifier: String,
   representing: {
     type: String,
     optional: true,
@@ -145,8 +145,8 @@ const AddTestimony = () => {
                 <TextField name="representing" label="Name any groups you are representing here:" />
 
                 <br />
-                <h4>Contact Information</h4>
-                <TextField name="writtenBy" label="Your Name (First, Last) *" />
+                <h4>Testifier Information</h4>
+                <TextField name="testifier" label="Your Name (First, Last) *" />
                 <Row>
                   <Col>
                     <TextField name="contactPhone" label="Phone" />
