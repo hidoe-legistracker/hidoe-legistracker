@@ -1,5 +1,6 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Button } from 'react-bootstrap';
+import { FileEarmarkText } from 'react-bootstrap-icons';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
@@ -31,6 +32,20 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+    <Container>
+      <Row>
+        <Col>
+          <Button href="/create-testimony" variant="secondary" size="sm" className="bill-button-spacing">
+            <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+            Create Testimony
+          </Button>
+          <Button variant="secondary" size="sm" className="bill-button-spacing">
+            <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+            Monitoring Report
+          </Button>
+        </Col>
+      </Row>
+    </Container>
     <h1>Bill #1234</h1>
     <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
       <Col>
