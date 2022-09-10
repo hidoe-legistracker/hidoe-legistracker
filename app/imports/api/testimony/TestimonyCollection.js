@@ -7,16 +7,16 @@ import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
 export const departmentPositions = ['Support', 'Oppose', 'Comments'];
-export const stuffPublications = {
-  stuff: 'Stuff',
-  stuffAdmin: 'StuffAdmin',
+export const testimonyPublications = {
+  testimony: 'testimony',
+  testimonyAdmin: 'testimonyAdmin', // not sure if we need this.
 };
 
 class TestimonyCollection extends BaseCollection {
   constructor() {
     super('Testimony', new SimpleSchema({
       date: Date,
-      time: TimeRanges,
+      time: String,
       owner: String,
       location: String,
       committee: String,
@@ -34,41 +34,45 @@ class TestimonyCollection extends BaseCollection {
 
   /**
    * Defines a new Testimony item.
-   * @param name the name of the item.
-   * @param quantity how many.
-   * @param owner the owner of the item.
-   * @param condition the condition of the item.
-   * @return {String} the docID of the new document.
    */
-  define({ name, quantity, owner, condition }) {
-    const docID = this._collection.insert({
-      name,
-      quantity,
-      owner,
-      condition,
-    });
+  define({ date, time, owner, location, committee, department, testifier, title, purpose, deptPosition }) {
+    const docID = this._collection.insert({ date, time, owner, location, committee, department, testifier, title, purpose, deptPosition });
     return docID;
   }
 
   /**
    * Updates the given document.
-   * @param docID the id of the document to update.
-   * @param name the new name (optional).
-   * @param quantity the new quantity (optional).
-   * @param condition the new condition (optional).
    */
-  update(docID, { name, quantity, condition }) {
+  update(docID, { date, time, location, committee, department, testifier, title, purpose, deptPosition }) {
     const updateData = {};
-    if (name) {
-      updateData.name = name;
+    if (_.isDate(date)) {
+      updateData.date = date;
     }
-    // if (quantity) { NOTE: 0 is falsy so we need to check if the quantity is a number.
-    if (_.isNumber(quantity)) {
-      updateData.quantity = quantity;
+    if (_.isString(time)) {
+      updateData.time = time;
     }
-    if (condition) {
-      updateData.condition = condition;
+    if (_.isString(location)) {
+      updateData.location = location;
     }
+    if (_.isString(committee)) {
+      updateData.committee = committee;
+    }
+    if (_.isString(department)) {
+      updateData.department = department;
+    }
+    if (_.isString(testifier)) {
+      updateData.testifier = testifier;
+    }
+    if (_.isString(title)) {
+      updateData.title = title;
+    }
+    if (_.isString(purpose)) {
+      updateData.purpose = purpose;
+    }
+    if (_.isString(deptPosition)) {
+      updateData.deptPosition = deptPosition;
+    }
+
     this._collection.update(docID, { $set: updateData });
   }
 
@@ -93,7 +97,7 @@ class TestimonyCollection extends BaseCollection {
       // get the StuffCollection instance.
       const instance = this;
       /** This subscription publishes only the documents associated with the logged in user */
-      Meteor.publish(stuffPublications.stuff, function publish() {
+      Meteor.publish(testimonyPublications.testimonies, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
           return instance._collection.find({ owner: username });
@@ -102,7 +106,7 @@ class TestimonyCollection extends BaseCollection {
       });
 
       /** This subscription publishes all documents regardless of user, but only if the logged in user is the Admin. */
-      Meteor.publish(stuffPublications.stuffAdmin, function publish() {
+      Meteor.publish(testimonyPublications.testimonyAdmin, function publish() {
         if (this.userId && Roles.userIsInRole(this.userId, ROLE.ADMIN)) {
           return instance._collection.find();
         }
@@ -112,11 +116,11 @@ class TestimonyCollection extends BaseCollection {
   }
 
   /**
-   * Subscription method for stuff owned by the current user.
+   * Subscription method for testimony owned by the current user.
    */
-  subscribeStuff() {
+  subscribeTestimony() {
     if (Meteor.isClient) {
-      return Meteor.subscribe(stuffPublications.stuff);
+      return Meteor.subscribe(testimonyPublications.testimony);
     }
     return null;
   }
@@ -125,21 +129,11 @@ class TestimonyCollection extends BaseCollection {
    * Subscription method for admin users.
    * It subscribes to the entire collection.
    */
-  subscribeStuffAdmin() {
+  subscribeTestimonyAdmin() {
     if (Meteor.isClient) {
-      return Meteor.subscribe(stuffPublications.stuffAdmin);
+      return Meteor.subscribe(testimonyPublications.testimonyAdmin);
     }
     return null;
-  }
-
-  /**
-   * Default implementation of assertValidRoleForMethod. Asserts that userId is logged in as an Admin or User.
-   * This is used in the define, update, and removeIt Meteor methods associated with each class.
-   * @param userId The userId of the logged in user. Can be null or undefined
-   * @throws { Meteor.Error } If there is no logged in user, or the user is not an Admin or User.
-   */
-  assertValidRoleForMethod(userId) {
-    this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
 
   /**
@@ -149,15 +143,30 @@ class TestimonyCollection extends BaseCollection {
    */
   dumpOne(docID) {
     const doc = this.findDoc(docID);
-    const name = doc.name;
-    const quantity = doc.quantity;
-    const condition = doc.condition;
-    const owner = doc.owner;
-    return { name, quantity, condition, owner };
+    const date = doc.date;
+    const time = doc.time;
+    const location = doc.location;
+    const committee = doc.committee;
+    const department = doc.department;
+    const testifier = doc.testifier;
+    const title = doc.title;
+    const purpose = doc.purpose;
+    const deptPosition = doc.deptPosition;
+    return {
+      date,
+      time,
+      location,
+      committee,
+      department,
+      testifier,
+      title,
+      purpose,
+      deptPosition,
+    };
   }
 }
 
 /**
  * Provides the singleton instance of this class to all other entities.
  */
-export const Stuffs = new TestimonyCollection();
+export const Testimony = new TestimonyCollection();

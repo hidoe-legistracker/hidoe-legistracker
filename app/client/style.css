@@ -98,8 +98,26 @@ body {
   text-align: center;
 }
 
+.testimony-header-columns {
+  margin: 2px 2px 4px;
+  justify-content: right;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.testimony-header {
+  font-weight: bold;
+  justify-content: flex-end;
+}
+
 .col .row {
   margin: 4px;
+}
+
+.row>* {
+  width: 100%;
+  max-width: 100%;
+  margin-top: var(--bs-gutter-y);
 }
 
 a:link th {
@@ -120,6 +138,12 @@ a:link th {
   margin-top: 5px;
   margin-bottom: 5px;
   font-weight: bold;
+}
+
+.row-center {
+  align-content: center;
+  justify-content: center;
+  margin: 0;
 }
 
 h1, h3 {

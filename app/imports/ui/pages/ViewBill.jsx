@@ -102,15 +102,6 @@ const ViewBill = () => (
         <Row>Hearing</Row>
       </Col>
     </Row>
-
-    <hr
-      style={{
-        background: 'black',
-        color: 'black',
-        borderColor: 'black',
-        height: '1px',
-      }}
-    />
     <Container className="view-testimony-container">
       <h3>Testimonies</h3>
       <Row>

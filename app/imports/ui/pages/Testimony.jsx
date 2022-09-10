@@ -27,27 +27,19 @@ const { ready, stuffs } = useTracker(() => {
 
 const Testimony = () => (
 
-  <Container id={PAGE_IDS.VIEW_TESTIMONY}>
-    <Row className="justify-content-center">
-      <Col md={9} className="testimony-container">
-        <Col className="text-center">
-          <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Date: </Row>
-            <Row>04/05/2006</Row>
-          </Col>
-          <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Time: </Row>
-            <Row>04:30 PM</Row>
-          </Col>
-          <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Location: </Row>
-            <Row>3412 via Videoconference</Row>
-          </Col>
-          <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Committee: </Row>
-            <Row>House of Finance</Row>
-          </Col>
-        </Col>
+  <Container id={PAGE_IDS.VIEW_TESTIMONY} className="view-testimony-container">
+    <Row className="row-center">
+      <Col>
+        <Row className="testimony-header">Date: </Row>
+        <Row className="testimony-header">Time: </Row>
+        <Row className="testimony-header">Location: </Row>
+        <Row className="testimony-header">Committee: </Row>
+      </Col>
+      <Col style={{ padding: 0 }}>
+        <Row>04/05/2006</Row>
+        <Row>04:30 PM</Row>
+        <Row>3412 via Videoconference</Row>
+        <Row>House of Finance</Row>
       </Col>
     </Row>
   </Container>
