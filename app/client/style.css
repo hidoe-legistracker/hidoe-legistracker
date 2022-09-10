@@ -58,24 +58,13 @@ body {
   margin-bottom: 1px;
 }
 
-.view-bill-container1 {
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  border-style: outset;
-  border-spacing: inherit;
-  padding: 50px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 .view-bill-container {
   align-content: center;
   justify-content: center;
   align-items: center;
   border-style: outset;
   border-spacing: inherit;
-  padding: 50px;
+  padding: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -105,9 +94,14 @@ body {
   text-align: right;
 }
 
-.testimony-header {
+.testimony-header1 {
   font-weight: bold;
   justify-content: flex-end;
+}
+
+.testimony-header2 {
+  font-weight: bold;
+  margin-bottom: 20px!important;
 }
 
 .col .row {
