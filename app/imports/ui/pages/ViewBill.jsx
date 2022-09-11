@@ -6,6 +6,7 @@ import { FileEarmarkText } from 'react-bootstrap-icons';
 // import StuffItem from '../components/StuffItem';
 // import LoadingSpinner from '../components/LoadingSpinner';
 import Form from 'react-bootstrap/Form';
+import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -131,7 +132,7 @@ const ViewBill = () => (
           </Row>
         </div>
         <div className="d-grid gap-2">
-          <a href="http://localhost:3000/view-testimony" className="testimonies-table">
+          <Link className="testimonies-table" to="/testimony-page">
             <Row>
               <Col>04/05/2006</Col>
               <Col>SB 2319847</Col>
@@ -140,7 +141,7 @@ const ViewBill = () => (
               <Col>Support</Col>
               <Col>Testimony same as ...</Col>
             </Row>
-          </a>
+          </Link>
         </div>
       </Row>
     </Container>

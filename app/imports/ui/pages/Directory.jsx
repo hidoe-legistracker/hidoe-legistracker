@@ -4,12 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 // import { Link, withRouter } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
-// import ViewBill from './ViewBill';
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => (
-
   <Container id={PAGE_IDS.DIRECTORY} className="py-3">
     <Row className="justify-content-center">
       <Col className="folder-section">
@@ -84,35 +83,35 @@ const Directory = () => (
         <Row>
           <div className="bill-table-header">
             <Row>
-              <Col>Bill #</Col>
-              <Col>Bill</Col>
-              <Col>Office</Col>
-              <Col>Action</Col>
-              <Col>Rationale</Col>
-              <Col>Committee</Col>
-              <Col>Hearing</Col>
-              <Col>Type</Col>
-              <Col>Position</Col>
-              <Col>Testifier</Col>
-              <Col>Status</Col>
+              <Col sm="auto">Bill #</Col>
+              <Col sm="auto">Bill</Col>
+              <Col sm="auto">Office</Col>
+              <Col sm="auto">Action</Col>
+              <Col sm="auto">Rationale</Col>
+              <Col sm="auto">Committee</Col>
+              <Col sm="auto">Hearing</Col>
+              <Col sm="auto">Type</Col>
+              <Col sm="auto">Position</Col>
+              <Col sm="auto">Testifier</Col>
+              <Col sm="auto">Status</Col>
             </Row>
           </div>
           <div className="d-grid gap-2">
-            <a href="http://localhost:3000/view-bill" className="bill-table">
+            <Link className="bill-table" to="/view-bill">
               <Row>
-                <Col>1234</Col>
-                <Col>...</Col>
-                <Col>OCID BOE</Col>
-                <Col>Testimony</Col>
-                <Col>...</Col>
-                <Col>EDU, FIN</Col>
-                <Col>12/02/2022</Col>
-                <Col>Hearing</Col>
-                <Col>Support</Col>
-                <Col>John Doe</Col>
-                <Col>1st Crossover</Col>
+                <Col sm="auto">1234</Col>
+                <Col sm="auto">...</Col>
+                <Col sm="auto">OCID BOE</Col>
+                <Col sm="auto">Testimony</Col>
+                <Col sm="auto">...</Col>
+                <Col sm="auto">EDU, FIN</Col>
+                <Col sm="auto">12/02/2022</Col>
+                <Col sm="auto">Hearing</Col>
+                <Col sm="auto">Support</Col>
+                <Col sm="auto">John Doe</Col>
+                <Col sm="auto">1st Crossover</Col>
               </Row>
-            </a>
+            </Link>
           </div>
         </Row>
       </Col>
