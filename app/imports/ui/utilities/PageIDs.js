@@ -5,6 +5,7 @@ export const PAGE_IDS = {
   VIEW_TESTIMONY: 'view-testimony',
   EDIT_TESTIMONY: 'edit-testimony',
 
+  CREATE_EMAIL: 'create-email',
   ADD_STUFF: 'add-stuff',
   EDIT_STUFF: 'edit-stuff',
   LANDING: 'landing',
