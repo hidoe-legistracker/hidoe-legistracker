@@ -22,7 +22,7 @@ const bridge = new SimpleSchema2Bridge(Testimony._schema);
 
 /* Renders the AddTestimony page for adding a testimony. */
 const EditTestimony = () => {
-  
+
   // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
   // const { _id } = useParams();
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
