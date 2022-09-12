@@ -16,6 +16,11 @@ class SimplePage {
   }
 }
 
+export const directoryPage = new SimplePage(PAGE_IDS.DIRECTORY);
+export const myFoldersPage = new SimplePage(PAGE_IDS.MY_FOLDERS);
+export const createMeasurePage = new SimplePage(PAGE_IDS.ADD_MEASURE);
+export const inboxPage = new SimplePage(PAGE_IDS.INBOX);
+
 export const addStuffPage = new SimplePage(PAGE_IDS.ADD_STUFF);
 export const editStuffPage = new SimplePage(PAGE_IDS.EDIT_STUFF);
 export const listStuffPage = new SimplePage(PAGE_IDS.LIST_STUFF);
