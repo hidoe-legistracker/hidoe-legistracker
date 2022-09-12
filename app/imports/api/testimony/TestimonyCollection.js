@@ -6,7 +6,7 @@ import { Roles } from 'meteor/alanning:roles';
 import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
-export const departmentPositions = ['Support', 'Oppose', 'Comments'];
+export const departmentPositions = ['In Support', 'In Opposition', 'Comments'];
 export const testimonyPublications = {
   testimony: 'testimony',
   testimonyAdmin: 'testimonyAdmin', // not sure if we need this.
@@ -15,62 +15,89 @@ export const testimonyPublications = {
 class TestimonyCollection extends BaseCollection {
   constructor() {
     super('Testimony', new SimpleSchema({
-      date: Date,
-      time: String,
       owner: String,
-      location: String,
-      committee: String,
-      department: String,
-      testifier: String,
-      title: String,
-      purpose: String,
+      committeeChair: String,
+      committeeName: String,
+      billNumber: String,
+      billDraftNumber: { type: String, optional: true },
+      title: { type: String, optional: true },
+      hearingDate: { type: Date, optional: true },
+      hearingLocation: { type: String, optional: true },
       deptPosition: {
         type: String,
         allowedValues: departmentPositions,
-        defaultValue: 'Support',
+        defaultValue: 'In Support',
       },
+      introduction: String,
+      content: String,
+      closing: { type: String, optional: true },
+      testifier: String,
+      representing: { type: String, optional: true },
+      contactEmail: { type: String, optional: true },
+      contactPhone: { type: String, optional: true },
     }));
   }
 
   /**
    * Defines a new Testimony item.
    */
-  define({ date, time, owner, location, committee, department, testifier, title, purpose, deptPosition }) {
-    const docID = this._collection.insert({ date, time, owner, location, committee, department, testifier, title, purpose, deptPosition });
+  define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
+    const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone });
     return docID;
   }
 
   /**
    * Updates the given document.
    */
-  update(docID, { date, time, location, committee, department, testifier, title, purpose, deptPosition }) {
+  update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
     const updateData = {};
-    if (_.isDate(date)) {
-      updateData.date = date;
+    if (_.isString(owner)) {
+      updateData.owner = owner;
     }
-    if (_.isString(time)) {
-      updateData.time = time;
+    if (_.isString(committeeChair)) {
+      updateData.committeeChair = committeeChair;
     }
-    if (_.isString(location)) {
-      updateData.location = location;
+    if (_.isString(committeeName)) {
+      updateData.committeeName = committeeName;
     }
-    if (_.isString(committee)) {
-      updateData.committee = committee;
+    if (_.isString(billNumber)) {
+      updateData.billNumber = billNumber;
     }
-    if (_.isString(department)) {
-      updateData.department = department;
-    }
-    if (_.isString(testifier)) {
-      updateData.testifier = testifier;
+    if (_.isString(billDraftNumber)) {
+      updateData.billDraftNumber = billDraftNumber;
     }
     if (_.isString(title)) {
       updateData.title = title;
     }
-    if (_.isString(purpose)) {
-      updateData.purpose = purpose;
+    if (_.isDate(hearingDate)) {
+      updateData.hearingDate = hearingDate;
+    }
+    if (_.isString(hearingLocation)) {
+      updateData.hearingLocation = hearingLocation;
     }
     if (_.isString(deptPosition)) {
       updateData.deptPosition = deptPosition;
+    }
+    if (_.isString(introduction)) {
+      updateData.introduction = introduction;
+    }
+    if (_.isString(content)) {
+      updateData.content = content;
+    }
+    if (_.isString(closing)) {
+      updateData.closing = closing;
+    }
+    if (_.isString(testifier)) {
+      updateData.testifier = testifier;
+    }
+    if (_.isString(representing)) {
+      updateData.representing = representing;
+    }
+    if (_.isString(contactEmail)) {
+      updateData.contactEmail = contactEmail;
+    }
+    if (_.isString(contactPhone)) {
+      updateData.contactPhone = contactPhone;
     }
 
     this._collection.update(docID, { $set: updateData });
@@ -94,13 +121,12 @@ class TestimonyCollection extends BaseCollection {
    */
   publish() {
     if (Meteor.isServer) {
-      // get the StuffCollection instance.
+      // get the TestimonyCollection instance.
       const instance = this;
       /** This subscription publishes only the documents associated with the logged in user */
       Meteor.publish(testimonyPublications.testimony, function publish() {
         if (this.userId) {
-          const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ owner: username });
+          return instance._collection.find({});
         }
         return this.ready();
       });
@@ -147,25 +173,39 @@ class TestimonyCollection extends BaseCollection {
    */
   dumpOne(docID) {
     const doc = this.findDoc(docID);
-    const date = doc.date;
-    const time = doc.time;
-    const location = doc.location;
-    const committee = doc.committee;
-    const department = doc.department;
-    const testifier = doc.testifier;
+    const owner = doc.owner;
+    const committeeChair = doc.committeeChair;
+    const committeeName = doc.committeeName;
+    const billNumber = doc.billNumber;
+    const billDraftNumber = doc.billDraftNumber;
     const title = doc.title;
-    const purpose = doc.purpose;
+    const hearingDate = doc.hearingDate;
+    const hearingLocation = doc.hearingLocation;
     const deptPosition = doc.deptPosition;
+    const introduction = doc.introduction;
+    const content = doc.content;
+    const closing = doc.closing;
+    const testifier = doc.testifier;
+    const representing = doc.representing;
+    const contactEmail = doc.contactEmail;
+    const contactPhone = doc.contactPhone;
     return {
-      date,
-      time,
-      location,
-      committee,
-      department,
-      testifier,
+      owner,
+      committeeChair,
+      committeeName,
+      billNumber,
+      billDraftNumber,
       title,
-      purpose,
+      hearingDate,
+      hearingLocation,
       deptPosition,
+      introduction,
+      content,
+      closing,
+      testifier,
+      representing,
+      contactEmail,
+      contactPhone,
     };
   }
 }
