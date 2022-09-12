@@ -14,7 +14,7 @@ const TestimonyPage = () => {
       <Container>
         <Row>
           <Col>
-            <Button variant="secondary" size="sm" className="bill-button-spacing">
+            <Button href="/edit-testimony" variant="secondary" size="sm" className="bill-button-spacing">
               Edit
             </Button>
             <Button onClick={handlePrint} variant="secondary" size="sm" className="bill-button-spacing">
