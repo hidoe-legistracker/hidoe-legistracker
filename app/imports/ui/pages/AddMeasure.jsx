@@ -100,7 +100,7 @@ const AddMeasure = () => {
   let fRef = null;
   return (
     <div>
-      <Container id={PAGE_IDS.ADD_BILL} className="py-3">
+      <Container id={PAGE_IDS.ADD_MEASURE} className="py-3">
         <Row className="justify-content-center">
           <Col>
             <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => confirm(data, fRef)}>

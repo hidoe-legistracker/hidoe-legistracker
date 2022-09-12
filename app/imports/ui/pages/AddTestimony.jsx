@@ -81,7 +81,7 @@ const AddTestimony = () => {
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   let fRef = null;
   return (
-    <Container id={PAGE_IDS.ADD_STUFF} className="py-3">
+    <Container id={PAGE_IDS.ADD_TESTIMONY} className="py-3">
       <Row className="justify-content-center">
         <Col>
           <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => submit(data, fRef)}>
