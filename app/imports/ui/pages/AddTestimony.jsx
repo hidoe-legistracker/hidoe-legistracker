@@ -4,7 +4,8 @@ import {
   AutoForm,
   DateField,
   ErrorsField,
-  LongTextField, SelectField,
+  LongTextField,
+  SelectField,
   SubmitField,
   TextField,
 } from 'uniforms-bootstrap5';
@@ -12,7 +13,7 @@ import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
-import { Stuffs } from '../../api/stuff/StuffCollection';
+import { Testimony } from '../../api/testimony/TestimonyCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
@@ -33,9 +34,9 @@ const formSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-  position: {
+  deptPosition: {
     type: String,
-    allowedValues: ['In Support', 'In Opposition'],
+    allowedValues: ['In Support', 'In Opposition', 'Comments'],
   },
   introduction: String,
   content: String,
@@ -60,15 +61,15 @@ const formSchema = new SimpleSchema({
 
 const bridge = new SimpleSchema2Bridge(formSchema);
 
-/* Renders the AddStuff page for adding a document. */
+/* Renders the AddTestimony page for adding a testimony. */
 const AddTestimony = () => {
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
-    const { name, quantity, condition } = data;
+    const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
     const owner = Meteor.user().username;
-    const collectionName = Stuffs.getCollectionName();
-    const definitionData = { name, quantity, condition, owner };
+    const collectionName = Testimony.getCollectionName();
+    const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -86,7 +87,9 @@ const AddTestimony = () => {
           <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => submit(data, fRef)}>
             <Card>
               <Card.Body>
-                <h4>Address To</h4>
+                <Row>
+                  <h4>Address To</h4>
+                </Row>
                 <Row>
                   <Col>
                     <TextField name="committeeChair" label="Committee Chair *" />
@@ -96,7 +99,9 @@ const AddTestimony = () => {
                   </Col>
                 </Row>
 
-                <h4>Bill / Resolution Information</h4>
+                <Row>
+                  <h4>Bill / Resolution Information</h4>
+                </Row>
                 <Row>
                   <Col>
                     <TextField name="billNumber" label="Bill / Resolution Number *" />
@@ -106,7 +111,9 @@ const AddTestimony = () => {
                   </Col>
                 </Row>
 
-                <h4>Hearing Information</h4>
+                <Row>
+                  <h4>Hearing Information</h4>
+                </Row>
                 <Row>
                   <Col>
                     <DateField name="hearingDate" label="Hearing Date" />
@@ -117,36 +124,52 @@ const AddTestimony = () => {
                 </Row>
 
                 <br />
-                <h4>Testimony</h4>
+                <Row>
+                  <h4>Testimony</h4>
+                </Row>
                 <Row>
                   <Col>
-                    <SelectField name="position" label="Position *" />
+                    <SelectField name="deptPosition" label="Position *" />
                   </Col>
                   <Col />
                 </Row>
-                <LongTextField name="introduction" label="Introduction *" />
+                <Row>
+                  <LongTextField name="introduction" label="Introduction *" />
+                </Row>
                 <ul>
                   <li>Introduce who you are and/or the group or organization you represent</li>
                   <li>State your position on the measure (&quot;I am testifying in favor of…&quot; or &quot;I am testifying against…&quot;)</li>
                 </ul>
-                <LongTextField name="content" label="Content *" />
+                <Row>
+                  <LongTextField name="content" label="Content *" />
+                </Row>
                 <ul>
                   <li>Reasons for taking your position</li>
                   <li>Start with most important or compelling</li>
                   <li>Include facts, figures, experiences, or narratives to support your position</li>
                 </ul>
-                <LongTextField name="closing" label="Closing" />
+                <Row>
+                  <LongTextField name="closing" label="Closing" />
+                </Row>
                 <ul>
                   <li>Include any summary remarks and re-state your position</li>
                 </ul>
 
                 <br />
-                <h4>Affiliations</h4>
-                <TextField name="representing" label="Name any groups you are representing here:" />
+                <Row>
+                  <h4>Affiliations</h4>
+                </Row>
+                <Row>
+                  <TextField name="representing" label="Name any groups you are representing here:" />
+                </Row>
 
                 <br />
-                <h4>Testifier Information</h4>
-                <TextField name="testifier" label="Your Name (First, Last) *" />
+                <Row>
+                  <h4>Testifier Information</h4>
+                </Row>
+                <Row>
+                  <TextField name="testifier" label="Your Name (First, Last) *" />
+                </Row>
                 <Row>
                   <Col>
                     <TextField name="contactPhone" label="Phone" />
@@ -156,7 +179,9 @@ const AddTestimony = () => {
                   </Col>
                 </Row>
 
-                <SubmitField value="Submit Testimony" />
+                <Row>
+                  <SubmitField value="Submit Testimony" />
+                </Row>
 
                 <br />
                 <ErrorsField />
