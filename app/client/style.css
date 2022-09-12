@@ -38,10 +38,110 @@ body {
   overflow-y: auto;
 }
 
+.testimony-container {
+  border-style: outset;
+  border-spacing: inherit;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  overflow-y: auto;
+}
+
 .bill-button-spacing {
-  margin: 3px 5px 3px 0;
+  margin: 3px 8px 3px 0;
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
   font-weight: normal;
+}
+
+.table {
+  margin-bottom: 1px;
+}
+
+.view-bill-container {
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  border-style: outset;
+  border-spacing: inherit;
+  padding: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.view-testimony-container {
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  border-style: outset;
+  border-spacing: inherit;
+  margin: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.view-bill-columns {
+  margin: 2px 2px 4px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.testimony-header-columns {
+  margin: 2px 2px 4px;
+  justify-content: right;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.testimony-header1 {
+  font-weight: bold;
+  justify-content: flex-end;
+}
+
+.testimony-header2 {
+  font-weight: bold;
+  margin-bottom: 20px!important;
+}
+
+.col .row {
+  margin: 4px;
+}
+
+.row>* {
+  width: 100%;
+  max-width: 100%;
+  margin-top: var(--bs-gutter-y);
+}
+
+a:link th {
+  margin: auto;
+  text-decoration: none!important;
+  font-weight: normal;
+}
+
+.testimonies-table, .bill-table {
+  border-style: solid;
+  border-width: thin;
+  text-decoration: none!important;
+  color: black;
+  padding: 5px;
+}
+
+.testimonies-table-header, .bill-table-header {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.row-center {
+  align-content: center;
+  justify-content: center;
+  margin: 0;
+}
+
+h1, h3 {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }

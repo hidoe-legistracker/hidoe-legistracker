@@ -6,69 +6,100 @@ import { Roles } from 'meteor/alanning:roles';
 import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
-export const departmentPositions = ['Support', 'Oppose', 'Comments'];
-export const stuffPublications = {
-  stuff: 'Stuff',
-  stuffAdmin: 'StuffAdmin',
+export const departmentPositions = ['In Support', 'In Opposition', 'Comments'];
+export const testimonyPublications = {
+  testimony: 'testimony',
+  testimonyAdmin: 'testimonyAdmin', // not sure if we need this.
 };
 
 class TestimonyCollection extends BaseCollection {
   constructor() {
     super('Testimony', new SimpleSchema({
-      date: Date,
-      time: TimeRanges,
       owner: String,
-      location: String,
-      committee: String,
-      department: String,
-      testifier: String,
-      title: String,
-      purpose: String,
+      committeeChair: String,
+      committeeName: String,
+      billNumber: String,
+      billDraftNumber: { type: String, optional: true },
+      title: { type: String, optional: true },
+      hearingDate: { type: Date, optional: true },
+      hearingLocation: { type: String, optional: true },
       deptPosition: {
         type: String,
         allowedValues: departmentPositions,
-        defaultValue: 'Support',
+        defaultValue: 'In Support',
       },
+      introduction: String,
+      content: String,
+      closing: { type: String, optional: true },
+      testifier: String,
+      representing: { type: String, optional: true },
+      contactEmail: { type: String, optional: true },
+      contactPhone: { type: String, optional: true },
     }));
   }
 
   /**
    * Defines a new Testimony item.
-   * @param name the name of the item.
-   * @param quantity how many.
-   * @param owner the owner of the item.
-   * @param condition the condition of the item.
-   * @return {String} the docID of the new document.
    */
-  define({ name, quantity, owner, condition }) {
-    const docID = this._collection.insert({
-      name,
-      quantity,
-      owner,
-      condition,
-    });
+  define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
+    const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone });
     return docID;
   }
 
   /**
    * Updates the given document.
-   * @param docID the id of the document to update.
-   * @param name the new name (optional).
-   * @param quantity the new quantity (optional).
-   * @param condition the new condition (optional).
    */
-  update(docID, { name, quantity, condition }) {
+  update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
     const updateData = {};
-    if (name) {
-      updateData.name = name;
+    if (_.isString(owner)) {
+      updateData.owner = owner;
     }
-    // if (quantity) { NOTE: 0 is falsy so we need to check if the quantity is a number.
-    if (_.isNumber(quantity)) {
-      updateData.quantity = quantity;
+    if (_.isString(committeeChair)) {
+      updateData.committeeChair = committeeChair;
     }
-    if (condition) {
-      updateData.condition = condition;
+    if (_.isString(committeeName)) {
+      updateData.committeeName = committeeName;
     }
+    if (_.isString(billNumber)) {
+      updateData.billNumber = billNumber;
+    }
+    if (_.isString(billDraftNumber)) {
+      updateData.billDraftNumber = billDraftNumber;
+    }
+    if (_.isString(title)) {
+      updateData.title = title;
+    }
+    if (_.isDate(hearingDate)) {
+      updateData.hearingDate = hearingDate;
+    }
+    if (_.isString(hearingLocation)) {
+      updateData.hearingLocation = hearingLocation;
+    }
+    if (_.isString(deptPosition)) {
+      updateData.deptPosition = deptPosition;
+    }
+    if (_.isString(introduction)) {
+      updateData.introduction = introduction;
+    }
+    if (_.isString(content)) {
+      updateData.content = content;
+    }
+    if (_.isString(closing)) {
+      updateData.closing = closing;
+    }
+    if (_.isString(testifier)) {
+      updateData.testifier = testifier;
+    }
+    if (_.isString(representing)) {
+      updateData.representing = representing;
+    }
+    if (_.isString(contactEmail)) {
+      updateData.contactEmail = contactEmail;
+    }
+    if (_.isString(contactPhone)) {
+      updateData.contactPhone = contactPhone;
+    }
+
     this._collection.update(docID, { $set: updateData });
   }
 
@@ -90,19 +121,18 @@ class TestimonyCollection extends BaseCollection {
    */
   publish() {
     if (Meteor.isServer) {
-      // get the StuffCollection instance.
+      // get the TestimonyCollection instance.
       const instance = this;
       /** This subscription publishes only the documents associated with the logged in user */
-      Meteor.publish(stuffPublications.stuff, function publish() {
+      Meteor.publish(testimonyPublications.testimony, function publish() {
         if (this.userId) {
-          const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ owner: username });
+          return instance._collection.find({});
         }
         return this.ready();
       });
 
       /** This subscription publishes all documents regardless of user, but only if the logged in user is the Admin. */
-      Meteor.publish(stuffPublications.stuffAdmin, function publish() {
+      Meteor.publish(testimonyPublications.testimonyAdmin, function publish() {
         if (this.userId && Roles.userIsInRole(this.userId, ROLE.ADMIN)) {
           return instance._collection.find();
         }
@@ -112,11 +142,11 @@ class TestimonyCollection extends BaseCollection {
   }
 
   /**
-   * Subscription method for stuff owned by the current user.
+   * Subscription method for testimony owned by the current user.
    */
-  subscribeStuff() {
+  subscribeTestimony() {
     if (Meteor.isClient) {
-      return Meteor.subscribe(stuffPublications.stuff);
+      return Meteor.subscribe(testimonyPublications.testimony);
     }
     return null;
   }
@@ -125,19 +155,13 @@ class TestimonyCollection extends BaseCollection {
    * Subscription method for admin users.
    * It subscribes to the entire collection.
    */
-  subscribeStuffAdmin() {
+  subscribeTestimonyAdmin() {
     if (Meteor.isClient) {
-      return Meteor.subscribe(stuffPublications.stuffAdmin);
+      return Meteor.subscribe(testimonyPublications.testimonyAdmin);
     }
     return null;
   }
 
-  /**
-   * Default implementation of assertValidRoleForMethod. Asserts that userId is logged in as an Admin or User.
-   * This is used in the define, update, and removeIt Meteor methods associated with each class.
-   * @param userId The userId of the logged in user. Can be null or undefined
-   * @throws { Meteor.Error } If there is no logged in user, or the user is not an Admin or User.
-   */
   assertValidRoleForMethod(userId) {
     this.assertRole(userId, [ROLE.ADMIN, ROLE.USER]);
   }
@@ -149,15 +173,44 @@ class TestimonyCollection extends BaseCollection {
    */
   dumpOne(docID) {
     const doc = this.findDoc(docID);
-    const name = doc.name;
-    const quantity = doc.quantity;
-    const condition = doc.condition;
     const owner = doc.owner;
-    return { name, quantity, condition, owner };
+    const committeeChair = doc.committeeChair;
+    const committeeName = doc.committeeName;
+    const billNumber = doc.billNumber;
+    const billDraftNumber = doc.billDraftNumber;
+    const title = doc.title;
+    const hearingDate = doc.hearingDate;
+    const hearingLocation = doc.hearingLocation;
+    const deptPosition = doc.deptPosition;
+    const introduction = doc.introduction;
+    const content = doc.content;
+    const closing = doc.closing;
+    const testifier = doc.testifier;
+    const representing = doc.representing;
+    const contactEmail = doc.contactEmail;
+    const contactPhone = doc.contactPhone;
+    return {
+      owner,
+      committeeChair,
+      committeeName,
+      billNumber,
+      billDraftNumber,
+      title,
+      hearingDate,
+      hearingLocation,
+      deptPosition,
+      introduction,
+      content,
+      closing,
+      testifier,
+      representing,
+      contactEmail,
+      contactPhone,
+    };
   }
 }
 
 /**
  * Provides the singleton instance of this class to all other entities.
  */
-export const Stuffs = new TestimonyCollection();
+export const Testimony = new TestimonyCollection();

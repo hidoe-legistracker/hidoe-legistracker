@@ -1,12 +1,15 @@
 import React from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
+// import { Link, withRouter } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-/* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row. */
+/* Renders a table containing all of the Measure documents. */
 const Directory = () => (
-  <Container id={PAGE_IDS.LIST_STUFF} className="py-3">
+  <Container id={PAGE_IDS.DIRECTORY} className="py-3">
     <Row className="justify-content-center">
       <Col className="folder-section">
         <h6 align="center">Legislative Tracking System 2022</h6>
@@ -64,7 +67,7 @@ const Directory = () => (
           </Accordion.Item>
         </Accordion>
       </Col>
-      <Col xs={9} className="bill-section">
+      <Col xs={10} className="bill-section">
         <Button variant="secondary" size="sm" className="bill-button-spacing">
           View Bill by Status
         </Button>
@@ -77,42 +80,40 @@ const Directory = () => (
         <Button variant="secondary" size="sm" className="bill-button-spacing">
           Export to XL
         </Button>
-        <Table striped bordered>
-          <thead>
-            <tr>
-              <th>Bill #</th>
-              <th>Bill / Resolution</th>
-              <th>Office</th>
-              <th>Action</th>
-              <th>Rationale</th>
-              <th>Committee</th>
-              <th>Hearing</th>
-              <th>Hearing Type</th>
-              <th>DOE Position</th>
-              <th>Testifier</th>
-              <th>Status</th>
-              <th>Act #</th>
-              <th>Proposed</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>1234</th>
-              <th>...</th>
-              <th>OCID BOE</th>
-              <th>Testimony</th>
-              <th>...</th>
-              <th>EDU, FIN</th>
-              <th>12/02/2022</th>
-              <th>Hearing</th>
-              <th>Support</th>
-              <th>John Doe</th>
-              <th>1st Crossover</th>
-              <th>123</th>
-              <th>...</th>
-            </tr>
-          </tbody>
-        </Table>
+        <Row>
+          <div className="bill-table-header">
+            <Row>
+              <Col sm="auto">Bill #</Col>
+              <Col sm="auto">Bill</Col>
+              <Col sm="auto">Office</Col>
+              <Col sm="auto">Action</Col>
+              <Col sm="auto">Rationale</Col>
+              <Col sm="auto">Committee</Col>
+              <Col sm="auto">Hearing</Col>
+              <Col sm="auto">Type</Col>
+              <Col sm="auto">Position</Col>
+              <Col sm="auto">Testifier</Col>
+              <Col sm="auto">Status</Col>
+            </Row>
+          </div>
+          <div className="d-grid gap-2">
+            <Link className="bill-table" to="/view-bill">
+              <Row>
+                <Col sm="auto">1234</Col>
+                <Col sm="auto">...</Col>
+                <Col sm="auto">OCID BOE</Col>
+                <Col sm="auto">Testimony</Col>
+                <Col sm="auto">...</Col>
+                <Col sm="auto">EDU, FIN</Col>
+                <Col sm="auto">12/02/2022</Col>
+                <Col sm="auto">Hearing</Col>
+                <Col sm="auto">Support</Col>
+                <Col sm="auto">John Doe</Col>
+                <Col sm="auto">1st Crossover</Col>
+              </Row>
+            </Link>
+          </div>
+        </Row>
       </Col>
     </Row>
   </Container>

@@ -17,11 +17,15 @@ import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
+import ViewBill from '../pages/ViewBill';
 import SignIn from '../pages/SignIn';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
+import Testimony from '../components/Testimony';
+import AddTestimony from '../pages/AddTestimony';
+import TestimonyPage from '../pages/TestimonyPage';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -42,10 +46,14 @@ const App = () => {
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/testimony-page" element={<TestimonyPage />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
+          <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
+          <Route path="/view-testimony" element={<ProtectedRoute><Testimony /></ProtectedRoute>} />
           <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
           <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
           <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
