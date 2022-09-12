@@ -10,7 +10,7 @@ import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
 import Inbox from '../pages/Inbox';
-import CreateEmail from '../page/CreateEmail';
+import CreateEmail from '../pages/CreateEmail';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import AddStuff from '../pages/AddStuff';
@@ -49,7 +49,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/testimony-page" element={<TestimonyPage />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-          <Route path="/create-email" element={<AdminProtectedRoute><CreateEmail /></AdminProtectedRoute>} />
+          <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
