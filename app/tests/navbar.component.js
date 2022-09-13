@@ -43,45 +43,44 @@ class NavBar {
     await t.click(`#${COMPONENT_IDS.NAVBAR_SIGN_OUT}`);
   }
 
-  /* Pull down login menu, go to sign up page. */
-  async gotoSignUpPage() {
-    await this.ensureLogout(t);
-    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
-    if (!visible) {
-      await t.click('button.navbar-toggler');
-    }
-    await t.click(`#${COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN}`);
-    await t.click(`#${COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP}`);
-  }
-
-  /* Go to the add stuff page. */
-  async gotoAddStuffPage() {
+  /* Go to directory page */
+  async gotoDirectoryPage() {
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');
     }
     await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
-    await t.click(`#${COMPONENT_IDS.NAVBAR_ADD_STUFF}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_DIRECTORY}`);
   }
 
-  /* Go to the list stuff page. */
-  async gotoListStuffPage() {
+  /* Go to my folders page */
+  async gotoMyFoldersPage() {
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');
     }
     await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
-    await t.click(`#${COMPONENT_IDS.NAVBAR_LIST_STUFF}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_MY_FOLDERS}`);
   }
 
-  /* Go to the list stuff admin page. */
-  async gotoListStuffAdminPage() {
+  /* Go to my folders page */
+  async gotoCreateMeasurePage() {
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');
     }
     await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
-    await t.click(`#${COMPONENT_IDS.NAVBAR_LIST_STUFF_ADMIN}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_ADD_MEASURE}`);
+  }
+
+  /* Go to my folders page */
+  async gotoInboxPage() {
+    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
+    if (!visible) {
+      await t.click('button.navbar-toggler');
+    }
+    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
+    await t.click(`#${COMPONENT_IDS.NAVBAR_INBOX}`);
   }
 
   /* Go to the manage database page. Must be adimin. */

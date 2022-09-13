@@ -16,9 +16,9 @@ class SimplePage {
   }
 }
 
-export const addStuffPage = new SimplePage(PAGE_IDS.ADD_STUFF);
-export const editStuffPage = new SimplePage(PAGE_IDS.EDIT_STUFF);
-export const listStuffPage = new SimplePage(PAGE_IDS.LIST_STUFF);
-export const listStuffAdminPage = new SimplePage(PAGE_IDS.LIST_STUFF_ADMIN);
-export const manageDatabasePage = new SimplePage(PAGE_IDS.MANAGE_DATABASE);
+export const directoryPage = new SimplePage(PAGE_IDS.DIRECTORY);
+export const myFoldersPage = new SimplePage(PAGE_IDS.MY_FOLDERS);
+export const createMeasurePage = new SimplePage(PAGE_IDS.ADD_MEASURE);
+export const inboxPage = new SimplePage(PAGE_IDS.INBOX);
+// export const manageDatabasePage = new SimplePage(PAGE_IDS.MANAGE_DATABASE);
 export const signOutPage = new SimplePage(PAGE_IDS.SIGN_OUT);

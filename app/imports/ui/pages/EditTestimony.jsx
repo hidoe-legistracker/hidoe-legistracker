@@ -16,7 +16,6 @@ import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { Testimony } from '../../api/testimony/TestimonyCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import { Stuffs } from '../../api/stuff/StuffCollection';
 
 const bridge = new SimpleSchema2Bridge(Testimony._schema);
 
@@ -42,7 +41,7 @@ const EditTestimony = () => {
   // On submit, insert the data.
   const submit = (data) => {
     const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
-    const collectionName = Stuffs.getCollectionName();
+    const collectionName = Testimony.getCollectionName();
     const updateData = { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))

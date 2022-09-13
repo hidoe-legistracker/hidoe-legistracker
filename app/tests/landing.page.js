@@ -3,7 +3,7 @@ import { PAGE_IDS } from '../imports/ui/utilities/PageIDs';
 
 class LandingPage {
   constructor() {
-    this.pageId = `#${PAGE_IDS.LANDING}`;
+    this.pageId = `#${PAGE_IDS.DIRECTORY}`;
     this.pageSelector = Selector(this.pageId);
   }
 

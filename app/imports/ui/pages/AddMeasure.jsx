@@ -99,8 +99,8 @@ const AddMeasure = () => {
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   let fRef = null;
   return (
-    <div>
-      <Container id={PAGE_IDS.ADD_BILL} className="py-3">
+    <div id={PAGE_IDS.ADD_MEASURE}>
+      <Container className="py-3">
         <Row className="justify-content-center">
           <Col>
             <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => confirm(data, fRef)}>

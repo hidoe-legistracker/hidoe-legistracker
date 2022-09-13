@@ -141,6 +141,10 @@ class TestimonyCollection extends BaseCollection {
     }
   }
 
+  getCollectionName() {
+    return this._collection.name;
+  }
+
   /**
    * Subscription method for testimony owned by the current user.
    */
