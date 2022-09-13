@@ -22,7 +22,7 @@ import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
-import MonitoringReport from "../pages/MonitoringReport";
+import MonitoringReport from '../pages/MonitoringReport';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => (
