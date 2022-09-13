@@ -25,7 +25,7 @@ const ListStuffAdmin = () => {
     <Container id={PAGE_IDS.MEMBERS} className="py-3">
       <Row className="justify-content-center">
         <Col md={7}>
-          <Col className="text-center"><h2>List Stuff (Admin)</h2></Col>
+          <Col className="text-center"><h2>Employee List</h2></Col>
           <Table striped bordered hover>
             <thead>
               <tr>

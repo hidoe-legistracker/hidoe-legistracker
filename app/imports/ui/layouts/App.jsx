@@ -42,7 +42,7 @@ const App = () => {
           ) : <Route exact path="/" element={<SignIn />} />}
           <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/members" element={<ListStuffAdmin />} />
+          <Route path="/employees" element={<ListStuffAdmin />} />
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
