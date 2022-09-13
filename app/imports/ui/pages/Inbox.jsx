@@ -10,18 +10,22 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 
 /** Render a Not Found page if the user enters a URL that doesn't match any route. */
 const Inbox = () => (
-  <Container id={PAGE_IDS.DIRECTORY} className="py-3">
+  <Container id={PAGE_IDS.INBOX} className="py-3">
     <Row className="justify-content-center">
-      <h3 align="center">Bill Updates</h3>
       <Col xs={10}>
         <Row>
+          <div>
+            <Button href="/create-email" variant="secondary" size="md" style={{ marginTop: 10 }}>Create Email</Button>{' '}
+          </div>
+          <div>
+            <h3 align="center">Bill Updates</h3>
+          </div>
           <div className="bill-table-header">
             <Row>
               <Col sm="auto">Select</Col>
-              <Col sm="auto">Date Updated</Col>
-              <Col sm="auto">Bill #</Col>
-              <Col sm="auto">Bill</Col>
-              <Col sm="auto">Status</Col>
+              <Col sm="auto">Date</Col>
+              <Col sm="auto">Sender</Col>
+              <Col sm="auto">Subject/Content</Col>
             </Row>
           </div>
           <div className="d-grid gap-2">
@@ -35,9 +39,8 @@ const Inbox = () => (
                   </Form>
                 </Col>
                 <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">1234</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">1st Crossover</Col>
+                <Col sm="auto">Jane Smith</Col>
+                <Col sm="auto">You are Assigned this testimony</Col>
                 <Col sm="auto">
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
@@ -67,9 +70,8 @@ const Inbox = () => (
                   </Form>
                 </Col>
                 <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">1234</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">1st Crossover</Col>
+                <Col sm="auto">Jane Smith</Col>
+                <Col sm="auto">You are Assigned this testimony</Col>
                 <Col sm="auto">
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
@@ -99,9 +101,8 @@ const Inbox = () => (
                   </Form>
                 </Col>
                 <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">1234</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">1st Crossover</Col>
+                <Col sm="auto">Jane Smith</Col>
+                <Col sm="auto">You are Assigned this testimony</Col>
                 <Col sm="auto">
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
@@ -131,9 +132,8 @@ const Inbox = () => (
                   </Form>
                 </Col>
                 <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">1234</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">1st Crossover</Col>
+                <Col sm="auto">Automated</Col>
+                <Col sm="auto"> [NOTIFICATION] Bill is Updated</Col>
                 <Col sm="auto">
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
