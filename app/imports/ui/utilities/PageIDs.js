@@ -10,6 +10,7 @@ export const PAGE_IDS = {
   MANAGE_DATABASE: 'manage-database',
   NOT_AUTHORIZED: 'not-authorized',
   MY_FOLDERS: 'my-folders',
+  MONITORING_REPORT: 'monitoring-report',
   NOT_FOUND: 'not-found',
   PROFILE: 'profile',
   SIGN_IN: 'sign-in',

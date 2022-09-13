@@ -22,6 +22,7 @@ import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
+import MonitoringReport from "../pages/MonitoringReport";
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => (
@@ -36,6 +37,7 @@ const App = () => (
         <Route path="/profile" element={<Profile />} />
         <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
         <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
+        <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
         <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
         <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
         <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
