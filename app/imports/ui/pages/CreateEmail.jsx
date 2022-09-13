@@ -1,34 +1,53 @@
 import React from 'react';
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { DateField, LongTextField, TextField } from 'uniforms-bootstrap5';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-/* Renders the Profile page for viewing your profile. */
-const CreateEmail = () => {
-
-  const profilePic = { float: 'right', width: '200px' };
-
-  return (
-    <Container id={PAGE_IDS.CREATE_EMAIL} className="py-3">
-      <Row className="justify-content-center">
-        <Col xs={5}>
-          <Col className="text-center"><h2>Your Profile</h2></Col>
-          <Card>
-            <Card.Body>
-              <Card.Img style={profilePic} src="https://www.pbshawaii.org/wp-content/uploads/2016/03/hawaii-doe.png" alt="Hawaii DOE Logo" />
-              <Card.Title>First Name:</Card.Title>
-              <Card.Text>john</Card.Text>
-              <Card.Title>Last Name:</Card.Title>
-              <Card.Text>foo</Card.Text>
-              <Card.Title>Email:</Card.Title>
-              <Card.Text>john@foo.com</Card.Text>
-              <Card.Title>Employee ID:</Card.Title>
-              <Card.Text>012345678</Card.Text>
-            </Card.Body>
-          </Card>
+/* Renders the CreateEmail page for composing emails. */
+const CreateEmail = () => (
+  <Container id={PAGE_IDS.CREATE_EMAIL} className="py-3">
+    <Row className="justify-content-center">
+      <h1>Create Email</h1>
+      <Row>--------------</Row>
+      <Container>
+        <Row>
+          <Col>
+            <Button href="/" variant="secondary" size="sm">Address</Button>
+            <Button href="/" variant="secondary" size="sm">Check Names</Button>
+          </Col>
+        </Row>
+      </Container>
+      <Row>
+        <div>
+          <TextField name="to" label="To: *" />
+        </div>
+        <div>
+          <TextField name="cc" label="cc: " />
+        </div>
+        <div>
+          <TextField name="bcc" label="bcc: " />
+        </div>
+        <div>
+          <TextField name="profile-name" label="From: *" />
+        </div>
+        <div>
+          <DateField name="date" label="Date: *" />
+        </div>
+      </Row>
+      <Row>--------------</Row>
+      <Row>
+        <TextField name="subject" label="Subject: " />
+      </Row>
+      <Row>
+        <LongTextField name="body" label="" />
+      </Row>
+      <Row>
+        <Col>
+          <Button style={{ marginRight: 2 }} variant="secondary" size="sm">Send</Button>
         </Col>
       </Row>
-    </Container>
-  );
-};
+    </Row>
+  </Container>
+);
 
 export default CreateEmail;
