@@ -10,6 +10,7 @@ import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
 import Inbox from '../pages/Inbox';
+import CreateEmail from '../pages/CreateEmail';
 import NotFound from '../pages/NotFound';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/testimony-page" element={<TestimonyPage />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
+          <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />

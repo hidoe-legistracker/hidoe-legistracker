@@ -8,7 +8,7 @@ export const PAGE_IDS = {
   VIEW_TESTIMONY: 'view-testimony',
   EDIT_TESTIMONY: 'edit-testimony',
   INBOX: 'inbox',
-
+  CREATE_EMAIL: 'create-email',
   MANAGE_DATABASE: 'manage-database',
   NOT_AUTHORIZED: 'not-authorized',
   NOT_FOUND: 'not-found',
