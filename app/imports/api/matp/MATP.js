@@ -27,6 +27,7 @@ class MATPClass {
     this.collectionLoadSequence = [
       AdminProfiles,
       UserProfiles,
+      Emails,
       Measures,
       Testimony,
     ];

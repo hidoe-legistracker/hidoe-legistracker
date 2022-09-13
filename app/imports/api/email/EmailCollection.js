@@ -18,12 +18,13 @@ class EmailCollection extends BaseCollection {
       recipientName: String,
       recipientEmail: String,
       date: Date,
-      attachment: Object,
+      attachment: { type: Object, optional: true },
       body: String,
+      isRead: { type: Boolean, defaultValue: false },
     }));
   }
 
-  define({ subject, senderName, senderEmail, recipientName, recipientEmail, date, attachment, body }) {
+  define({ subject, senderName, senderEmail, recipientName, recipientEmail, date, attachment, body, isRead }) {
     const docID = this._collection.insert({
       subject,
       senderName,
@@ -33,8 +34,17 @@ class EmailCollection extends BaseCollection {
       date,
       attachment,
       body,
+      isRead,
     });
     return docID;
+  }
+
+  update(docID, { isRead }) {
+    const updateData = {};
+    if (isRead) {
+      updateData.isRead = isRead;
+    }
+    this._collection.update(docID, { $set: updateData });
   }
 
   publish() {
@@ -43,7 +53,7 @@ class EmailCollection extends BaseCollection {
       Meteor.publish(emailPublications.email, function publish() {
         if (this.userId) {
           const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ owner: username });
+          return instance._collection.find({ recipientEmail: username });
         }
         return this.ready();
       });
