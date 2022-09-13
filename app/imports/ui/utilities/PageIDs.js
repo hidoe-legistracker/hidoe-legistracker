@@ -1,15 +1,16 @@
 /** Define ids for each page. */
 export const PAGE_IDS = {
-  ADD_BILL: 'add-bill',
-
-  ADD_STUFF: 'add-stuff',
-  EDIT_STUFF: 'edit-stuff',
-  LANDING: 'landing',
   DIRECTORY: 'directory',
-  LIST_STUFF_ADMIN: 'list-stuff-admin',
+  MY_FOLDERS: 'my-folders',
+  ADD_MEASURE: 'add-measure',
+  VIEW_BILL: 'view-bill',
+  ADD_TESTIMONY: 'add-testimony',
+  VIEW_TESTIMONY: 'view-testimony',
+  EDIT_TESTIMONY: 'edit-testimony',
+  INBOX: 'inbox',
+  CREATE_EMAIL: 'create-email',
   MANAGE_DATABASE: 'manage-database',
   NOT_AUTHORIZED: 'not-authorized',
-  MY_FOLDERS: 'my-folders',
   MONITORING_REPORT: 'monitoring-report',
   NOT_FOUND: 'not-found',
   PROFILE: 'profile',

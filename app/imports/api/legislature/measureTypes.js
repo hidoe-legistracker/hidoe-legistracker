@@ -10,7 +10,7 @@ export const measureTypes = {
   GM: 'gm',
 };
 
-export const isValidMeasureType = (type) => _.includes(measureTypes, type);
+export const isValidMeasureType = (type) => _.includes(measureTypes, type.toLowerCase());
 export const getRandomMeasureType = () => {
   const keys = Object.keys(measureTypes);
   return measureTypes[keys[Math.floor(keys.length * Math.random())]];

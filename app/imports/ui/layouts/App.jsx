@@ -3,55 +3,66 @@ import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useTracker } from 'meteor/react-meteor-data';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import Directory from '../pages/Directory';
+import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
-import AddBill from '../pages/AddBill';
 import Inbox from '../pages/Inbox';
-import ListStuff from '../pages/ListStuff';
-import ListStuffAdmin from '../pages/ListStuffAdmin';
-import AddStuff from '../pages/AddStuff';
-import EditStuff from '../pages/EditStuff';
+import CreateEmail from '../pages/CreateEmail';
 import NotFound from '../pages/NotFound';
-import SignUp from '../pages/SignUp';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
+import ViewBill from '../pages/ViewBill';
 import SignIn from '../pages/SignIn';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
 import MonitoringReport from '../pages/MonitoringReport';
+import Testimony from '../components/Testimony';
+import AddTestimony from '../pages/AddTestimony';
+import TestimonyPage from '../pages/TestimonyPage';
+import EditTestimony from '../pages/EditTestimony';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
-const App = () => (
-  <Router>
-    <div className="d-flex flex-column min-vh-100">
-      <NavBar />
-      <Routes>
-        <Route exact path="/" element={<Landing />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
-        <Route path="/signout" element={<SignOut />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-        <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
-        <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
-        <Route path="/create-bill" element={<ProtectedRoute><AddBill /></ProtectedRoute>} />
-        <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-        <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
-        <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
-        <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
-        <Route path="/admin" element={<AdminProtectedRoute><ListStuffAdmin /></AdminProtectedRoute>} />
-        <Route path="/notauthorized" element={<NotAuthorized />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </div>
-  </Router>
-);
-
+const App = () => {
+  const { currentUser } = useTracker(() => ({
+    currentUser: Meteor.user() ? Meteor.user().username : '',
+  }), []);
+  return (
+    <Router>
+      <div className="d-flex flex-column min-vh-100">
+        <NavBar />
+        <Routes>
+          {currentUser ? (
+            <Route exact path="/" element={<Directory />} />
+          ) : <Route exact path="/" element={<SignIn />} />}
+          <Route exact path="/" element={<SignIn />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/signout" element={<SignOut />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/testimony-page" element={<TestimonyPage />} />
+          <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
+          <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
+          <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
+          <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
+          <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
+          <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
+          <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
+          <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
+          <Route path="/view-testimony" element={<ProtectedRoute><Testimony /></ProtectedRoute>} />
+          <Route path="/notauthorized" element={<NotAuthorized />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
+  );
+};
 /*
  * ProtectedRoute (see React Router v6 sample)
  * Checks for Meteor login before routing to the requested page, otherwise goes to signin page.

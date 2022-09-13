@@ -5,13 +5,14 @@
     { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe" }
   ],
 
-  "defaultData": [
-    { "name": "Basket", "quantity": 3, "owner": "john@foo.com", "condition": "excellent" },
-    { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
-    { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
-    { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
-  ],
   "public": {
     "development": true
-  }
+  },
+
+  "defaultEmails": [
+    { "subject": "Email collection test", "senderName": "Admin MATRP", "senderEmail": "admin@foo.com", "recipientName": "John Doe", "recipientEmail": "john@foo.com", "date": "Thu Sep 08 2022 14:00:00 GMT-1000 (Hawaii-Aleutian Standard Time)", "attachment": null, "body": "reply when you see this email", "isRead": true },
+    { "subject": "Re: Email collection test", "senderName": "Admin MATRP", "senderEmail": "admin@foo.com", "recipientName": "John Doe", "recipientEmail": "john@foo.com", "date": "Thu Sep 08 2022 15:00:00 GMT-1000 (Hawaii-Aleutian Standard Time)", "attachment": null, "body": "hello?", "isRead": false },
+    { "subject": "Re: Email collection test", "senderName": "John Doe", "senderEmail": "john@foo.com", "recipientName": "Admin MATRP", "recipientEmail": "admin@foo.com", "date": "Fri Sep 09 2022 10:00:00 GMT-1000 (Hawaii-Aleutian Standard Time)", "attachment": null, "body": "got your email", "isRead": false },
+    { "subject": "Re: Re: Email collection test", "senderName": "Admin MATRP", "senderEmail": "admin@foo.com", "recipientName": "John Doe", "recipientEmail": "john@foo.com", "date": "Fri Sep 09 2022 10:01:00 GMT-1000 (Hawaii-Aleutian Standard Time)", "attachment": null, "body": "Noice!", "isRead": false }
+  ]
 }
