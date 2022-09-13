@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { Stuffs } from '../../api/stuff/StuffCollection';
 import { Emails } from '../../api/email/EmailCollection';
-/* eslint-disable no-console */
+/*
+import { Stuffs } from '../../api/stuff/StuffCollection
 
 // Initialize the database with a default data document.
 function addData(data) {
@@ -16,6 +16,7 @@ if (Stuffs.count() === 0) {
     Meteor.settings.defaultData.map(data => addData(data));
   }
 }
+*/
 
 function addEmails(data) {
   console.log(`  Adding email: (${data.subject}) ${data.senderEmail} => ${data.recipientEmail}`);

@@ -10,10 +10,6 @@ import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
 import Inbox from '../pages/Inbox';
-import ListStuff from '../pages/ListStuff';
-import ListStuffAdmin from '../pages/ListStuffAdmin';
-import AddStuff from '../pages/AddStuff';
-import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
@@ -23,6 +19,10 @@ import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
+import Testimony from '../components/Testimony';
+import AddTestimony from '../pages/AddTestimony';
+import TestimonyPage from '../pages/TestimonyPage';
+import EditTestimony from '../pages/EditTestimony';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -42,15 +42,15 @@ const App = () => {
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/testimony-page" element={<TestimonyPage />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
+          <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-          <Route path="/list" element={<ProtectedRoute><ListStuff /></ProtectedRoute>} />
-          <Route path="/add" element={<ProtectedRoute><AddStuff /></ProtectedRoute>} />
-          <Route path="/edit/:_id" element={<ProtectedRoute><EditStuff /></ProtectedRoute>} />
-          <Route path="/admin" element={<AdminProtectedRoute><ListStuffAdmin /></AdminProtectedRoute>} />
+          <Route path="/view-testimony" element={<ProtectedRoute><Testimony /></ProtectedRoute>} />
           <Route path="/notauthorized" element={<NotAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

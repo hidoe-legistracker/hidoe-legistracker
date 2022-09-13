@@ -1,10 +1,12 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Button } from 'react-bootstrap';
+import { FileEarmarkText } from 'react-bootstrap-icons';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
 // import StuffItem from '../components/StuffItem';
 // import LoadingSpinner from '../components/LoadingSpinner';
 import Form from 'react-bootstrap/Form';
+import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -31,6 +33,20 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+    <Container>
+      <Row>
+        <Col>
+          <Button href="/create-testimony" variant="secondary" size="sm" className="bill-button-spacing">
+            <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+            Create Testimony
+          </Button>
+          <Button variant="secondary" size="sm" className="bill-button-spacing">
+            <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+            Monitoring Report
+          </Button>
+        </Col>
+      </Row>
+    </Container>
     <h1>Bill #1234</h1>
     <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
       <Col>
@@ -102,11 +118,47 @@ const ViewBill = () => (
         <Row>Hearing</Row>
       </Col>
     </Row>
+    <Container className="view-testimony-container">
+      <h3>Testimonies</h3>
+      <Row>
+        <div className="testimonies-table-header">
+          <Row>
+            <Col>Hearing Date</Col>
+            <Col>Bill #</Col>
+            <Col>Status</Col>
+            <Col>Prepared by</Col>
+            <Col>DOE Position</Col>
+            <Col>Same</Col>
+          </Row>
+        </div>
+        <div className="d-grid gap-2">
+          <Link className="testimonies-table" to="/testimony-page">
+            <Row>
+              <Col>04/05/2006</Col>
+              <Col>SB 2319847</Col>
+              <Col>Approved</Col>
+              <Col>Jane Doe</Col>
+              <Col>Support</Col>
+              <Col>Testimony same as ...</Col>
+            </Row>
+          </Link>
+        </div>
+      </Row>
+    </Container>
+
+    <hr
+      style={{
+        background: 'black',
+        color: 'black',
+        borderColor: 'black',
+        height: '1px',
+      }}
+    />
     <Row style={{ marginTop: 10 }}>
       <Form>
         <Form.Check
           inline
-          label="I want to receive notifications for this bill"
+          label="I want to receive hearing notifications for this bill"
         />
       </Form>
     </Row>
