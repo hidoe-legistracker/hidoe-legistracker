@@ -1,6 +1,7 @@
 // import { Selector, t } from 'testcafe';
-import { directoryPage, myFoldersPage, createMeasurePage, inboxPage, signOutPage } from './simple.page';
+import { directoryPage, myFoldersPage, inboxPage, signOutPage } from './simple.page';
 import { signInPage } from './signin.page';
+import { createMeasurePage } from './createmeasure.page';
 import { navBar } from './navbar.component';
 // import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 
@@ -62,6 +63,10 @@ test('Test Create Measure Page', async () => {
   await navBar.isLoggedIn(adminCredentials.username);
   await navBar.gotoCreateMeasurePage();
   await createMeasurePage.isDisplayed();
+
+  // Fill out measure form
+  await createMeasurePage.createMeasure();
+
   await navBar.logout();
   await signOutPage.isDisplayed();
 });
