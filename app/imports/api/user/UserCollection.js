@@ -88,6 +88,17 @@ class UserCollection {
   }
 
   /**
+   * Returns true if user is referenced by other "public" entities.
+   * Used to determine if user can be deleted.
+   * @param user
+   * @return {boolean}
+   */
+  // eslint-disable-next-line no-unused-vars
+  isReferenced(user) {
+    return false; // Hard coded for now until collections are implemented
+  }
+
+  /**
    * Returns true if user is a defined userID or username.
    * @param user The user.
    * @returns { boolean } True if user is defined, false otherwise.

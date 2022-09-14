@@ -33,11 +33,7 @@ class CreateMeasurePage {
 
     await t.click(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_SUBMIT}`);
 
-    const confirmationButton = Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`);
-    await t.expect(confirmationButton.with({ visibilityCheck: true }).exists)
-      .ok({ timeout: 20000 })
-      .hover(confirmationButton)
-      .click(confirmationButton);
+    await t.expect(Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`).visible).eql(true);
   }
 }
 
