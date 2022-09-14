@@ -9,14 +9,23 @@ export const emailPublications = {
   emailAdmin: 'EmailAdmin',
 };
 
+const recipientSchema = new SimpleSchema({
+  name: { type: String, optional: true },
+  email: String,
+});
+
 class EmailCollection extends BaseCollection {
   constructor() {
     super('Emails', new SimpleSchema({
       subject: String,
-      senderName: String,
+      senderName: { type: String, optional: true },
       senderEmail: String,
-      recipientName: String,
-      recipientEmail: String,
+      recipients: Array,
+      'recipients.$': { type: recipientSchema },
+      ccs: { type: Array, optional: true },
+      'ccs.$': { type: recipientSchema, optional: true },
+      bccs: { type: Array, optional: true },
+      'bccs.$': { type: recipientSchema, optional: true },
       date: Date,
       attachment: { type: Object, optional: true },
       body: String,
@@ -24,13 +33,14 @@ class EmailCollection extends BaseCollection {
     }));
   }
 
-  define({ subject, senderName, senderEmail, recipientName, recipientEmail, date, attachment, body, isRead }) {
+  define({ subject, senderName, senderEmail, recipients, ccs, bccs, date, attachment, body, isRead }) {
     const docID = this._collection.insert({
       subject,
       senderName,
       senderEmail,
-      recipientName,
-      recipientEmail,
+      recipients,
+      ccs,
+      bccs,
       date,
       attachment,
       body,
