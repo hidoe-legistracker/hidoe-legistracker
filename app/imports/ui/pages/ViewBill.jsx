@@ -132,7 +132,7 @@ const ViewBill = () => (
           </Row>
         </div>
         <div className="d-grid gap-2">
-          <Link className="testimonies-table" to="/testimony-page">
+          <Link className="testimonies-table" to="/view-testimony">
             <Row>
               <Col>04/05/2006</Col>
               <Col>SB 2319847</Col>

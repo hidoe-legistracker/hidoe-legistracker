@@ -19,7 +19,6 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-to-print": "^2.14.7",
-    "simpl-schema": "^1.12.2",
     "simpl-schema": "^1.12.3",
     "sweetalert": "^2.1.2",
     "underscore": "^1.13.4",
