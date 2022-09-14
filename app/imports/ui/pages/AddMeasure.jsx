@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { _ } from 'meteor/underscore';
-import { Card, Col, Container, Row, Button } from 'react-bootstrap';
-import Modal from 'react-bootstrap/Modal';
+import { Card, Col, Container, Row, Button, Modal } from 'react-bootstrap';
 import { AutoForm, ErrorsField, LongTextField, SelectField, SubmitField, TextField, DateField, NumField } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -53,9 +52,9 @@ const formSchema = new SimpleSchema({
 const bridge = new SimpleSchema2Bridge(formSchema);
 
 let submitData = null;
-let submitRef = null;
+let fRef = null;
 
-/* Renders the AddStuff page for adding a document. */
+/* Renders the AddMeasure page for adding a document. */
 const AddMeasure = () => {
 
   const [show, setShow] = useState(false);
@@ -64,22 +63,22 @@ const AddMeasure = () => {
 
   const confirm = (data, formRef) => {
     submitData = data;
-    submitRef = formRef;
-
-    if (submitData.office.indexOf('House: ') >= 0) {
-      const committeeStr = submitData.office.substring(7);
-      submitData.office = _.find(houseCommittees, function (committee) { return committee.name === committeeStr; }).key;
-    } else {
-      const committeeStr = submitData.office.substring(8);
-      submitData.office = _.find(senateCommittees, function (committee) { return committee.name === committeeStr; }).key;
-    }
+    fRef = formRef;
     modalShow();
   };
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
-    const { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion } = data;
+    const { year, measureType, measureNumber, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion } = data;
+    let office;
     const collectionName = Measures.getCollectionName();
+    if (data.office.indexOf('House: ') >= 0) {
+      const committeeStr = data.office.substring(7);
+      office = _.find(houseCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    } else {
+      const committeeStr = data.office.substring(8);
+      office = _.find(senateCommittees, function (committee) { return committee.name === committeeStr; }).key;
+    }
     const definitionData = { year, measureType, measureNumber, office, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
@@ -90,14 +89,13 @@ const AddMeasure = () => {
   };
 
   const submitBtn = () => {
-    submit(submitData, submitRef);
+    submit(submitData, fRef);
     submitData = null;
-    submitRef = null;
+    fRef = null;
     modalClose();
   };
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
-  let fRef = null;
   return (
     <div id={PAGE_IDS.ADD_MEASURE}>
       <Container className="py-3">
@@ -202,7 +200,7 @@ const AddMeasure = () => {
         </Row>
       </Container>
 
-      <Modal id={COMPONENT_IDS.CREATE_MEASURE_FORM_MODAL} show={show} onHide={modalClose} centered="true">
+      <Modal show={show} onHide={modalClose} centered="true">
         <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
