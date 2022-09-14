@@ -200,11 +200,11 @@ const AddMeasure = () => {
         </Row>
       </Container>
 
-      <Modal show={show} onHide={modalClose} centered="true">
+      <Modal id={COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM} show={show} onHide={modalClose} centered="true">
         <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
-          <Button id={COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM} variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
+          <Button variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
         </Modal.Footer>
       </Modal>
     </div>
