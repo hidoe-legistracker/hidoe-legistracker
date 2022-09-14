@@ -35,6 +35,5 @@ export const COMPONENT_IDS = {
   CREATE_MEASURE_FORM_OFFICE: 'create-measure-form-office',
   CREATE_MEASURE_FORM_ACTION: 'create-measure-form-action',
   CREATE_MEASURE_FORM_SUBMIT: 'create-measure-form-submit',
-  CREATE_MEASURE_FORM_MODAL: 'create-measure-form-modal',
   CREATE_MEASURE_FORM_CONFIRM: 'create-measure-form-confirm',
 };
