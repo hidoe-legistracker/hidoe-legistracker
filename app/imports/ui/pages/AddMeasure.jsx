@@ -9,6 +9,7 @@ import SimpleSchema from 'simpl-schema';
 import { Measures } from '../../api/measure/MeasureCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 
@@ -32,7 +33,6 @@ const formSchema = new SimpleSchema({
   office: {
     type: String,
     allowedValues: committees,
-    optional: true,
   },
   action: {
     type: String,
@@ -111,13 +111,13 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <NumField name="year" label="Year *" required decimal="false" min="1900" />
+                      <NumField id={COMPONENT_IDS.CREATE_MEASURE_FORM_YEAR} name="year" label="Year *" required decimal="false" min="1900" />
                     </Col>
                     <Col>
-                      <NumField name="measureNumber" label="Measure Number *" required decimal="false" />
+                      <NumField id={COMPONENT_IDS.CREATE_MEASURE_FORM_MEASURE_NUMBER} name="measureNumber" label="Measure Number *" required decimal="false" />
                     </Col>
                     <Col>
-                      <SelectField name="measureType" label="Measure Type *" required />
+                      <SelectField id={COMPONENT_IDS.CREATE_MEASURE_FORM_MEASURE_TYPE} name="measureType" label="Measure Type *" required />
                     </Col>
                   </Row>
                   <Row>
@@ -150,10 +150,10 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <SelectField name="office" multiple />
+                      <SelectField id={COMPONENT_IDS.CREATE_MEASURE_FORM_OFFICE} name="office" multiple />
                     </Col>
                     <Col>
-                      <SelectField name="action" label="Action *" required />
+                      <SelectField id={COMPONENT_IDS.CREATE_MEASURE_FORM_ACTION} name="action" label="Action *" required />
                     </Col>
                   </Row>
 
@@ -193,7 +193,7 @@ const AddMeasure = () => {
                     <TextField name="measureArchiveUrl" label="Measure Archive URL" />
                   </Row>
 
-                  <SubmitField className="d-flex justify-content-end" value="Create Measure" />
+                  <SubmitField id={COMPONENT_IDS.CREATE_MEASURE_FORM_SUBMIT} className="d-flex justify-content-end" value="Create Measure" />
                   <ErrorsField />
                 </Card.Body>
               </Card>
@@ -202,11 +202,11 @@ const AddMeasure = () => {
         </Row>
       </Container>
 
-      <Modal show={show} onHide={modalClose} centered="true">
+      <Modal id={COMPONENT_IDS.CREATE_MEASURE_FORM_MODAL} show={show} onHide={modalClose} centered="true">
         <ConfirmationModal modal={{ title: 'Create Measure', body: 'Are you sure you want to add this measure to the database?' }} />
         <Modal.Footer>
           <Button variant="secondary" onClick={modalClose}>Cancel</Button>
-          <Button variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
+          <Button id={COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM} variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
         </Modal.Footer>
       </Modal>
     </div>

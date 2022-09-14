@@ -18,7 +18,5 @@ class SimplePage {
 
 export const directoryPage = new SimplePage(PAGE_IDS.DIRECTORY);
 export const myFoldersPage = new SimplePage(PAGE_IDS.MY_FOLDERS);
-export const createMeasurePage = new SimplePage(PAGE_IDS.ADD_MEASURE);
 export const inboxPage = new SimplePage(PAGE_IDS.INBOX);
-// export const manageDatabasePage = new SimplePage(PAGE_IDS.MANAGE_DATABASE);
 export const signOutPage = new SimplePage(PAGE_IDS.SIGN_OUT);
