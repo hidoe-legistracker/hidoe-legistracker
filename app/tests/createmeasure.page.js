@@ -32,7 +32,7 @@ class CreateMeasurePage {
     await t.click(actionSelector).click(actionOption.withText('Testimony')).expect(actionSelector.value).eql('Testimony');
 
     await t.click(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_SUBMIT}`);
-    await t.expect(Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`).visible).ok();
+    await Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`).visible;
     await t.click(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`);
   }
 }
