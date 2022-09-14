@@ -32,7 +32,12 @@ class CreateMeasurePage {
     await t.click(actionSelector).click(actionOption.withText('Testimony')).expect(actionSelector.value).eql('Testimony');
 
     await t.click(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_SUBMIT}`);
-    await t.expect(Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`).exists).ok({ timeout: 5000 }).click(Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`));
+
+    const confirmationButton = Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_CONFIRM}`);
+    await t.expect(confirmationButton.with({ visibilityCheck: true }).exists)
+      .ok({ timeout: 20000 })
+      .hover(confirmationButton)
+      .click(confirmationButton);
   }
 }
 
