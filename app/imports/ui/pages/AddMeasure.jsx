@@ -168,9 +168,7 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <label>
-                        Offices
-                      </label>
+                      Offices
                       <Select options={committeeOptions} isMulti />
                     </Col>
                     <Col>
