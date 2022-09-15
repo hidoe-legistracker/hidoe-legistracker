@@ -2,20 +2,20 @@ import React from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { Stuffs } from '../../api/stuff/StuffCollection';
+import { Emails } from '../../api/email/EmailCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-/* Renders a table containing all of the Stuff documents. Use <StuffItemAdmin> to render each row. */
+/* Renders a table containing all of the HI-DOE employees. Use <EmployeeList> to render each row. */
 const EmployeeList = () => {
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
   const { ready } = useTracker(() => {
-    // Get access to Stuff documents.
-    const subscription = Stuffs.subscribeStuffAdmin();
+    // Get access to Employees documents.
+    const subscription = Email.subscribeEmailAdmin();
     // Determine if the subscription is ready
     const rdy = subscription.ready();
-    // Get the Stuff documents
-    const items = Stuffs.find({}).fetch();
+    // Get the Employees documents
+    const items = Emails.find({}).fetch();
     return {
       stuffs: items,
       ready: rdy,
