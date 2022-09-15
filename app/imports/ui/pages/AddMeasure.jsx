@@ -9,6 +9,7 @@ import { Measures } from '../../api/measure/MeasureCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+import Select from 'react-select';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 
@@ -19,6 +20,7 @@ Object.values(houseCommittees).forEach(function (committee) {
 Object.values(senateCommittees).forEach(function (committee) {
   committees.push(`Senate: ${committee.name}`);
 });
+
 
 // Create a schema to specify the structure of the data to appear in the form.
 const formSchema = new SimpleSchema({
@@ -95,6 +97,30 @@ const AddMeasure = () => {
     modalClose();
   };
 
+  //creates an array of objects from houseCommittees and senateCommittees
+  let committeeOptions = [];
+  Object.values(houseCommittees).forEach(function (committee){
+    committeeOptions.push(committee);
+    committeeOptions=committeeOptions.map( item => {
+      const {name: label, key: value, ...rest} = item;
+      return {label, value, ...rest}
+    })
+  });
+
+  Object.values(senateCommittees).forEach(function (committee){
+    committeeOptions.push(committee);
+    committeeOptions=committeeOptions.map( item => {
+      const {name: label, key: value, ...rest} = item;
+      return {label, value, ...rest}
+    })
+  });
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
+
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   return (
     <div id={PAGE_IDS.ADD_MEASURE}>
@@ -148,7 +174,10 @@ const AddMeasure = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <SelectField id={COMPONENT_IDS.CREATE_MEASURE_FORM_OFFICE} name="office" multiple />
+                      <label>
+                        Offices
+                      </label>
+                      <Select  options={committeeOptions} isMulti />
                     </Col>
                     <Col>
                       <SelectField id={COMPONENT_IDS.CREATE_MEASURE_FORM_ACTION} name="action" label="Action *" required />
