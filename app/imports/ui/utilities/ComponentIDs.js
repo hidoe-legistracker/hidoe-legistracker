@@ -36,4 +36,7 @@ export const COMPONENT_IDS = {
   CREATE_MEASURE_FORM_ACTION: 'create-measure-form-action',
   CREATE_MEASURE_FORM_SUBMIT: 'create-measure-form-submit',
   CREATE_MEASURE_FORM_CONFIRM: 'create-measure-form-confirm',
+
+  // INBOX PAGE
+  INBOX_CREATE_EMAIL_BUTTON: 'inbox-create-email-button',
 };

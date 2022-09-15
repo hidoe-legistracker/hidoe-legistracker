@@ -19,4 +19,5 @@ class SimplePage {
 export const directoryPage = new SimplePage(PAGE_IDS.DIRECTORY);
 export const myFoldersPage = new SimplePage(PAGE_IDS.MY_FOLDERS);
 export const inboxPage = new SimplePage(PAGE_IDS.INBOX);
+export const createEmailPage = new SimplePage(PAGE_IDS.CREATE_EMAIL);
 export const signOutPage = new SimplePage(PAGE_IDS.SIGN_OUT);
