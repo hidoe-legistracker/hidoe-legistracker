@@ -7,7 +7,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItemAdmin> to render each row. */
-const EmployeeList = () => {
+const ListStuffAdmin = () => {
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
   const { ready } = useTracker(() => {
     // Get access to Stuff documents.
@@ -98,4 +98,4 @@ const EmployeeList = () => {
   ) : <LoadingSpinner />);
 };
 
-export default EmployeeList;
+export default ListStuffAdmin;
