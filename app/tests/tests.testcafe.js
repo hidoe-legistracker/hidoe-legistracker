@@ -1,9 +1,9 @@
-// import { Selector, t } from 'testcafe';
-import { directoryPage, myFoldersPage, inboxPage, signOutPage } from './simple.page';
+import { t } from 'testcafe';
+import { directoryPage, myFoldersPage, inboxPage, signOutPage, createEmailPage } from './simple.page';
 import { signInPage } from './signin.page';
 import { createMeasurePage } from './createmeasure.page';
 import { navBar } from './navbar.component';
-// import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
+import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 
 /* global fixture:false, test:false */
 
@@ -47,12 +47,14 @@ test('Test My Folders Page', async () => {
   await signOutPage.isDisplayed();
 });
 
-test('Test Inbox Page', async () => {
+test('Test Inbox and Create Email Pages', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
   await navBar.isLoggedIn(credentials.username);
   await navBar.gotoInboxPage();
   await inboxPage.isDisplayed();
+  await t.click(`#${COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON}`);
+  await createEmailPage.isDisplayed();
   await navBar.logout();
   await signOutPage.isDisplayed();
 });

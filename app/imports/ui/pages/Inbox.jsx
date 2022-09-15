@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import { Trash } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 // import InboxItem from '../components/InboxItem';
 // import Button from 'react-bootstrap/Button';
 
@@ -16,7 +17,7 @@ const Inbox = () => (
       <Col xs={10}>
         <Row>
           <div>
-            <Button href="/create-email" variant="secondary" size="md" style={{ marginTop: 10 }}>Create Email</Button>{' '}
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="secondary" size="md" style={{ marginTop: 10 }}>Create Email</Button>{' '}
           </div>
           <div>
             <h3 align="center">Bill Updates</h3>
