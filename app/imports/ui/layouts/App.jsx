@@ -24,6 +24,7 @@ import MonitoringReport from '../pages/MonitoringReport';
 import AddTestimony from '../pages/AddTestimony';
 import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
+import EmployeeList from '../pages/EmployeeList';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
           ) : <Route exact path="/" element={<SignIn />} />}
           <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/employees" element={<EmployeeList />} />
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />

@@ -10,6 +10,7 @@ export const PAGE_IDS = {
   INBOX: 'inbox',
   CREATE_EMAIL: 'create-email',
   MANAGE_DATABASE: 'manage-database',
+  MEMBERS: 'members',
   NOT_AUTHORIZED: 'not-authorized',
   MONITORING_REPORT: 'monitoring-report',
   NOT_FOUND: 'not-found',
