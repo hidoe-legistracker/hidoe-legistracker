@@ -23,9 +23,10 @@ class CreateMeasurePage {
     const measureTypeOption = measureTypeSelector.find('option');
     await t.click(measureTypeSelector).click(measureTypeOption.withText('HB')).expect(measureTypeSelector.value).eql('HB');
 
-    const officeSelector = Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_OFFICE}`);
-    const officeOption = officeSelector.find('option');
-    await t.click(officeSelector).click(officeOption.withText('House: Agriculture')).expect(officeSelector.value).eql('House: Agriculture');
+    // Temporarily remove
+    // const officeSelector = Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_OFFICE}`);
+    // const officeOption = officeSelector.find('option');
+    // await t.click(officeSelector).click(officeOption.withText('House: Agriculture')).expect(officeSelector.value).eql('House: Agriculture');
 
     const actionSelector = Selector(`#${COMPONENT_IDS.CREATE_MEASURE_FORM_ACTION}`);
     const actionOption = actionSelector.find('option');
