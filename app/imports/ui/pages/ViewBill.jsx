@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Button } from 'react-bootstrap';
+import { Col, Container, Row, Button, ProgressBar } from 'react-bootstrap';
 import { FileEarmarkText } from 'react-bootstrap-icons';
 // import { useTracker } from 'meteor/react-meteor-data';
 // import { Stuffs } from '../../api/stuff/StuffCollection';
@@ -7,6 +7,7 @@ import { FileEarmarkText } from 'react-bootstrap-icons';
 // import LoadingSpinner from '../components/LoadingSpinner';
 import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
@@ -30,6 +31,7 @@ import { PAGE_IDS } from '../utilities/PageIDs';
   *  <LoadingSpinner message="Loading Stuff" />
 *
 * */
+const billProgress = 60;
 
 const ViewBill = () => (
   <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
@@ -120,30 +122,28 @@ const ViewBill = () => (
     </Row>
     <Container className="view-testimony-container">
       <h3>Testimonies</h3>
-      <Row>
-        <div className="testimonies-table-header">
-          <Row>
-            <Col>Hearing Date</Col>
-            <Col>Bill #</Col>
-            <Col>Status</Col>
-            <Col>Prepared by</Col>
-            <Col>DOE Position</Col>
-            <Col>Same</Col>
-          </Row>
-        </div>
-        <div className="d-grid gap-2">
-          <Link className="testimonies-table" to="/view-testimony">
-            <Row>
-              <Col>04/05/2006</Col>
-              <Col>SB 2319847</Col>
-              <Col>Approved</Col>
-              <Col>Jane Doe</Col>
-              <Col>Support</Col>
-              <Col>Testimony same as ...</Col>
-            </Row>
+      <Table>
+        <thead>
+          <tr>
+            <th scope="col">Hearing Date</th>
+            <th scope="col">Bill #</th>
+            <th scope="col">Prepared By</th>
+            <th scope="col">DOE Positon</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <Link className="table-row" to="/view-testimony">
+            <th scope="row">04/05/2022</th>
+            <td>SB 123456</td>
+            <td>Jane Doe</td>
+            <td>Support</td>
+            <td>
+              <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+            </td>
           </Link>
-        </div>
-      </Row>
+        </tbody>
+      </Table>
     </Container>
 
     <hr

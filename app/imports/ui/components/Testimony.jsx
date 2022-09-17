@@ -44,23 +44,28 @@ export const Testimony = React.forwardRef((props, ref) => (
           <Row>House of Finance</Row>
         </Col>
         <Row className="row-center">
-          <Col xs={2} style={{ marginLeft: 20 }}>
-            <Row className="testimony-header2">Department: </Row>
-            <Row className="testimony-header2">Testifier: </Row>
-            <Row className="testimony-header2">Title of Bill: </Row>
-            <Row className="testimony-header2">Purpose of Bill: </Row>
-          </Col>
-          <Col>
-            <Row style={{ marginBottom: 20 }}>Education</Row>
-            <Row style={{ marginBottom: 20 }}>Jane Doe, Superintendent of Education</Row>
-            <Row style={{ marginBottom: 20 }}>SBC 13134798</Row>
-            <Row style={{ marginBottom: 20 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          <Row>
+            <Col className="testimony-header2" xs={2}>Department</Col>
+            <Col>Education</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Testifier</Col>
+            <Col>Jane Doe, Superintendent of Education</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Title of Bill</Col>
+            <Col>SBC 13134798</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Purpose of Bill</Col>
+            <Col>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
               dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
               proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </Row>
-          </Col>
-          <Container>
+            </Col>
+          </Row>
+          <Container style={{ marginTop: 10 }}>
             <Col>
               <Row className="testimony-header2">Department Position: </Row>
             </Col>

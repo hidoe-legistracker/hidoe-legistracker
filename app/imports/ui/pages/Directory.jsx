@@ -1,11 +1,12 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, ProgressBar } from 'react-bootstrap';
+import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
-// import { Link, withRouter } from 'react-router-dom';
-// import { Link } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
+
+const billProgress = 60;
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => (
@@ -81,38 +82,40 @@ const Directory = () => (
           Export to XL
         </Button>
         <Row>
-          <div className="bill-table-header">
-            <Row>
-              <Col sm="auto">Bill #</Col>
-              <Col sm="auto">Bill</Col>
-              <Col sm="auto">Office</Col>
-              <Col sm="auto">Action</Col>
-              <Col sm="auto">Rationale</Col>
-              <Col sm="auto">Committee</Col>
-              <Col sm="auto">Hearing</Col>
-              <Col sm="auto">Type</Col>
-              <Col sm="auto">Position</Col>
-              <Col sm="auto">Testifier</Col>
-              <Col sm="auto">Status</Col>
-            </Row>
-          </div>
-          <div className="d-grid gap-2">
-            <Link className="bill-table" to="/view-bill">
-              <Row>
-                <Col sm="auto">1234</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">OCID BOE</Col>
-                <Col sm="auto">Testimony</Col>
-                <Col sm="auto">...</Col>
-                <Col sm="auto">EDU, FIN</Col>
-                <Col sm="auto">12/02/2022</Col>
-                <Col sm="auto">Hearing</Col>
-                <Col sm="auto">Support</Col>
-                <Col sm="auto">John Doe</Col>
-                <Col sm="auto">1st Crossover</Col>
-              </Row>
-            </Link>
-          </div>
+          <Table>
+            <thead>
+              <tr>
+                <th scope="col">Bill #</th>
+                <th scope="col">Bill</th>
+                <th scope="col">Office</th>
+                <th scope="col">Action</th>
+                <th scope="col">Rationale</th>
+                <th scope="col">Committee</th>
+                <th scope="col">Hearing</th>
+                <th scope="col">Type</th>
+                <th scope="col">Position</th>
+                <th scope="col">Testifier</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <Link className="table-row" to="/view-bill">
+                <th scope="row">1234</th>
+                <td>.....</td>
+                <td>OCID BOE</td>
+                <td>Testimony</td>
+                <td>........</td>
+                <td>EDU, FIN</td>
+                <td>12/02/2022</td>
+                <td>Hearing</td>
+                <td>Support</td>
+                <td>John Doe</td>
+                <td>
+                  <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+                </td>
+              </Link>
+            </tbody>
+          </Table>
         </Row>
       </Col>
     </Row>

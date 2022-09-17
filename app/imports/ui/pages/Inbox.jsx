@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import { Trash } from 'react-bootstrap-icons';
+import Table from 'react-bootstrap/Table';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 // import InboxItem from '../components/InboxItem';
@@ -22,112 +23,106 @@ const Inbox = () => (
           <div>
             <h3 align="center">Bill Updates</h3>
           </div>
-          <div className="bill-table-header">
-            <Row>
-              <Col sm="auto">Select</Col>
-              <Col sm="auto">Date</Col>
-              <Col sm="auto">Sender</Col>
-              <Col sm="auto">Subject/Content</Col>
-            </Row>
-          </div>
-          <div className="d-grid gap-2">
-            <Link className="bill-table" to="/view-bill">
-              <Row>
-                <Col sm="auto">
+          <Table>
+            <thead>
+              <tr>
+                <th scope="col">Select</th>
+                <th scope="col">Date</th>
+                <th scope="col">Sender</th>
+                <th scope="col">Subject</th>
+              </tr>
+            </thead>
+            <tbody style={{ marginTop: 5, paddingTop: 5 }}>
+              <Link className="table-row" to="/view-bill">
+                <th scope="row">
                   <Form>
                     <Form.Check
                       inline
                     />
                   </Form>
-                </Col>
-                <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">Jane Smith</Col>
-                <Col sm="auto">You are Assigned this testimony</Col>
-                <Col sm="auto">
+                </th>
+                <td>12/12/2020</td>
+                <td>Jane Smith</td>
+                <td>You are assigned this Bill</td>
+                <td>
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
                   </Button>
-                </Col>
-                <Col sm="auto">
+                </td>
+                <td>
                   <Button variant="danger" size="sm" className="bill-button-spacing">
                     <Trash size={15} />
                   </Button>
-                </Col>
-              </Row>
-            </Link>
-            <Link className="bill-table" to="/view-bill">
-              <Row>
-                <Col sm="auto">
+                </td>
+              </Link>
+              <Link className="table-row" to="/view-bill">
+                <th scope="row">
                   <Form>
                     <Form.Check
                       inline
                     />
                   </Form>
-                </Col>
-                <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">Jane Smith</Col>
-                <Col sm="auto">You are Assigned this testimony</Col>
-                <Col sm="auto">
+                </th>
+                <td>12/12/2020</td>
+                <td>Jane Smith</td>
+                <td>You are assigned this Bill</td>
+                <td>
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
                   </Button>
-                </Col>
-                <Col sm="auto">
+                </td>
+                <td>
                   <Button variant="danger" size="sm" className="bill-button-spacing">
                     <Trash size={15} />
                   </Button>
-                </Col>
-              </Row>
-            </Link>
-            <Link className="bill-table" to="/view-bill">
-              <Row>
-                <Col sm="auto">
+                </td>
+              </Link>
+              <Link className="table-row" to="/view-bill">
+                <th scope="row">
                   <Form>
                     <Form.Check
                       inline
                     />
                   </Form>
-                </Col>
-                <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">Jane Smith</Col>
-                <Col sm="auto">You are Assigned this testimony</Col>
-                <Col sm="auto">
+                </th>
+                <td>12/12/2020</td>
+                <td>Jane Smith</td>
+                <td>You are assigned this Bill</td>
+                <td>
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
                   </Button>
-                </Col>
-                <Col sm="auto">
+                </td>
+                <td>
                   <Button variant="danger" size="sm" className="bill-button-spacing">
                     <Trash size={15} />
                   </Button>
-                </Col>
-              </Row>
-            </Link>
-            <Link className="bill-table" to="/view-bill">
-              <Row>
-                <Col sm="auto">
+                </td>
+              </Link>
+              <Link className="table-row" to="/view-bill">
+                <th scope="row">
                   <Form>
                     <Form.Check
                       inline
                     />
                   </Form>
-                </Col>
-                <Col sm="auto">12/12/2020</Col>
-                <Col sm="auto">Automated</Col>
-                <Col sm="auto"> [NOTIFICATION] Bill is Updated</Col>
-                <Col sm="auto">
+                </th>
+                <td>12/12/2020</td>
+                <td>Jane Smith</td>
+                <td>You are assigned this Bill</td>
+                <td>
                   <Button size="sm" className="bill-button-spacing">
                     Mark as Read
                   </Button>
-                </Col>
-                <Col sm="auto">
+                </td>
+                <td>
                   <Button variant="danger" size="sm" className="bill-button-spacing">
                     <Trash size={15} />
                   </Button>
-                </Col>
-              </Row>
-            </Link>
-          </div>
+                </td>
+              </Link>
+            </tbody>
+          </Table>
         </Row>
       </Col>
     </Row>
