@@ -99,6 +99,15 @@ body {
   justify-content: flex-end;
 }
 
+.table-row {
+  display: table-row;
+  border-style: solid;
+  border-width: thin;
+  text-decoration: none!important;
+  color: black;
+  padding: 5px;
+}
+
 .testimony-header2 {
   font-weight: bold;
   margin-bottom: 20px!important;
