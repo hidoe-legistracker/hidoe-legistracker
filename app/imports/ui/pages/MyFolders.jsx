@@ -28,7 +28,7 @@ const MyFolders = () => (
             </Nav.Item>
           </Nav>
         </Col>
-        <Col sm={9} className="bill-section">
+        <Col sm={9} className="overflow-auto">
           <Tab.Content>
             <Tab.Pane eventKey="first">
               <Col xs={12}>
