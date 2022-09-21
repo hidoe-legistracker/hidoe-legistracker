@@ -38,8 +38,9 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param docID the id of the AdminProfile
    * @param firstName new first name (optional).
    * @param lastName new last name (optional).
+   * @param myFolders array of folders of measures (optional)
    */
-  update(docID, { firstName, lastName }) {
+  update(docID, { firstName, lastName, myFolders }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -47,6 +48,9 @@ class AdminProfileCollection extends BaseProfileCollection {
     }
     if (lastName) {
       updateData.lastName = lastName;
+    }
+    if (myFolders) {
+      updateData.myFolders = myFolders;
     }
     this._collection.update(docID, { $set: updateData });
   }
