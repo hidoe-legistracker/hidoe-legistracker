@@ -12,66 +12,60 @@ const EmployeeList = () => (
         <Table striped bordered hover className="table table-bordered">
           <thead className="thead-dark">
             <tr>
-              <th>Profile Picture</th>
+              <th>Profile</th>
               <th>Name</th>
               <th>Phone #</th>
               <th>Email</th>
               <th>Employee ID</th>
-              <th>Profile</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="w-25">
-                <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" />
+              <td>
+                <a href="/profile" className="row-link">
+                  <div className="d-grid gap-2 d-md-block text-center">
+                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
+                  </div>
+                </a>
               </td>
-              <th className="text-center align-middle">John Doe</th>
-              <th className="text-center align-middle">(123) 456-7890</th>
-              <th className="text-center align-middle">John.Doe@k12.hi.us</th>
-              <th className="text-center align-middle">12345678</th>
-              <th>
-                <div className="d-grid gap-2 d-md-block">
-                  <Link className="profile" to="/profile">
-                    <button type="button" className="btn btn-primary btn-lg btn-block">Link to Profile</button>
-                  </Link>
-                </div>
-              </th>
+              <td className="text-center align-middle" width={150}>John Doe
+              </td>
+              <td className="text-center align-middle" width={150}>(123) 456-7890
+              </td>
+              <td className="text-center align-middle">John.Doe@k12.hi.us
+              </td>
+              <td className="text-center align-middle">12345678
+              </td>
             </tr>
           </tbody>
           <tbody>
             <tr>
-              <td className="w-25">
-                <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" />
+              <td>
+                <div className="d-grid gap-2 d-md-block text-center">
+                  <Link className="profile" to="/profile">
+                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
+                  </Link>
+                </div>
               </td>
               <th className="text-center align-middle">Foo Bar</th>
               <th className="text-center align-middle">(098) 765-4321</th>
               <th className="text-center align-middle">Foo.Bar@k12.hi.us</th>
               <th className="text-center align-middle">00000001</th>
-              <th>
-                <div className="d-grid gap-2 d-md-block">
-                  <Link className="profile" to="/profile">
-                    <button type="button" className="btn btn-primary btn-lg btn-block">Link to Profile</button>
-                  </Link>
-                </div>
-              </th>
             </tr>
           </tbody>
           <tbody>
             <tr>
-              <td className="w-25">
-                <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" />
+              <td>
+                <div className="d-grid gap-2 d-md-block text-center">
+                  <Link className="profile" to="/profile">
+                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
+                  </Link>
+                </div>
               </td>
               <th className="text-center align-middle">Bruce Wayne</th>
               <th className="text-center align-middle">(671) 482-5661</th>
               <th className="text-center align-middle">Bruce.Wayne@k12.hi.us</th>
               <th className="text-center align-middle">25986301</th>
-              <th>
-                <div className="d-grid gap-2 d-md-block">
-                  <Link className="profile" to="/profile">
-                    <button type="button" className="btn btn-primary btn-lg btn-block">Link to Profile</button>
-                  </Link>
-                </div>
-              </th>
             </tr>
           </tbody>
         </Table>
