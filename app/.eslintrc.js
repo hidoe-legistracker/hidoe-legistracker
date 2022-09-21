@@ -52,4 +52,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react/no-array-index-key': 'off',
   },
+  "globals": {
+    "Assets": true // Meteor disallows importing of Assets, see https://docs.meteor.com/api/assets.html
+  }
 };

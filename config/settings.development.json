@@ -4,8 +4,6 @@
     },
     { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe" }
   ],
-
-  "public": {
-    "development": true
-  }
+  
+  "loadAssetsFile":  true
 }
