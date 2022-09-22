@@ -13,11 +13,11 @@ import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 // import { useParams } from 'react-router';
 // import { useTracker } from 'meteor/react-meteor-data';
-import { Testimony } from '../../api/testimony/TestimonyCollection';
+import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-const bridge = new SimpleSchema2Bridge(Testimony._schema);
+const bridge = new SimpleSchema2Bridge(Testimonies._schema);
 
 /* Renders the AddTestimony page for adding a testimony. */
 const EditTestimony = () => {
@@ -41,7 +41,7 @@ const EditTestimony = () => {
   // On submit, insert the data.
   const submit = (data) => {
     const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
-    const collectionName = Testimony.getCollectionName();
+    const collectionName = Testimonies.getCollectionName();
     const updateData = { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))

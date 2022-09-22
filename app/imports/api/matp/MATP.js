@@ -3,7 +3,7 @@ import { AdminProfiles } from '../user/AdminProfileCollection';
 import { UserProfiles } from '../user/UserProfileCollection';
 import { Emails } from '../email/EmailCollection';
 import { Measures } from '../measure/MeasureCollection';
-import { Testimony } from '../testimony/TestimonyCollection';
+import { Testimonies } from '../testimony/TestimonyCollection';
 
 class MATPClass {
   collections;
@@ -19,7 +19,7 @@ class MATPClass {
       UserProfiles,
       Emails,
       Measures,
-      Testimony,
+      Testimonies,
     ];
     /*
      * A list of collection class instances in the order required for them to be sequentially loaded from a file.
@@ -29,7 +29,7 @@ class MATPClass {
       UserProfiles,
       Emails,
       Measures,
-      Testimony,
+      Testimonies,
     ];
 
     /*
