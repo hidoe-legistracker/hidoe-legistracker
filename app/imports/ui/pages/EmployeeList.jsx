@@ -9,7 +9,7 @@ const EmployeeList = () => (
     <Row className="justify-content-center">
       <Col md={7}>
         <Col className="text-center"><h2>Employee List</h2></Col>
-        <Table striped bordered hover className="table table-bordered">
+        <Table striped className="table table-bordered">
           <thead className="thead-dark">
             <tr>
               <th>Profile</th>
@@ -20,53 +20,43 @@ const EmployeeList = () => (
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <a href="/profile" className="row-link">
-                  <div className="d-grid gap-2 d-md-block text-center">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </div>
-                </a>
-              </td>
-              <td className="text-center align-middle" width={150}>John Doe
-              </td>
-              <td className="text-center align-middle" width={150}>(123) 456-7890
-              </td>
-              <td className="text-center align-middle">John.Doe@k12.hi.us
-              </td>
-              <td className="text-center align-middle">12345678
-              </td>
-            </tr>
+            <Link className="table-row" to="/profile">
+              <th scope="row">
+                <div className="d-grid gap-2 d-md-block text-center">
+                  <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
+                </div>
+              </th>
+              <td className="text-center align-middle" width={150}>John Doe</td>
+              <td className="text-center align-middle" width={150}>(123) 456-7890</td>
+              <td className="text-center align-middle">John.Doe@k12.hi.us</td>
+              <td className="text-center align-middle">12345678</td>
+            </Link>
           </tbody>
           <tbody>
-            <tr>
-              <td>
+            <Link className="table-row" to="/profile">
+              <th scope="row">
                 <div className="d-grid gap-2 d-md-block text-center">
-                  <Link className="profile" to="/profile">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </Link>
+                  <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
                 </div>
-              </td>
-              <th className="text-center align-middle">Foo Bar</th>
-              <th className="text-center align-middle">(098) 765-4321</th>
-              <th className="text-center align-middle">Foo.Bar@k12.hi.us</th>
-              <th className="text-center align-middle">00000001</th>
-            </tr>
+              </th>
+              <td className="text-center align-middle">Foo Bar</td>
+              <td className="text-center align-middle">(098) 765-4321</td>
+              <td className="text-center align-middle">Foo.Bar@k12.hi.us</td>
+              <td className="text-center align-middle">00000001</td>
+            </Link>
           </tbody>
           <tbody>
-            <tr>
-              <td>
+            <Link className="table-row" to="/profile">
+              <th scope="row">
                 <div className="d-grid gap-2 d-md-block text-center">
-                  <Link className="profile" to="/profile">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </Link>
+                  <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
                 </div>
-              </td>
-              <th className="text-center align-middle">Bruce Wayne</th>
-              <th className="text-center align-middle">(671) 482-5661</th>
-              <th className="text-center align-middle">Bruce.Wayne@k12.hi.us</th>
-              <th className="text-center align-middle">25986301</th>
-            </tr>
+              </th>
+              <td className="text-center align-middle">Bruce Wayne</td>
+              <td className="text-center align-middle">(671) 482-5661</td>
+              <td className="text-center align-middle">Bruce.Wayn@k12.hi.us</td>
+              <td className="text-center align-middle">25986301</td>
+            </Link>
           </tbody>
         </Table>
       </Col>
