@@ -1,14 +1,13 @@
 import React from 'react';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Card, Col, Container, Row, Button } from 'react-bootstrap';
+import { Col, Container, Row, Button } from 'react-bootstrap';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 /* Renders the Profile page for viewing your profile. */
 const Profile = () => {
-  const profilePic = { float: 'right', width: '200px' };
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
   const { employeeID } = useParams();

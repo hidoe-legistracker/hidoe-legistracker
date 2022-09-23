@@ -60,7 +60,7 @@ const ChangePasswordUser = () => {
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD} name="currentPassword" placeholder="Current Password" type="password"/>
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD} name="currentPassword" placeholder="Current Password" type="password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
                 <ErrorsField />

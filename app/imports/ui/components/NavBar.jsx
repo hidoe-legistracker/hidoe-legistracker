@@ -13,19 +13,18 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 const NavBar = () => {
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-  const { currentUser } = useTracker(() => ({
-    currentUser: Meteor.user() ? Meteor.user().username : '',
-  }), []);
-  const { notificationCount, user, ready } = useTracker(() => {
+  const { currentUser, notificationCount, user, ready } = useTracker(() => {
+    const currUser = Meteor.user() ? Meteor.user().username : '';
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const subscription = Emails.subscribeEmail();
     const rdy = subscription.ready() && userSubscription.ready() && adminSubscription.ready();
     const notifCount = Emails.find({ isRead: false }).fetch().length;
 
-    let usr = UserProfiles.findOne({ email: currentUser }, {});
-    if (usr === undefined) usr = AdminProfiles.findOne({ email: currentUser }, {});
+    let usr = UserProfiles.findOne({ email: currUser }, {});
+    if (usr === undefined) usr = AdminProfiles.findOne({ email: currUser }, {});
     return {
+      currentUser: currUser,
       user: usr,
       notificationCount: notifCount,
       ready: rdy,
