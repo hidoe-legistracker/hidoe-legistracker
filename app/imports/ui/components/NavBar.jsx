@@ -42,7 +42,6 @@ const NavBar = () => {
             {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employees</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_ADMIN} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>,
             ]) : ''}
           </Nav>
           <Nav className="justify-content-end">

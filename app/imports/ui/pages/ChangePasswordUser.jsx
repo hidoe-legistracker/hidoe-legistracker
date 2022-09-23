@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { Accounts } from 'meteor/accounts-base';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
@@ -32,8 +33,9 @@ const ChangePasswordUser = () => {
     defineMethod.callPromise({ collectionName, definitionData })
       .then(() => {
         // log the new user in.
-        const { email, password } = doc;
-        Meteor.loginWithPassword(email, password, (err) => {
+        const currentPassword = COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD;
+        const newPassword = COMPONENT_IDS.SIGN_UP_FORM_PASSWORD;
+        Accounts.changePassword(currentPassword, newPassword, (err) => {
           if (err) {
             setError(err.reason);
           } else {
@@ -60,7 +62,7 @@ const ChangePasswordUser = () => {
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD} name="currentPassword" placeholder="Current Password" type="password"/>
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD} name="currentPassword" placeholder="Current Password" type="password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
                 <ErrorsField />
