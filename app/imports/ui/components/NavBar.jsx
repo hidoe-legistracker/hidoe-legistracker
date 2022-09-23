@@ -58,7 +58,7 @@ const NavBar = () => {
               <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employee List</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_REGISTER_USER} as={NavLink} to="/signup" key="signup">Register User</NavDropdown.Item>
-                <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</NavDropdown.Item>
               </NavDropdown>
             ) : ''}
             {currentUser !== '' ? (
