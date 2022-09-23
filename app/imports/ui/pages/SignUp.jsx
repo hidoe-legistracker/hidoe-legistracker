@@ -28,6 +28,10 @@ const SignUp = () => {
       type: String,
       allowedValues: [ROLE.USER, ROLE.ADMIN],
     },
+    newAccount: {
+      type: Boolean,
+      defaultValue: true,
+    },
   });
   const bridge = new SimpleSchema2Bridge(schema);
 
@@ -35,6 +39,7 @@ const SignUp = () => {
   const submit = (doc, formRef) => {
     const collectionName = UserProfiles.getCollectionName();
     const definitionData = doc;
+    definitionData.newAccount = true;
     // create the new UserProfile
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
