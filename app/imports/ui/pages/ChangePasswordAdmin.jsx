@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
@@ -18,7 +19,7 @@ const ChangePasswordUser = () => {
   const [redirectToReferer, setRedirectToRef] = useState(false);
 
   const schema = new SimpleSchema({
-    currentPassword: String,
+    email: String,
     password: String,
     confirmPassword: String,
   });
@@ -55,12 +56,12 @@ const ChangePasswordUser = () => {
       <Row className="justify-content-center">
         <Col xs={5}>
           <Col className="text-center">
-            <h2>Change your password</h2>
+            <h2>Change Employee&apos;s password</h2>
           </Col>
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD} name="currentPassword" placeholder="Current Password" type="password"/>
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
                 <ErrorsField />

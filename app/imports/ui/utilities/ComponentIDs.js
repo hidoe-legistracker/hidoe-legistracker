@@ -16,7 +16,9 @@ export const COMPONENT_IDS = {
   NAVBAR_MEMBERS: 'navbar-members',
   NAVBAR_SIGN_OUT: 'navbar-sign-out',
   NAVBAR_CURRENT_USER: 'navbar-current-user',
-  NAVBAR_CHANGE_PASSWORD: 'navbar-change-password',
+  NAVBAR_CHANGE_PASSWORD_ADMIN: 'navbar-change-password-admin',
+  NAVBAR_CHANGE_PASSWORD_USER: 'navbar-change-password-user',
+
 
   // SIGN IN PAGE
   SIGN_IN_FORM_EMAIL: 'sign-in-form-email',
@@ -26,9 +28,9 @@ export const COMPONENT_IDS = {
   // SIGN UP PAGE
   SIGN_UP_FORM_FIRST_NAME: 'sign-up-form-first-name',
   SIGN_UP_FORM_LAST_NAME: 'sign-up-form-last-name',
-  SIGN_UP_FORM_EMAIL: 'sign-up-form-email',
   SIGN_UP_FORM_PASSWORD: 'sign-up-form-password',
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
+  SIGN_UP_FORM_CURRENT_PASSWORD: 'sign-up-form-current-password',
 
   // CREATE MEASURE PAGE
   CREATE_MEASURE_FORM_YEAR: 'create-measure-form-year',

@@ -37,18 +37,19 @@ const NavBar = () => {
             {currentUser ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MY_FOLDERS} as={NavLink} to="/MyFolders" key="my-folders">My Folders</Nav.Link>,
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_USER} as={NavLink} to="/change-password-user" key="change-password-user">Change Password</Nav.Link>,
             ]) : ''}
             {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employees</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>,
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_ADMIN} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>,
             ]) : ''}
           </Nav>
           <Nav className="justify-content-end">
             {currentUser === '' ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN} title="Login" key="login">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_IN} as={NavLink} to="/signin" key="signin"><PersonFill />Sign in</NavDropdown.Item>
-                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/change-password-user"><QuestionCircle />Forgot password?</NavDropdown.Item>
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/forgot-password"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
             ) : ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/inbox" key="inbox">

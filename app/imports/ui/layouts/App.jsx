@@ -19,13 +19,14 @@ import SignIn from '../pages/SignIn';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
-import ChangePassword from '../pages/ChangePassword';
+import ChangePasswordAdmin from '../pages/ChangePasswordAdmin';
 import ChangePasswordUser from '../pages/ChangePasswordUser';
 import MonitoringReport from '../pages/MonitoringReport';
 import AddTestimony from '../pages/AddTestimony';
 import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
+import ForgotPassword from '../pages/ForgotPassword';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -43,8 +44,9 @@ const App = () => {
           <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
-          <Route path="/change-password-admin" element={<ChangePassword />} />
+          <Route path="/change-password-admin" element={<ChangePasswordAdmin />} />
           <Route path="/change-password-user" element={<ChangePasswordUser />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
