@@ -2,19 +2,17 @@ import React from 'react';
 import { Col, Container, Row, Nav, ProgressBar } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
-import { _ } from 'meteor/underscore';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import Measure from '../components/Measure';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Measures } from '../../api/measure/MeasureCollection';
 
 const billProgress = 60;
 
-/** Component for layout out a Project Card. */
+/** Component for layout out a Measures
 const MeasureComponent = ({ measure }) => (
   <Link className="table-row" to="/view-bill">
     <th scope="row">{measure.measureNumber}</th>
@@ -27,18 +25,18 @@ const MeasureComponent = ({ measure }) => (
     </td>
   </Link>
 );
-
 MeasureComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   measure: PropTypes.object.isRequired,
 };
+ */
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
   const { ready, measures } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
-    const measureData = Measures._collection.find();
+    const measureData = Measures.find().fetch();
     return {
       ready: isReady,
       measures: measureData,
@@ -102,7 +100,18 @@ const Directory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {_.map(<Measure measure={measures} />)}
+                    {measures.map(measure => (
+                      <Link className="table-row" to="/view-bill">
+                        <th scope="row">{measure.measureNumber}</th>
+                        <td>{measure.measureTitle}</td>
+                        <td>{measure.description}</td>
+                        <td>{measure.currentReferral}</td>
+                        <td>{measure.measureType}</td>
+                        <td>
+                          <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+                        </td>
+                      </Link>
+                    ))}
                   </tbody>
                 </Table>
               </Row>
