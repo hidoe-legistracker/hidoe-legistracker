@@ -47,7 +47,7 @@ const NavBar = () => {
             {currentUser === '' ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN} title="Login" key="login">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_IN} as={NavLink} to="/signin" key="signin"><PersonFill />Sign in</NavDropdown.Item>
-                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/changepassword"><QuestionCircle />Forgot password?</NavDropdown.Item>
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/change-password-user"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
             ) : ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/inbox" key="inbox">
