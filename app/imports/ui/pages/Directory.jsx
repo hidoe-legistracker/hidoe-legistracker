@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import Measure from '../components/Measure';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { Measures } from '../../api/measure/MeasureCollection';
 
 const billProgress = 60;
 
@@ -35,9 +36,9 @@ MeasureComponent.propTypes = {
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
   const { ready, measures } = useTracker(() => {
-    const subscription = Measure.subscribeTestimony();
+    const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
-    const measureData = Measure.find().fetch();
+    const measureData = Measures._collection.find();
     return {
       ready: isReady,
       measures: measureData,
@@ -126,7 +127,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  ) : <LoadingSpinner />;
+  ) : <LoadingSpinner message=" Getting Bills" />;
 };
 
 export default Directory;
