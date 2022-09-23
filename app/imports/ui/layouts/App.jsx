@@ -51,7 +51,7 @@ const App = () => {
           <Route path="/change-password-user" element={<ChangePasswordUser />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:employeeID" element={<Profile />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
