@@ -40,8 +40,6 @@ const NavBar = () => {
             ]) : ''}
             {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employees</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>,
             ]) : ''}
           </Nav>
           <Nav className="justify-content-end">
@@ -50,16 +48,25 @@ const NavBar = () => {
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_IN} as={NavLink} to="/signin" key="signin"><PersonFill />Sign in</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/change-password-user"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
-            ) : ([
+            ) : (
               <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/inbox" key="inbox">
                 <EnvelopePaper size={25} />
                 {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
-              </Nav.Link>,
+              </Nav.Link>
+            )}
+            {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+              <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin">
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employee List</NavDropdown.Item>
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_REGISTER_USER} as={NavLink} to="/signup" key="signup">Register User</NavDropdown.Item>
+                <Nav.Link id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</Nav.Link>
+              </NavDropdown>
+            ) : ''}
+            {currentUser !== '' ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={currentUser} key="currUser">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_PROFILE} as={NavLink} to="/profile" key="profile">Profile</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_SIGN_OUT} as={NavLink} to="/signout" key="signout"><BoxArrowRight /> Sign out</NavDropdown.Item>
-              </NavDropdown>,
-            ])}
+              </NavDropdown>
+            ) : ''}
           </Nav>
         </Navbar.Collapse>
       </Container>

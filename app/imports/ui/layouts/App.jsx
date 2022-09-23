@@ -16,6 +16,7 @@ import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
 import ViewBill from '../pages/ViewBill';
 import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
@@ -42,9 +43,10 @@ const App = () => {
           ) : <Route exact path="/" element={<SignIn />} />}
           <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
-          <Route path="/change-password-admin" element={<ChangePassword />} />
-          <Route path="/change-password-user" element={<ChangePasswordUser />} />
+          <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
+          <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/change-password-user" element={<AdminProtectedRoute><ChangePasswordUser /></AdminProtectedRoute>} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />

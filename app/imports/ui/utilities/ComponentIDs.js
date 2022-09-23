@@ -13,7 +13,9 @@ export const COMPONENT_IDS = {
   NAVBAR_LOGIN_DROPDOWN_SIGN_UP: 'navbar-login-dropdown-sign-up',
   NAVBAR_MANAGE_DROPDOWN: 'navbar-manage-dropdown',
   NAVBAR_MANAGE_DROPDOWN_DATABASE: 'navbar-manage-dropdown-database',
+  NAVBAR_ADMIN: 'navbar-admin',
   NAVBAR_MEMBERS: 'navbar-members',
+  NAVBAR_REGISTER_USER: 'navbar-register-user',
   NAVBAR_SIGN_OUT: 'navbar-sign-out',
   NAVBAR_CURRENT_USER: 'navbar-current-user',
   NAVBAR_CHANGE_PASSWORD: 'navbar-change-password',
@@ -28,6 +30,8 @@ export const COMPONENT_IDS = {
   SIGN_UP_FORM_LAST_NAME: 'sign-up-form-last-name',
   SIGN_UP_FORM_EMAIL: 'sign-up-form-email',
   SIGN_UP_FORM_PASSWORD: 'sign-up-form-password',
+  SIGN_UP_FORM_EMPLOYEE_ID: 'sign-up-form-employee-id',
+  SIGN_UP_FORM_ROLE: 'sign-up-form-role',
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
 
   // CREATE MEASURE PAGE
