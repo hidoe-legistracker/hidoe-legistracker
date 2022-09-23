@@ -43,7 +43,7 @@ const App = () => {
           <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
-          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/change-password-admin" element={<ChangePassword />} />
           <Route path="/change-password-user" element={<ChangePasswordUser />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
