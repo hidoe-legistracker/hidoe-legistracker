@@ -60,7 +60,7 @@ const SignIn = () => {
             </Card>
           </AutoForm>
           <Alert variant="secondary">
-            <Link to="/changepassword">Forgot Password?</Link>
+            <Link to="/change-password-user">Forgot Password?</Link>
           </Alert>
           {error === '' ? (
             ''

@@ -21,6 +21,7 @@ import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
 import ChangePassword from '../pages/ChangePassword';
+import ChangePasswordUser from '../pages/ChangePasswordUser';
 import MonitoringReport from '../pages/MonitoringReport';
 import AddTestimony from '../pages/AddTestimony';
 import TestimonyPage from '../pages/TestimonyPage';
@@ -44,7 +45,8 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
           <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
-          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/change-password-user" element={<AdminProtectedRoute><ChangePasswordUser /></AdminProtectedRoute>} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />

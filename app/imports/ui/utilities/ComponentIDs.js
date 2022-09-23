@@ -18,6 +18,7 @@ export const COMPONENT_IDS = {
   NAVBAR_REGISTER_USER: 'navbar-register-user',
   NAVBAR_SIGN_OUT: 'navbar-sign-out',
   NAVBAR_CURRENT_USER: 'navbar-current-user',
+  NAVBAR_CHANGE_PASSWORD: 'navbar-change-password',
 
   // SIGN IN PAGE
   SIGN_IN_FORM_EMAIL: 'sign-in-form-email',
