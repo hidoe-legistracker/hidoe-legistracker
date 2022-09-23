@@ -15,6 +15,7 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param password The password for this user.
    * @param firstName The first name.
    * @param lastName The last name.
+   * @param role
    */
   define({ email, firstName, lastName, password }) {
     if (Meteor.isServer) {
