@@ -71,7 +71,7 @@ const NavBar = () => {
               </NavDropdown>
             ) : ''}
             {currentUser !== '' ? (
-              <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={`${user.firstName} ${user.lastName}`} key="currUser">
+              <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={currentUser} key="currUser">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_PROFILE} as={NavLink} to={`/profile/${user.employeeID}`} key="profile">Profile</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_USER} as={NavLink} to="/change-password-user" key="change-password-user">Change Password</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_SIGN_OUT} as={NavLink} to="/signout" key="signout"><BoxArrowRight /> Sign out</NavDropdown.Item>

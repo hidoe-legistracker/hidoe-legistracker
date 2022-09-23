@@ -23,9 +23,9 @@ if (Meteor.isServer) {
         fc.property(
           fc.lorem({ maxCount: 1 }),
           fc.lorem({ maxCount: 1 }),
-          (firstName, lastName) => {
+          (firstName, lastName, employeeID, newAccount) => {
             const email = faker.internet.email();
-            const docID = AdminProfiles.define({ email, firstName, lastName });
+            const docID = AdminProfiles.define({ email, firstName, lastName, employeeID, newAccount });
             expect(AdminProfiles.isDefined(docID)).to.be.true;
             AdminProfiles.removeIt(docID);
             expect(AdminProfiles.isDefined(docID)).to.be.false;
@@ -39,8 +39,10 @@ if (Meteor.isServer) {
       const email = faker.internet.email();
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
-      const docID1 = AdminProfiles.define({ email, firstName, lastName });
-      const docID2 = AdminProfiles.define({ email, firstName, lastName });
+      const employeeID = 'dummyID';
+      const newAccount = true;
+      const docID1 = AdminProfiles.define({ email, firstName, lastName, employeeID, newAccount });
+      const docID2 = AdminProfiles.define({ email, firstName, lastName, employeeID, newAccount });
       expect(docID1).to.equal(docID2);
     });
 
@@ -49,7 +51,9 @@ if (Meteor.isServer) {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
       const password = faker.internet.password();
-      const docID = AdminProfiles.define({ email, firstName, lastName, password });
+      const employeeID = '0';
+      const newAccount = false;
+      const docID = AdminProfiles.define({ email, firstName, lastName, password, employeeID, newAccount });
       fc.assert(
         fc.property(fc.lorem(1), fc.lorem(1), (fName, lName) => {
           AdminProfiles.update(docID, { firstName: fName, lastName: lName });
