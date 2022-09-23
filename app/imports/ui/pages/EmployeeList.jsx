@@ -28,11 +28,7 @@ const EmployeeList = () => {
     <Container id={PAGE_IDS.MEMBERS} className="py-3" style={{ marginTop: '50px' }}>
       <Row>
         <Col>
-          <h1
-            className="text-left"
-            style={{ fontFamily: 'Montserrat, monospace', textAlign: 'left', fontSize: '3.5em' }}
-          >EMPLOYEE LIST
-          </h1>
+          <h1 className="montserrat" style={{ textAlign: 'left', fontSize: '3.5em' }}>EMPLOYEE LIST</h1>
         </Col>
         <Col xs={4}>
           <InputGroup className="mb-3" style={{ marginTop: '1em' }}>
