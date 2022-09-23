@@ -8,8 +8,8 @@ import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 /* global fixture:false, test:false */
 
 /** Credentials for one of the sample users defined in settings.development.json. */
-const credentials = { username: 'john@foo.com', password: 'changeme' };
-const adminCredentials = { username: 'admin@foo.com', password: 'changeme' };
+const credentials = { username: 'john@foo.com', password: 'changeme', firstName: 'John', lastName: 'Doe' };
+const adminCredentials = { username: 'admin@foo.com', password: 'changeme', firstName: 'Admin', lastName: 'MATRP' };
 // const newCredentials = { username: 'jane@foo.com', password: 'changeme' };
 
 fixture('hidoe-legistracker localhost test with default db')
@@ -22,7 +22,7 @@ test('Test that landing / sign in page shows up', async () => {
 test('Test that signin and signout work', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
-  await navBar.isLoggedIn(credentials.username);
+  await navBar.isLoggedIn(`${credentials.firstName} ${credentials.lastName}`);
   await navBar.logout();
   await signOutPage.isDisplayed();
 });
@@ -30,7 +30,7 @@ test('Test that signin and signout work', async () => {
 test('Test Directory Page', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
-  await navBar.isLoggedIn(credentials.username);
+  await navBar.isLoggedIn(`${credentials.firstName} ${credentials.lastName}`);
   await navBar.gotoDirectoryPage();
   await directoryPage.isDisplayed();
   await navBar.logout();
@@ -40,7 +40,7 @@ test('Test Directory Page', async () => {
 test('Test My Folders Page', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
-  await navBar.isLoggedIn(credentials.username);
+  await navBar.isLoggedIn(`${credentials.firstName} ${credentials.lastName}`);
   await navBar.gotoMyFoldersPage();
   await myFoldersPage.isDisplayed();
   await navBar.logout();
@@ -50,7 +50,7 @@ test('Test My Folders Page', async () => {
 test('Test Inbox and Create Email Pages', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
-  await navBar.isLoggedIn(credentials.username);
+  await navBar.isLoggedIn(`${credentials.firstName} ${credentials.lastName}`);
   await navBar.gotoInboxPage();
   await inboxPage.isDisplayed();
   await t.click(`#${COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON}`);
@@ -62,7 +62,7 @@ test('Test Inbox and Create Email Pages', async () => {
 test('Test Create Measure Page', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(adminCredentials.username, adminCredentials.password);
-  await navBar.isLoggedIn(adminCredentials.username);
+  await navBar.isLoggedIn(`${adminCredentials.firstName} ${adminCredentials.lastName}`);
   await navBar.gotoCreateMeasurePage();
   await createMeasurePage.isDisplayed();
 
