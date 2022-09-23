@@ -23,8 +23,10 @@ if (Meteor.isServer) {
         fc.property(
           fc.lorem({ maxCount: 1 }),
           fc.lorem({ maxCount: 1 }),
-          (firstName, lastName, employeeID, newAccount) => {
+          (firstName, lastName) => {
             const email = faker.internet.email();
+            const employeeID = 'dummyID';
+            const newAccount = true;
             const docID = AdminProfiles.define({ email, firstName, lastName, employeeID, newAccount });
             expect(AdminProfiles.isDefined(docID)).to.be.true;
             AdminProfiles.removeIt(docID);
