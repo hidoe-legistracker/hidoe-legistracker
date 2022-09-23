@@ -42,7 +42,6 @@ const App = () => {
           {currentUser ? (
             <Route exact path="/" element={<Directory />} />
           ) : <Route exact path="/" element={<SignIn />} />}
-          <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
           <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
