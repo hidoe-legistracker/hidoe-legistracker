@@ -19,6 +19,7 @@ const SignUp = () => {
     lastName: String,
     email: String,
     password: String,
+    employeeID: String,
     departments: {
       type: Array,
       optional: true,
@@ -64,7 +65,8 @@ const SignUp = () => {
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_LAST_NAME} name="lastName" placeholder="Last Name" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail Address" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="Temporary Password" type="password" label="Temporary Password" />
-                <SelectField id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} name="role" placeholder="Role" />
+                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID} name="employeeID" placeholder="Employee ID" label="Employee ID" />
+                <SelectField id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} name="role" value={ROLE.USER} />
                 <ErrorsField />
                 <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} value="Register New User" />
               </Card.Body>

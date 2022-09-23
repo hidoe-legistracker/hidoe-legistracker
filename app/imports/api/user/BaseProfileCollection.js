@@ -17,6 +17,7 @@ class BaseProfileCollection extends BaseCollection {
       lastName: String,
       role: String,
       userID: SimpleSchema.RegEx.Id,
+      employeeID: String,
       newAccount: Boolean,
       // Array of folders
       myFolders: {
