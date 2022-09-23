@@ -15,16 +15,17 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param password The password for this user.
    * @param firstName The first name.
    * @param lastName The last name.
+   * @param employeeID
    * @param role
+   * @param newAccount
    */
-  define({ email, firstName, lastName, password }) {
+  define({ email, firstName, lastName, password, employeeID, role, newAccount }) {
     if (Meteor.isServer) {
-      // console.log('define', email, firstName, lastName, password);
+      console.log('define', email, firstName, lastName, password, employeeID, role, newAccount);
       const username = email;
       const user = this.findOne({ email, firstName, lastName });
       if (!user) {
-        const role = ROLE.ADMIN;
-        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), role });
+        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount });
         const userID = Users.define({ username, role, password });
         this._collection.update(profileID, { $set: { userID } });
         return profileID;
