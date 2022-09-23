@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row, Table, InputGroup, Form, Button } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import EmployeeListItem from '../components/EmployeeListItem';
@@ -26,11 +26,25 @@ const EmployeeList = () => {
 
   return (ready ? (
     <Container id={PAGE_IDS.MEMBERS} className="py-3" style={{ marginTop: '50px' }}>
-      <h1
-        className="text-left"
-        style={{ fontFamily: 'Montserrat, monospace', textAlign: 'left', fontSize: '3.5em' }}
-      >EMPLOYEE LIST
-      </h1>
+      <Row>
+        <Col>
+          <h1
+            className="text-left"
+            style={{ fontFamily: 'Montserrat, monospace', textAlign: 'left', fontSize: '3.5em' }}
+          >EMPLOYEE LIST
+          </h1>
+        </Col>
+        <Col xs={4}>
+          <InputGroup className="mb-3" style={{ marginTop: '1em' }}>
+            <Form.Control
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <Button>Search</Button>
+          </InputGroup>
+        </Col>
+      </Row>
+
       <Row className="justify-content-center">
         <Col>
           <Table striped className="table table-bordered">
@@ -38,7 +52,6 @@ const EmployeeList = () => {
               <tr>
                 <th>Profile</th>
                 <th>Name</th>
-                <th>Phone #</th>
                 <th>Email</th>
                 <th>Employee ID</th>
                 <th>View Profile</th>

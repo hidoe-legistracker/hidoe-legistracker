@@ -12,7 +12,6 @@ const EmployeeListItem = ({ profile }) => (
       </div>
     </th>
     <td className="text-center align-middle" width={150}>{profile.name}</td>
-    <td className="text-center align-middle" width={150}>(123) 456-7890</td>
     <td className="text-center align-middle">{profile.email}</td>
     <td className="text-center align-middle">{profile.employeeID}</td>
     <td className="text-center align-middle">
