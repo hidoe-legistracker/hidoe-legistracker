@@ -1,4 +1,6 @@
-// import { Meteor } from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
+import { Measures } from '../../api/measure/MeasureCollection';
+
 // import { Emails } from '../../api/email/EmailCollection';
 /*
 import { Stuffs } from '../../api/stuff/StuffCollection
@@ -30,3 +32,21 @@ if (Stuffs.count() === 0) {
 //     Meteor.settings.defaultEmails.map(data => addEmails(data));
 //   }
 // }
+function addMeasures(data) {
+  // eslint-disable-next-line no-console
+  console.log(`  Adding: Bill ${data.code}`);
+  Measures._collection.insert(data);
+}
+
+/**
+ * If the loadAssetsFile field in settings.development.json is true, then load the data in private/data.json.
+ * This approach allows you to initialize your system with large amounts of data.
+ * Note that settings.development.json is limited to 64,000 characters.
+ * We use the "Assets" capability in Meteor.
+ * For more info on assets, see https://docs.meteor.com/api/assets.html
+ */
+
+if (Meteor.settings.loadAssetsFile && Meteor.isServer) {
+  const measureData = JSON.parse(Assets.getText('measures.json'));
+  measureData.measures.map(measures => addMeasures(measures));
+}

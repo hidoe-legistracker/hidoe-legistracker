@@ -16,15 +16,18 @@ import SignOut from '../pages/SignOut';
 import NavBar from '../components/NavBar';
 import ViewBill from '../pages/ViewBill';
 import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
 import Profile from '../pages/Profile';
 import NotAuthorized from '../pages/NotAuthorized';
 import { ROLE } from '../../api/role/Role';
-import ChangePassword from '../pages/ChangePassword';
+import ChangePasswordAdmin from '../pages/ChangePasswordAdmin';
+import ChangePasswordUser from '../pages/ChangePasswordUser';
 import MonitoringReport from '../pages/MonitoringReport';
 import AddTestimony from '../pages/AddTestimony';
 import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
+import ForgotPassword from '../pages/ForgotPassword';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -39,12 +42,15 @@ const App = () => {
           {currentUser ? (
             <Route exact path="/" element={<Directory />} />
           ) : <Route exact path="/" element={<SignIn />} />}
-          <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
+          <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
           <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
-          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/change-password-admin" element={<AdminProtectedRoute><ChangePasswordAdmin /></AdminProtectedRoute>} />
+          <Route path="/change-password-user" element={<ChangePasswordUser />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:employeeID" element={<Profile />} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />

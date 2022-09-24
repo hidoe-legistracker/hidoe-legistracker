@@ -14,15 +14,18 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param password The password for this user.
    * @param firstName The first name.
    * @param lastName The last name.
+   * @param employeeID
+   * @param role
+   * @param newAccount
    */
-  define({ email, firstName, lastName, password }) {
+  define({ email, firstName, lastName, password, employeeID, newAccount }) {
     // if (Meteor.isServer) {
     const username = email;
     const user = this.findOne({ email, firstName, lastName });
     if (!user) {
       const role = ROLE.USER;
       const userID = Users.define({ username, role, password });
-      const profileID = this._collection.insert({ email, firstName, lastName, userID, role });
+      const profileID = this._collection.insert({ email, firstName, lastName, userID, employeeID, role, newAccount });
       // this._collection.update(profileID, { $set: { userID } });
       return profileID;
     }
@@ -36,8 +39,9 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param docID the id of the UserProfile
    * @param firstName new first name (optional).
    * @param lastName new last name (optional).
+   * @param myFolders array of folders of measures (optional)
    */
-  update(docID, { firstName, lastName }) {
+  update(docID, { firstName, lastName, myFolders }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -45,6 +49,9 @@ class UserProfileCollection extends BaseProfileCollection {
     }
     if (lastName) {
       updateData.lastName = lastName;
+    }
+    if (myFolders) {
+      updateData.myFolders = myFolders;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -98,7 +105,8 @@ class UserProfileCollection extends BaseProfileCollection {
     const email = doc.email;
     const firstName = doc.firstName;
     const lastName = doc.lastName;
-    return { email, firstName, lastName };
+    const myFolders = doc.myFolders;
+    return { email, firstName, lastName, myFolders };
   }
 }
 

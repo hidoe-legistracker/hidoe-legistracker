@@ -14,6 +14,10 @@ body {
   --bs-light-rgb: var(--matr-navbar-bg-rgb);
 }
 
+.montserrat {
+  font-family: 'Montserrat', monospace;
+}
+
 /* Set the SignIn and SignUp alerts background. */
 #signin-page .alert-light, #signup-page .alert-light {
   --bs-alert-bg: var(--matr-navbar-bg);
@@ -129,6 +133,10 @@ a:link th {
   font-weight: normal;
 }
 
+a {
+  text-decoration: none!important;
+}
+
 .testimonies-table, .bill-table {
   border-style: solid;
   border-width: thin;
@@ -153,4 +161,23 @@ h1, h3 {
   text-align: center;
   justify-content: center;
   align-items: center;
+}
+
+.nav-pills {
+  --bs-nav-pills-border-radius: 0.375rem;
+  --bs-nav-pills-link-active-color: #fff;
+}
+
+.nav-pills .nav-link {
+  background: 0 0;
+  border: 0;
+  border-radius: var(--bs-nav-pills-border-radius);
+  color: black;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  color: #141619!important;
+  background-color: white!important;
+  border: thin solid black;
+  text-decoration: none!important;
 }
