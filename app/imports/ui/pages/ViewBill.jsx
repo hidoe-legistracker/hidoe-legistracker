@@ -132,31 +132,33 @@ const ViewBill = () => {
         </Col>
       </Row>
       <Container className="view-testimony-container">
-        <h3>Testimonies</h3>
-        <Table>
-          <thead>
-            <tr>
-              <th scope="col">Hearing Date</th>
-              <th scope="col">Bill #</th>
-              <th scope="col">Prepared By</th>
-              <th scope="col">DOE Positon</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {testimonies.map(testimony => (
-              <Link className="table-row" to="/view-testimony">
-                <th scope="row">{testimony.hearingDate.toLocaleDateString()}</th>
-                <td>{testimony.billNumber}</td>
-                <td>{testimony.testifier}</td>
-                <td>{testimony.deptPosition}</td>
-                <td>
-                  <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                </td>
-              </Link>
-            ))}
-          </tbody>
-        </Table>
+        <h3>{testimonies.length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
+        {testimonies.length === 0 ? '' : (
+          <Table>
+            <thead>
+              <tr>
+                <th scope="col">Hearing Date</th>
+                <th scope="col">Bill #</th>
+                <th scope="col">Prepared By</th>
+                <th scope="col">DOE Positon</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {testimonies.map(testimony => (
+                <Link className="table-row" to="/view-testimony">
+                  <th scope="row">{testimony.hearingDate.toLocaleDateString()}</th>
+                  <td>{testimony.billNumber}</td>
+                  <td>{testimony.testifier}</td>
+                  <td>{testimony.deptPosition}</td>
+                  <td>
+                    <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden/>
+                  </td>
+                </Link>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Container>
 
       <hr
