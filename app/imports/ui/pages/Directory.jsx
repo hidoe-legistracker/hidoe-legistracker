@@ -136,7 +136,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  ) : <LoadingSpinner message=" Getting Bills" />;
+  ) : <LoadingSpinner message="Loading bills" />;
 };
 
 export default Directory;
