@@ -146,13 +146,13 @@ const ViewBill = () => {
             </thead>
             <tbody>
               {testimonies.map(testimony => (
-                <Link className="table-row" to="/view-testimony">
+                <Link className="table-row" to={`/view-testimony/${testimony._id}`}>
                   <th scope="row">{testimony.hearingDate.toLocaleDateString()}</th>
                   <td>{testimony.billNumber}</td>
                   <td>{testimony.testifier}</td>
                   <td>{testimony.deptPosition}</td>
                   <td>
-                    <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden/>
+                    <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
                   </td>
                 </Link>
               ))}

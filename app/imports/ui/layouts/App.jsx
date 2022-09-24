@@ -54,7 +54,7 @@ const App = () => {
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-          <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
+          <Route path="/view-testimony/:_id" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/notauthorized" element={<NotAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
