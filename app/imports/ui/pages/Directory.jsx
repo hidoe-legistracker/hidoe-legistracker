@@ -4,46 +4,49 @@ import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-// import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import LoadingSpinner from '../components/LoadingSpinner';
 import { Measures } from '../../api/measure/MeasureCollection';
+// import LoadingSpinner from '../components/LoadingSpinner';
 
 const billProgress = 60;
 
-/** Component for layout out a Measures
-const MeasureComponent = ({ measure }) => (
-  <Link className="table-row" to="/view-bill">
-    <th scope="row">{measure.measureNumber}</th>
-    <td>{measure.measureTitle}</td>
-    <td>{measure.description}</td>
-    <td>{measure.currentReferral}</td>
-    <td>{measure.measureType}</td>
-    <td>
-      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-    </td>
-  </Link>
+/* Component for layout out a Measures */
+const MeasureComponent = ({ ready, measure }) => (
+  ready ? (
+    <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
+      <th scope="row">{measure.measureNumber}</th>
+      <td>{measure.measureTitle}</td>
+      <td>{measure.description}</td>
+      <td>{measure.currentReferral}</td>
+      <td>{measure.measureType}</td>
+      <td>
+        <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+      </td>
+    </Link>
+  ) : <td>Bill not available</td>
 );
+
 MeasureComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   measure: PropTypes.object.isRequired,
+  ready: PropTypes.bool.isRequired,
 };
- */
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
-  const { ready, measures } = useTracker(() => {
+  const { ready, measure } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
     const measureData = Measures.find().fetch();
     return {
       ready: isReady,
-      measures: measureData,
+      measure: measureData,
     };
   }, []);
 
-  return ready ? (
+  return (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3">
       <Row className="justify-content-center">
         <Col className="folder-section">
@@ -100,17 +103,8 @@ const Directory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {measures.map(measure => (
-                      <Link className="table-row" to="/view-bill">
-                        <th scope="row">{measure.measureNumber}</th>
-                        <td>{measure.measureTitle}</td>
-                        <td>{measure.description}</td>
-                        <td>{measure.currentReferral}</td>
-                        <td>{measure.measureType}</td>
-                        <td>
-                          <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                        </td>
-                      </Link>
+                    {measure.map(measures => (
+                      <MeasureComponent measure={measures} ready={ready} />
                     ))}
                   </tbody>
                 </Table>
@@ -136,7 +130,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  ) : <LoadingSpinner message="Loading bills" />;
+  );
 };
 
 export default Directory;
