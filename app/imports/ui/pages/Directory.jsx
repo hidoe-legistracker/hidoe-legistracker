@@ -8,30 +8,27 @@ import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Measures } from '../../api/measure/MeasureCollection';
-// import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const billProgress = 60;
 
 /* Component for layout out a Measures */
-const MeasureComponent = ({ ready, measure }) => (
-  ready ? (
-    <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
-      <th scope="row">{measure.measureNumber}</th>
-      <td>{measure.measureTitle}</td>
-      <td>{measure.description}</td>
-      <td>{measure.currentReferral}</td>
-      <td>{measure.measureType}</td>
-      <td>
-        <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-      </td>
-    </Link>
-  ) : <td>Bill not available</td>
+const MeasureComponent = ({ measure }) => (
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
+    <th scope="row">{measure.measureNumber}</th>
+    <td>{measure.measureTitle}</td>
+    <td>{measure.description}</td>
+    <td>{measure.currentReferral}</td>
+    <td>{measure.measureType}</td>
+    <td>
+      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+    </td>
+  </Link>
 );
 
 MeasureComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   measure: PropTypes.object.isRequired,
-  ready: PropTypes.bool.isRequired,
 };
 
 /* Renders a table containing all of the Measure documents. */
@@ -39,14 +36,14 @@ const Directory = () => {
   const { ready, measure } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
-    const measureData = Measures.find().fetch();
+    const measureData = Measures.find({}, {}).fetch();
     return {
       ready: isReady,
       measure: measureData,
     };
   }, []);
 
-  return (
+  return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3">
       <Row className="justify-content-center">
         <Col className="folder-section">
@@ -104,7 +101,7 @@ const Directory = () => {
                   </thead>
                   <tbody>
                     {measure.map(measures => (
-                      <MeasureComponent measure={measures} ready={ready} />
+                      <MeasureComponent measure={measures} />
                     ))}
                   </tbody>
                 </Table>
@@ -130,7 +127,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  );
+  ) : <LoadingSpinner message="Loading Measures" />);
 };
 
 export default Directory;
