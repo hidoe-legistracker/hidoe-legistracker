@@ -5,7 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Navigate } from 'react-router-dom';
-import { Col, Container, Row, Button } from 'react-bootstrap';
+import { Col, Container, Row, Button, InputGroup, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
@@ -30,12 +30,6 @@ const committees = [{
   options: senate,
 }];
 
-let selectedDepartments = [];
-const selectDepartments = e => {
-  selectedDepartments = e;
-  console.log(selectedDepartments);
-};
-
 /* Renders the Profile page for viewing your profile. */
 const EditProfile = () => {
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
@@ -59,9 +53,17 @@ const EditProfile = () => {
     };
   }, [employeeID]);
 
+  let selectedDepartments = [];
+  if (ready) {
+    selectedDepartments = user.departments;
+  }
+  const selectDepartments = e => {
+    selectedDepartments = e;
+  };
+
   const submit = () => {
     const collectionName = UserProfiles.getCollectionName();
-    const updateData = { id: user._id, departments: selectedDepartments };
+    const updateData = { id: user._id, departments: selectedDepartments, phone: document.getElementById('phone-input').value.toString() };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Profile updated successfully', 'success'));
@@ -95,6 +97,7 @@ const EditProfile = () => {
                 <p><b>Employee ID: </b>{user.employeeID}</p>
               </Col>
               <Col style={{ textAlign: 'right' }}>
+                <Button variant="outline-secondary" href={`/profile/${employeeID}`} style={{ marginRight: '0.3em' }}>Return to Profile</Button>
                 <Button variant="success" onClick={submit}>Save</Button>
               </Col>
             </Row>
@@ -107,7 +110,7 @@ const EditProfile = () => {
             <Row>
               <Col>
                 <p><b>Department(s): </b></p>
-                <Select id="select-departments" options={committees} isMulti closeMenuOnSelect={false} onChange={selectDepartments} />
+                <Select id="select-departments" options={committees} isMulti closeMenuOnSelect={false} onChange={selectDepartments} defaultValue={user.departments} />
               </Col>
             </Row>
           </Row>
@@ -121,7 +124,15 @@ const EditProfile = () => {
                 <p><b>Email: </b>{user.email}</p>
               </Col>
               <Col>
-                <p><b>Phone: </b>{user.phone ? user.phone : 'N/A'}</p>
+                <InputGroup size="sm">
+                  <InputGroup.Text><b>Phone</b></InputGroup.Text>
+                  <Form.Control
+                    id="phone-input"
+                    placeholder="(xxx) xxx-xxxx"
+                    aria-label="Phone"
+                    defaultValue={user.phone ? user.phone : ''}
+                  />
+                </InputGroup>
               </Col>
             </Row>
           </Row>
