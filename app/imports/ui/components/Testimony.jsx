@@ -1,35 +1,18 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-// import { useTracker } from 'meteor/react-meteor-data';
-// import { Stuffs } from '../../api/stuff/StuffCollection';
-// import StuffItem from '../components/StuffItem';
-// import LoadingSpinner from '../components/LoadingSpinner';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 import { PAGE_IDS } from '../utilities/PageIDs';
-// import ViewBill from './ViewBill';
-
-/*
-// useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-const { ready, stuffs } = useTracker(() => {
-  // Note that this subscription will get cleaned up
-  // when your component is unmounted or deps change.
-  // Get access to Stuff documents.
-  const subscription = Stuffs.subscribeStuff();
-  // Determine if the subscription is ready
-  const rdy = subscription.ready();
-  // Get the Stuff documents
-  const stuffItems = Stuffs.find({}, { sort: { name: 1 } }).fetch();
-  return {
-    stuffs: stuffItems,
-    ready: rdy,
-  };
-}, []);
-* : <LoadingSpinner message="Loading Stuff" />)
- */
 
 // used https://www.npmjs.com/package/react-to-print
 export const Testimony = React.forwardRef((props, ref) => (
   <div ref={ref}>
     <Container id={PAGE_IDS.VIEW_TESTIMONY} className="view-testimony-container">
+      <Row className="row-center">
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/d/d3/HSSC_Seal.png" className="logo" />
+        <Row className="letterhead" style={{ marginTop: 10 }}>STATE OF HAWAII</Row>
+        <Row className="letterhead">DEPARTMENT OF EDUCATION</Row>
+        <Row className="letterhead" style={{ fontWeight: 'normal' }}>P.O. BOX 2360</Row>
+        <Row className="letterhead" style={{ marginBottom: 20, fontWeight: 'normal' }}>HONOLULU, HAWAI`I 96894</Row>
+      </Row>
       <Row className="row-center">
         <Col>
           <Row className="testimony-header1">Date: </Row>
