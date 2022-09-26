@@ -58,17 +58,3 @@ test('Test Inbox and Create Email Pages', async () => {
   await navBar.logout();
   await signOutPage.isDisplayed();
 });
-
-test('Test Create Measure Page', async () => {
-  await navBar.gotoSignInPage();
-  await signInPage.signin(adminCredentials.username, adminCredentials.password);
-  await navBar.isLoggedIn(adminCredentials.username);
-  await navBar.gotoCreateMeasurePage();
-  await createMeasurePage.isDisplayed();
-
-  // Fill out measure form
-  await createMeasurePage.createMeasure();
-
-  await navBar.logout();
-  await signOutPage.isDisplayed();
-});
