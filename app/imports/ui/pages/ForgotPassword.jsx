@@ -5,16 +5,15 @@ import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { AutoForm, ErrorsField } from 'uniforms-bootstrap5';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 
 /**
  * ChangePassword component is similar to signin component, but we change the user's password instead.
  */
-const ChangePassword = () => {
+const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToRef] = useState(false);
 
@@ -56,16 +55,14 @@ const ChangePassword = () => {
       <Row className="justify-content-center">
         <Col xs={5}>
           <Col className="text-center">
-            <h2>Change your password</h2>
+            <h2>Forgot your Password?</h2>
           </Col>
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
-                <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="confirmPassword" placeholder="Confirm new password" type="password" />
+                Please contact the appropriate IT person from your Department.
+                Email: admin@foo.com
                 <ErrorsField />
-                <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} />
               </Card.Body>
             </Card>
           </AutoForm>
@@ -86,4 +83,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default ForgotPassword;

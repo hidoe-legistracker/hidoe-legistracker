@@ -1,77 +1,66 @@
 import React from 'react';
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import _ from 'lodash';
+import { Col, Container, Row, Table, InputGroup, Form, Button } from 'react-bootstrap';
+import { useTracker } from 'meteor/react-meteor-data';
 import { PAGE_IDS } from '../utilities/PageIDs';
+import EmployeeListItem from '../components/EmployeeListItem';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 /* Renders a table containing all of the Stuff documents. Use <StuffItemAdmin> to render each row. */
-const EmployeeList = () => (
-  <Container id={PAGE_IDS.MEMBERS} className="py-3">
-    <Row className="justify-content-center">
-      <Col md={7}>
-        <Col className="text-center"><h2>Employee List</h2></Col>
-        <Table striped bordered hover className="table table-bordered">
-          <thead className="thead-dark">
-            <tr>
-              <th>Profile</th>
-              <th>Name</th>
-              <th>Phone #</th>
-              <th>Email</th>
-              <th>Employee ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="/profile" className="row-link">
-                  <div className="d-grid gap-2 d-md-block text-center">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </div>
-                </a>
-              </td>
-              <td className="text-center align-middle" width={150}>John Doe
-              </td>
-              <td className="text-center align-middle" width={150}>(123) 456-7890
-              </td>
-              <td className="text-center align-middle">John.Doe@k12.hi.us
-              </td>
-              <td className="text-center align-middle">12345678
-              </td>
-            </tr>
-          </tbody>
-          <tbody>
-            <tr>
-              <td>
-                <div className="d-grid gap-2 d-md-block text-center">
-                  <Link className="profile" to="/profile">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </Link>
-                </div>
-              </td>
-              <th className="text-center align-middle">Foo Bar</th>
-              <th className="text-center align-middle">(098) 765-4321</th>
-              <th className="text-center align-middle">Foo.Bar@k12.hi.us</th>
-              <th className="text-center align-middle">00000001</th>
-            </tr>
-          </tbody>
-          <tbody>
-            <tr>
-              <td>
-                <div className="d-grid gap-2 d-md-block text-center">
-                  <Link className="profile" to="/profile">
-                    <img src="https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png" className="img-fluid" alt="John Doe Profile Pic" width={50} />
-                  </Link>
-                </div>
-              </td>
-              <th className="text-center align-middle">Bruce Wayne</th>
-              <th className="text-center align-middle">(671) 482-5661</th>
-              <th className="text-center align-middle">Bruce.Wayne@k12.hi.us</th>
-              <th className="text-center align-middle">25986301</th>
-            </tr>
-          </tbody>
-        </Table>
-      </Col>
-    </Row>
-  </Container>
-);
+const EmployeeList = () => {
+  const { ready, profiles } = useTracker(() => {
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = userSubscription.ready() && adminSubscription.ready();
+
+    const user = UserProfiles.find({}, { sort: { username: 1 } }).fetch();
+    const admin = AdminProfiles.find({}, { sort: { username: 1 } }).fetch();
+
+    const users = _.sortBy(user.concat(admin), (obj) => obj.lastName);
+    return ({
+      ready: rdy,
+      profiles: users,
+    });
+  }, []);
+
+  return (ready ? (
+    <Container id={PAGE_IDS.MEMBERS} className="py-3" style={{ marginTop: '50px' }}>
+      <Row>
+        <Col>
+          <h1 className="montserrat" style={{ textAlign: 'left', fontSize: '3.5em' }}>EMPLOYEE LIST</h1>
+        </Col>
+        <Col xs={4}>
+          <InputGroup className="mb-3" style={{ marginTop: '1em' }}>
+            <Form.Control
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <Button>Search</Button>
+          </InputGroup>
+        </Col>
+      </Row>
+
+      <Row className="justify-content-center">
+        <Col>
+          <Table striped className="table table-bordered">
+            <thead className="thead-dark">
+              <tr>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Employee ID</th>
+                <th>View Profile</th>
+              </tr>
+            </thead>
+            <tbody>
+              {profiles.map((profile, index) => <EmployeeListItem key={index} profile={{ name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
+    </Container>
+  ) : '');
+};
 
 export default EmployeeList;

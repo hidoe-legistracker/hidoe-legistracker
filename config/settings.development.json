@@ -1,8 +1,7 @@
 {
   "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Admin", "lastName": "MATRP"
-    },
-    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe" }
+    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Admin", "lastName": "MATRP", "employeeID": 1, "newAccount": false },
+    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false }
   ],
   
   "loadAssetsFile":  true

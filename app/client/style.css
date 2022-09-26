@@ -14,6 +14,10 @@ body {
   --bs-light-rgb: var(--matr-navbar-bg-rgb);
 }
 
+.montserrat {
+  font-family: 'Montserrat', monospace;
+}
+
 /* Set the SignIn and SignUp alerts background. */
 #signin-page .alert-light, #signup-page .alert-light {
   --bs-alert-bg: var(--matr-navbar-bg);
