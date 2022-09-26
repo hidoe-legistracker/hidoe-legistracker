@@ -171,6 +171,7 @@ class BaseProfileCollection extends BaseCollection {
     const profile = this._collection.findOne({ _id: profileID });
     const userID = profile.userID;
     if (!Users.isReferenced(userID)) {
+      Users.updateRole(userID, profile.role === ROLE.USER ? ROLE.ADMIN : ROLE.USER);
       return super.removeIt(profileID);
     }
     throw new Meteor.Error(`User ${profile.email} owns Stuff.`);

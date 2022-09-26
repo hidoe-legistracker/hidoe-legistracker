@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Roles } from 'meteor/alanning:roles';
 import _ from 'lodash';
+import { ROLE } from '../role/Role';
 
 /**
  * Represents a user, which is someone who has a Meteor account.
@@ -66,6 +67,13 @@ class UserCollection {
     return userID;
     // }
     // return undefined;
+  }
+
+  updateRole(user, role) {
+    const userID = this.getID(user);
+
+    Roles.createRole(role, { unlessExists: true });
+    Roles.setUserRoles(userID, role);
   }
 
   /**
