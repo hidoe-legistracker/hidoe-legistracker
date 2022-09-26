@@ -42,8 +42,9 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param myFolders array of folders of measures (optional)
    * @param departments
    * @param phone
+   * @param role
    */
-  update(docID, { firstName, lastName, myFolders, departments, phone }) {
+  update(docID, { firstName, lastName, myFolders, departments, phone, role }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -62,6 +63,9 @@ class UserProfileCollection extends BaseProfileCollection {
       updateData.phone = phone;
     } else {
       updateData.phone = '';
+    }
+    if (role) {
+      updateData.role = role;
     }
     this._collection.update(docID, { $set: updateData });
   }

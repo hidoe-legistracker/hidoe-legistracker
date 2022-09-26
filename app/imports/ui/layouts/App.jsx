@@ -50,8 +50,8 @@ const App = () => {
           <Route path="/change-password-user" element={<ProtectedRoute><ChangePasswordUser /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
-          <Route path="/profile/:employeeID" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/edit-profile/:employeeID" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+          <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />

@@ -14,7 +14,7 @@ import { ROLE } from '../../api/role/Role';
 const Profile = () => {
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
-  const { employeeID } = useParams();
+  const { _id } = useParams();
 
   const { validUser, thisUser, user, ready } = useTracker(() => {
     const currUser = Meteor.user() ? Meteor.user().username : '';
@@ -22,16 +22,16 @@ const Profile = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = userSubscription.ready() && adminSubscription.ready();
 
-    let usr = UserProfiles.findOne({ employeeID: employeeID }, {});
+    let usr = UserProfiles.findOne({ _id: _id }, {});
     const thisUsr = UserProfiles.findOne({ email: currUser }, {});
-    if (usr === undefined) usr = AdminProfiles.findOne({ employeeID: employeeID }, {});
+    if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
       validUser: usr !== undefined,
       thisUser: thisUsr,
       user: usr,
       ready: rdy,
     };
-  }, [employeeID]);
+  }, [_id]);
 
   // eslint-disable-next-line no-nested-ternary
   return (ready ? (validUser ? (
@@ -57,8 +57,8 @@ const Profile = () => {
                 <p><b>Employee ID: </b>{user.employeeID}</p>
               </Col>
               <Col style={{ textAlign: 'right' }}>
-                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) || thisUser.employeeID === employeeID ? (
-                  <Button href={`/edit-profile/${employeeID}`} variant="outline-secondary">Edit User</Button>
+                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) || thisUser._id === _id ? (
+                  <Button href={`/edit-profile/${_id}`} variant="outline-secondary">Edit User</Button>
                 ) : ''}
               </Col>
             </Row>

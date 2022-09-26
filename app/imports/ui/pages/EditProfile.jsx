@@ -34,7 +34,7 @@ const committees = [{
 const EditProfile = () => {
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
-  const { employeeID } = useParams();
+  const { _id } = useParams();
 
   const { validUser, thisUser, user, ready } = useTracker(() => {
     const currUser = Meteor.user() ? Meteor.user().username : '';
@@ -42,16 +42,16 @@ const EditProfile = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = userSubscription.ready() && adminSubscription.ready();
 
-    let usr = UserProfiles.findOne({ employeeID: employeeID }, {});
+    let usr = UserProfiles.findOne({ _id: _id }, {});
     const thisUsr = UserProfiles.findOne({ email: currUser }, {});
-    if (usr === undefined) usr = AdminProfiles.findOne({ employeeID: employeeID }, {});
+    if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
       validUser: usr !== undefined,
       thisUser: thisUsr,
       user: usr,
       ready: rdy,
     };
-  }, [employeeID]);
+  }, [_id]);
 
   let selectedDepartments = [];
   if (ready) {
@@ -63,25 +63,24 @@ const EditProfile = () => {
 
   const submit = () => {
     const collectionName = UserProfiles.getCollectionName();
-    const updateData = { id: user._id, departments: selectedDepartments, phone: document.getElementById('phone-input').value.toString() };
+    const phone = document.getElementById('phone-input').value.toString();
+    const role = document.getElementById('role-input').value;
+    const updateData = { id: user._id, departments: selectedDepartments, phone: phone, role: role };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Profile updated successfully', 'success'));
   };
 
-  if (ready && Roles.userIsInRole(Meteor.userId(), [ROLE.USER]) && thisUser.employeeID !== employeeID) {
-    return (<Navigate to={`/profile/${employeeID}`} />);
+  if (ready && Roles.userIsInRole(Meteor.userId(), [ROLE.USER]) && thisUser._id !== _id) {
+    return (<Navigate to={`/profile/${_id}`} />);
   }
 
   // eslint-disable-next-line no-nested-ternary
   return (ready ? (validUser ? (
     <Container id={PAGE_IDS.PROFILE} className="py-3" style={{ marginTop: '50px' }}>
       <Row>
-        <Col xs={3}>
-          <h1 className="montserrat" style={{ textAlign: 'left', fontSize: '2em' }}>User Profile</h1>
-        </Col>
         <Col>
-          <hr />
+          <h1 className="montserrat" style={{ textAlign: 'left', fontSize: '2em' }}>Edit Profile</h1>
         </Col>
       </Row>
 
@@ -97,7 +96,7 @@ const EditProfile = () => {
                 <p><b>Employee ID: </b>{user.employeeID}</p>
               </Col>
               <Col style={{ textAlign: 'right' }}>
-                <Button variant="outline-secondary" href={`/profile/${employeeID}`} style={{ marginRight: '0.3em' }}>Return to Profile</Button>
+                <Button variant="outline-secondary" href={`/profile/${_id}`} style={{ marginRight: '0.3em' }}>Return to Profile</Button>
                 <Button variant="success" onClick={submit}>Save</Button>
               </Col>
             </Row>
@@ -138,6 +137,23 @@ const EditProfile = () => {
           </Row>
         </Col>
       </Row>
+
+      {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ([
+        <Row style={{ marginTop: '3em' }}>
+          <Col>
+            <h1 className="montserrat" style={{ textAlign: 'left', fontSize: '2em' }}>Administrator Permissions</h1>
+          </Col>
+        </Row>,
+        <Row>
+          <Col xs={3}>
+            <Form.Select id="role-input" aria-label="Role Select" defaultValue={user.role}>
+              <option disabled>Select User Role</option>
+              <option value={ROLE.USER}>{ROLE.USER}</option>
+              <option value={ROLE.ADMIN}>{ROLE.ADMIN}</option>
+            </Form.Select>
+          </Col>
+        </Row>,
+      ]) : ''}
     </Container>
   ) :
     <h1>User does not exist</h1>
