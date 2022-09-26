@@ -54,7 +54,7 @@ const App = () => {
           <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
-          <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
