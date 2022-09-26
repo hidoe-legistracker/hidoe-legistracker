@@ -15,8 +15,8 @@ export const Testimony = React.forwardRef((props, ref) => {
     const measureSubscription = Measures.subscribeMeasures();
     const rdy = testimonySubscription.ready() && measureSubscription.ready();
     const testimonyDoc = Testimonies.findDoc(_id);
-    const billNumber = testimonyDoc.billNumber;
-    const measureDoc = Measures.findOne({ measureNumber: billNumber });
+    const billNum = Number(testimonyDoc.billNumber);
+    const measureDoc = Measures.findOne({ measureNumber: billNum });
     return {
       measure: measureDoc,
       testimony: testimonyDoc,
@@ -49,15 +49,15 @@ export const Testimony = React.forwardRef((props, ref) => {
           <Row className="row-center">
             <Row>
               <Col className="testimony-header2" xs={2}>Department</Col>
-              <Col>Education</Col>
+              <Col>{testimony.representing}</Col>
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Testifier</Col>
-              <Col>{testimony.testifier}, {testimony.representing}</Col>
+              <Col>{testimony.testifier}</Col>
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Title of Bill</Col>
-              <Col>{measure.measureTitle}</Col>
+              <Col>{measure.measureType}{measure.measureNumber}</Col>
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Purpose of Bill</Col>
