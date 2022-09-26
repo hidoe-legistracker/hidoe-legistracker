@@ -1,43 +1,48 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
-import { Col, Container, Row, ProgressBar, Nav } from 'react-bootstrap';
+import { Col, Container, Row, Nav, ProgressBar } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
+import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { Link, Navigate } from 'react-router-dom';
-import { useTracker } from 'meteor/react-meteor-data';
+import { Link, NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import { UserProfiles } from '../../api/user/UserProfileCollection';
-import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { ROLE } from '../../api/role/Role';
+import { Measures } from '../../api/measure/MeasureCollection';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const billProgress = 60;
 
+/* Component for layout out a Measures */
+const MeasureComponent = ({ measure }) => (
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
+    <th scope="row">{measure.measureNumber}</th>
+    <td>{measure.measureTitle}</td>
+    <td>{measure.description}</td>
+    <td>{measure.currentReferral}</td>
+    <td>{measure.measureType}</td>
+    <td>
+      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+    </td>
+  </Link>
+);
+
+MeasureComponent.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  measure: PropTypes.object.isRequired,
+};
+
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
-  const { ready, currentUser } = useTracker(() => {
-    const username = Meteor.user() ? Meteor.user().username : '';
-    let rdy;
-    let usr;
-
-    if (Roles.userIsInRole(Meteor.userId(), [ROLE.USER])) {
-      const subscription = UserProfiles.subscribe();
-      rdy = subscription.ready();
-      usr = UserProfiles.findByEmail(username);
-    } else {
-      const subscription = AdminProfiles.subscribe();
-      rdy = subscription.ready();
-      usr = AdminProfiles.findByEmail(username);
-    }
+  const { ready, measure } = useTracker(() => {
+    const subscription = Measures.subscribeMeasures();
+    const isReady = subscription.ready();
+    const measureData = Measures.find({}, {}).fetch();
     return {
-      currentUser: usr,
-      ready: rdy,
+      ready: isReady,
+      measure: measureData,
     };
   }, []);
-  if (ready && currentUser.newAccount) {
-    return (<Navigate to="/change-password-user" />);
-  }
+
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3">
       <Row className="justify-content-center">
@@ -88,33 +93,16 @@ const Directory = () => {
                     <tr>
                       <th scope="col">Bill #</th>
                       <th scope="col">Bill</th>
-                      <th scope="col">Office</th>
-                      <th scope="col">Action</th>
-                      <th scope="col">Rationale</th>
-                      <th scope="col">Committee</th>
-                      <th scope="col">Hearing</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Offices</th>
                       <th scope="col">Type</th>
-                      <th scope="col">Position</th>
-                      <th scope="col">Testifier</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <Link className="table-row" to="/view-bill">
-                      <th scope="row">1234</th>
-                      <td>.....</td>
-                      <td>OCID BOE</td>
-                      <td>Testimony</td>
-                      <td>........</td>
-                      <td>EDU, FIN</td>
-                      <td>12/02/2022</td>
-                      <td>Hearing</td>
-                      <td>Support</td>
-                      <td>John Doe</td>
-                      <td>
-                        <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                      </td>
-                    </Link>
+                    {measure.map(measures => (
+                      <MeasureComponent measure={measures} />
+                    ))}
                   </tbody>
                 </Table>
               </Row>
@@ -139,7 +127,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  ) : '');
+  ) : <LoadingSpinner message="Loading Measures" />);
 };
 
 export default Directory;
