@@ -18,14 +18,14 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param role
    * @param newAccount
    */
-  define({ email, firstName, lastName, password, employeeID, newAccount }) {
+  define({ email, firstName, lastName, password, employeeID, newAccount, phone, departments }) {
     // if (Meteor.isServer) {
     const username = email;
     const user = this.findOne({ email, firstName, lastName });
     if (!user) {
       const role = ROLE.USER;
       const userID = Users.define({ username, role, password });
-      const profileID = this._collection.insert({ email, firstName, lastName, userID, employeeID, role, newAccount });
+      const profileID = this._collection.insert({ email, firstName, lastName, userID, employeeID, role, newAccount, phone, departments });
       // this._collection.update(profileID, { $set: { userID } });
       return profileID;
     }

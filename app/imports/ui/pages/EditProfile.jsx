@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import swal from 'sweetalert';
 import { Roles } from 'meteor/alanning:roles';
@@ -12,7 +13,7 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 import { ROLE } from '../../api/role/Role';
-import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { defineMethod, updateMethod, removeItMethod } from '../../api/base/BaseCollection.methods';
 
 const house = [];
 const senate = [];
@@ -32,6 +33,9 @@ const committees = [{
 
 /* Renders the Profile page for viewing your profile. */
 const EditProfile = () => {
+  const [newID, setNewID] = useState('');
+  const [redirectToReferer, setRedirectToRef] = useState(false);
+
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
   const { _id } = useParams();
@@ -62,17 +66,69 @@ const EditProfile = () => {
   };
 
   const submit = () => {
-    const collectionName = UserProfiles.getCollectionName();
-    const phone = document.getElementById('phone-input').value.toString();
     const role = document.getElementById('role-input').value;
-    const updateData = { id: user._id, departments: selectedDepartments, phone: phone, role: role };
-    updateMethod.callPromise({ collectionName, updateData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => swal('Success', 'Profile updated successfully', 'success'));
+    const phone = document.getElementById('phone-input').value.toString();
+
+    if (role !== user.role) {
+      const definitionData = _.clone(user);
+      definitionData.departments = selectedDepartments;
+      definitionData.phone = phone;
+      definitionData.role = role;
+
+      if (role === ROLE.USER) {
+        const collectionName = UserProfiles.getCollectionName();
+        // create the new UserProfile
+        defineMethod.callPromise({ collectionName, definitionData })
+          .catch(error => swal('Error', error.message, 'error'))
+          .then(() => {
+            setNewID(UserProfiles.findOne({ email: user.email }, {})._id);
+          });
+      } else {
+        const collectionName = AdminProfiles.getCollectionName();
+        // create the new AdminProfile
+        defineMethod.callPromise({ collectionName, definitionData })
+          .catch(error => swal('Error', error.message, 'error'))
+          .then(() => {
+            setNewID(AdminProfiles.findOne({ email: user.email }, {})._id);
+          });
+      }
+      setRedirectToRef(true);
+    } else {
+      let collectionName;
+      if (user.role === ROLE.USER) {
+        collectionName = UserProfiles.getCollectionName();
+      } else {
+        collectionName = AdminProfiles.getCollectionName();
+      }
+      const updateData = { id: user._id, departments: selectedDepartments, phone: phone, role: role };
+      updateMethod.callPromise({ collectionName, updateData })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => swal('Success', 'Profile updated successfully', 'success'));
+    }
   };
 
   if (ready && Roles.userIsInRole(Meteor.userId(), [ROLE.USER]) && thisUser._id !== _id) {
     return (<Navigate to={`/profile/${_id}`} />);
+  }
+
+  if (ready && newID !== '' && redirectToReferer) {
+    const instance = _id;
+    if (user.role === ROLE.USER) {
+      const collectionName = UserProfiles.getCollectionName();
+      removeItMethod.callPromise({ collectionName, instance })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => {
+          swal('Success', 'Profile updated successfully (with role change)', 'success');
+        });
+    } else {
+      const collectionName = AdminProfiles.getCollectionName();
+      removeItMethod.callPromise({ collectionName, instance })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => {
+          swal('Success', 'Profile updated successfully (with role change)', 'success');
+        });
+    }
+    return (<Navigate to={`/profile/${newID}`} />);
   }
 
   // eslint-disable-next-line no-nested-ternary
