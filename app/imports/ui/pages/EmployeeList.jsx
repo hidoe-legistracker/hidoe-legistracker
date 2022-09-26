@@ -54,7 +54,7 @@ const EmployeeList = () => {
               </tr>
             </thead>
             <tbody>
-              {profiles.map((profile, index) => <EmployeeListItem key={index} profile={{ name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
+              {profiles.map((profile, index) => <EmployeeListItem key={index} profile={{ _id: profile._id, name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
             </tbody>
           </Table>
         </Col>
