@@ -15,7 +15,7 @@ const EmployeeListItem = ({ profile }) => (
     <td className="text-center align-middle">{profile.email}</td>
     <td className="text-center align-middle">{profile.employeeID}</td>
     <td className="text-center align-middle">
-      <Button variant="info" href={`/profile/${profile.employeeID}`}>View Profile</Button>
+      <Button variant="info" href={`/profile/${profile._id}`}>View Profile</Button>
     </td>
   </tr>
 );
@@ -23,6 +23,7 @@ const EmployeeListItem = ({ profile }) => (
 // Require a document to be passed to this component.
 EmployeeListItem.propTypes = {
   profile: PropTypes.shape({
+    _id: PropTypes.string,
     name: PropTypes.string,
     email: PropTypes.string,
     employeeID: PropTypes.string,

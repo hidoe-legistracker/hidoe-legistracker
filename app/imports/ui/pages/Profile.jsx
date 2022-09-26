@@ -1,31 +1,40 @@
 import React from 'react';
+import { _ } from 'meteor/underscore';
+import { Meteor } from 'meteor/meteor';
+import { Roles } from 'meteor/alanning:roles';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Col, Container, Row, Button } from 'react-bootstrap';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { ROLE } from '../../api/role/Role';
 
 /* Renders the Profile page for viewing your profile. */
 const Profile = () => {
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
-  const { employeeID } = useParams();
+  const { _id } = useParams();
 
-  const { user, ready } = useTracker(() => {
+  const { validUser, thisUser, user, ready } = useTracker(() => {
+    const currUser = Meteor.user() ? Meteor.user().username : '';
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = userSubscription.ready() && adminSubscription.ready();
 
-    let usr = UserProfiles.findOne({ employeeID: employeeID }, {});
-    if (usr === undefined) usr = AdminProfiles.findOne({ employeeID: employeeID }, {});
+    let usr = UserProfiles.findOne({ _id: _id }, {});
+    const thisUsr = UserProfiles.findOne({ email: currUser }, {});
+    if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
+      validUser: usr !== undefined,
+      thisUser: thisUsr,
       user: usr,
       ready: rdy,
     };
-  }, [employeeID]);
+  }, [_id]);
 
-  return (ready ? (
+  // eslint-disable-next-line no-nested-ternary
+  return (ready ? (validUser ? (
     <Container id={PAGE_IDS.PROFILE} className="py-3" style={{ marginTop: '50px' }}>
       <Row>
         <Col xs={3}>
@@ -48,7 +57,9 @@ const Profile = () => {
                 <p><b>Employee ID: </b>{user.employeeID}</p>
               </Col>
               <Col style={{ textAlign: 'right' }}>
-                <Button variant="outline-secondary">Edit User</Button>
+                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) || thisUser._id === _id ? (
+                  <Button href={`/edit-profile/${_id}`} variant="outline-secondary">Edit User</Button>
+                ) : ''}
               </Col>
             </Row>
           </Row>
@@ -59,7 +70,7 @@ const Profile = () => {
             </Row>
             <Row>
               <Col>
-                <p><b>Department(s): </b>EDU</p>
+                <p><b>Department(s): </b>{user.departments && user.departments.length > 0 ? _.pluck(user.departments, 'value').toString() : 'N/A'}</p>
               </Col>
             </Row>
           </Row>
@@ -73,13 +84,15 @@ const Profile = () => {
                 <p><b>Email: </b>{user.email}</p>
               </Col>
               <Col>
-                <p><b>Phone: </b>(808) 123-4567</p>
+                <p><b>Phone: </b>{user.phone ? user.phone : 'N/A'}</p>
               </Col>
             </Row>
           </Row>
         </Col>
       </Row>
     </Container>
+  ) :
+    <h1>User does not exist</h1>
   ) : '');
 };
 

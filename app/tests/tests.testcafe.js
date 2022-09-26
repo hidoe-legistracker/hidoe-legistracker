@@ -16,7 +16,7 @@ fixture('hidoe-legistracker localhost test with default db')
   .page('http://localhost:3000');
 
 test('Test that landing / sign in page shows up', async () => {
-  await signInPage.isDisplayed();
+  await signInPage.isLandingDisplayed();
 });
 
 test('Test that signin and signout work', async () => {
@@ -55,20 +55,6 @@ test('Test Inbox and Create Email Pages', async () => {
   await inboxPage.isDisplayed();
   await t.click(`#${COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON}`);
   await createEmailPage.isDisplayed();
-  await navBar.logout();
-  await signOutPage.isDisplayed();
-});
-
-test('Test Create Measure Page', async () => {
-  await navBar.gotoSignInPage();
-  await signInPage.signin(adminCredentials.username, adminCredentials.password);
-  await navBar.isLoggedIn(adminCredentials.username);
-  await navBar.gotoCreateMeasurePage();
-  await createMeasurePage.isDisplayed();
-
-  // Fill out measure form
-  await createMeasurePage.createMeasure();
-
   await navBar.logout();
   await signOutPage.isDisplayed();
 });

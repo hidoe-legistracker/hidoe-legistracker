@@ -28,6 +28,7 @@ import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
 import ForgotPassword from '../pages/ForgotPassword';
+import EditProfile from '../pages/EditProfile';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -45,15 +46,15 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
           <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
-          <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
           <Route path="/change-password-admin" element={<AdminProtectedRoute><ChangePasswordAdmin /></AdminProtectedRoute>} />
-          <Route path="/change-password-user" element={<ChangePasswordUser />} />
+          <Route path="/change-password-user" element={<ProtectedRoute><ChangePasswordUser /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
-          <Route path="/profile/:employeeID" element={<Profile />} />
+          <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
-          <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />

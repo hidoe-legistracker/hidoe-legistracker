@@ -47,9 +47,6 @@ const NavBar = () => {
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MY_FOLDERS} as={NavLink} to="/MyFolders" key="my-folders">My Folders</Nav.Link>,
             ]) : ''}
-            {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? ([
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_ADD_MEASURE} as={NavLink} to="/create-measure" key="create-measure">Create Measure</Nav.Link>,
-            ]) : ''}
           </Nav>
           <Nav className="justify-content-end">
             {currentUser === '' ? (
@@ -72,7 +69,7 @@ const NavBar = () => {
             ) : ''}
             {currentUser !== '' ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={currentUser} key="currUser">
-                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_PROFILE} as={NavLink} to={`/profile/${user.employeeID}`} key="profile">Profile</NavDropdown.Item>
+                <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_PROFILE} as={NavLink} to={`/profile/${user._id}`} key="profile">Profile</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_USER} as={NavLink} to="/change-password-user" key="change-password-user">Change Password</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_SIGN_OUT} as={NavLink} to="/signout" key="signout"><BoxArrowRight /> Sign out</NavDropdown.Item>
               </NavDropdown>

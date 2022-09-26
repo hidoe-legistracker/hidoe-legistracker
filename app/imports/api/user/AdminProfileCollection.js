@@ -19,16 +19,16 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param role
    * @param newAccount
    */
-  define({ email, firstName, lastName, password, employeeID, newAccount }) {
+  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, departments }) {
     if (Meteor.isServer) {
       // console.log('define', email, firstName, lastName, password, employeeID, newAccount);
       const username = email;
       const user = this.findOne({ email, firstName, lastName });
       if (!user) {
         const role = ROLE.ADMIN;
-        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount });
-        const userID = Users.define({ username, role, password });
-        this._collection.update(profileID, { $set: { userID } });
+        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount, phone, departments });
+        const newUserID = userID !== undefined ? userID : Users.define({ username, role, password });
+        this._collection.update(profileID, { $set: { userID: newUserID } });
         return profileID;
       }
       return user._id;
@@ -42,8 +42,11 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param firstName new first name (optional).
    * @param lastName new last name (optional).
    * @param myFolders array of folders of measures (optional)
+   * @param departments
+   * @param phone
+   * @param role
    */
-  update(docID, { firstName, lastName, myFolders }) {
+  update(docID, { firstName, lastName, myFolders, departments, phone, role }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -54,6 +57,17 @@ class AdminProfileCollection extends BaseProfileCollection {
     }
     if (myFolders) {
       updateData.myFolders = myFolders;
+    }
+    if (departments) {
+      updateData.departments = departments;
+    }
+    if (phone) {
+      updateData.phone = phone;
+    } else {
+      updateData.phone = '';
+    }
+    if (role) {
+      updateData.role = role;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -66,6 +80,17 @@ class AdminProfileCollection extends BaseProfileCollection {
   removeIt(profileID) {
     if (this.isDefined(profileID)) {
       return super.removeIt(profileID);
+    }
+    return null;
+  }
+
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    if (this.isDefined(profileID)) {
+      return super.transferIt(profileID);
     }
     return null;
   }
