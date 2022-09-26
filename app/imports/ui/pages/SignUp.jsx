@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
 
@@ -38,16 +39,30 @@ const SignUp = () => {
 
   /* Handle SignUp submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = (doc, formRef) => {
-    const collectionName = UserProfiles.getCollectionName();
-    const definitionData = doc;
-    definitionData.newAccount = true;
-    // create the new UserProfile
-    defineMethod.callPromise({ collectionName, definitionData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => {
-        swal('Success', 'User Registered!', 'success');
-        formRef.reset();
-      });
+    if (doc.role === ROLE.USER) {
+      const collectionName = UserProfiles.getCollectionName();
+      const definitionData = doc;
+      definitionData.newAccount = true;
+      // create the new UserProfile
+      defineMethod.callPromise({ collectionName, definitionData })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => {
+          swal('Success', 'User Registered!', 'success');
+          formRef.reset();
+        });
+    } else {
+      const collectionName = AdminProfiles.getCollectionName();
+      const definitionData = doc;
+      definitionData.newAccount = true;
+      // create the new UserProfile
+      defineMethod.callPromise({ collectionName, definitionData })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => {
+          swal('Success', 'User Registered!', 'success');
+          formRef.reset();
+        });
+    }
+
   };
 
   let fRef = null;
@@ -66,7 +81,7 @@ const SignUp = () => {
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail Address" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="Temporary Password" type="password" label="Temporary Password" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID} name="employeeID" placeholder="Employee ID" label="Employee ID" />
-                <SelectField id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} name="role" value={ROLE.USER} />
+                <SelectField id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} name="role" defaultValue={ROLE.USER} />
                 <ErrorsField />
                 <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} value="Register New User" />
               </Card.Body>

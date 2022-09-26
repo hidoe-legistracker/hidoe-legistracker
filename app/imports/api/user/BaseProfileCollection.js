@@ -19,6 +19,21 @@ class BaseProfileCollection extends BaseCollection {
       userID: SimpleSchema.RegEx.Id,
       employeeID: String,
       newAccount: Boolean,
+      phone: {
+        type: String,
+        optional: true,
+      },
+      departments: {
+        type: Array,
+        optional: true,
+      },
+      'departments.$': {
+        type: new SimpleSchema({
+          label: String,
+          value: String,
+          group: String,
+        }),
+      },
       // Array of folders
       myFolders: {
         type: Array,
