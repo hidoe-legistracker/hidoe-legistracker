@@ -1,16 +1,43 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import swal from 'sweetalert';
 import { Roles } from 'meteor/alanning:roles';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Navigate } from 'react-router-dom';
 import { Col, Container, Row, Button } from 'react-bootstrap';
+import Select from 'react-select';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 import { ROLE } from '../../api/role/Role';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
+
+const house = [];
+const senate = [];
+Object.values(houseCommittees).forEach(function (committee) {
+  house.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'HOUSE' });
+});
+Object.values(senateCommittees).forEach(function (committee) {
+  senate.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'SENATE' });
+});
+const committees = [{
+  label: 'House',
+  options: house,
+}, {
+  label: 'Senate',
+  options: senate,
+}];
+
+let selectedDepartments = [];
+const selectDepartments = e => {
+  selectedDepartments = e;
+  console.log(selectedDepartments);
+};
 
 /* Renders the Profile page for viewing your profile. */
-const Profile = () => {
+const EditProfile = () => {
   const profileCard = { marginTop: '20px', boxShadow: '0.1px 0.1px 5px #cccccc', borderRadius: '0.5em' };
 
   const { employeeID } = useParams();
@@ -31,6 +58,18 @@ const Profile = () => {
       ready: rdy,
     };
   }, [employeeID]);
+
+  const submit = () => {
+    const collectionName = UserProfiles.getCollectionName();
+    const updateData = { id: user._id, departments: selectedDepartments };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Profile updated successfully', 'success'));
+  };
+
+  if (ready && Roles.userIsInRole(Meteor.userId(), [ROLE.USER]) && thisUser.employeeID !== employeeID) {
+    return (<Navigate to={`/profile/${employeeID}`} />);
+  }
 
   // eslint-disable-next-line no-nested-ternary
   return (ready ? (validUser ? (
@@ -56,9 +95,7 @@ const Profile = () => {
                 <p><b>Employee ID: </b>{user.employeeID}</p>
               </Col>
               <Col style={{ textAlign: 'right' }}>
-                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) || thisUser.employeeID === employeeID ? (
-                  <Button href={`/edit-profile/${employeeID}`} variant="outline-secondary">Edit User</Button>
-                ) : ''}
+                <Button variant="success" onClick={submit}>Save</Button>
               </Col>
             </Row>
           </Row>
@@ -69,7 +106,8 @@ const Profile = () => {
             </Row>
             <Row>
               <Col>
-                <p><b>Department(s): </b>{user.departments ? user.departments.toString() : 'N/A'}</p>
+                <p><b>Department(s): </b></p>
+                <Select id="select-departments" options={committees} isMulti closeMenuOnSelect={false} onChange={selectDepartments} />
               </Col>
             </Row>
           </Row>
@@ -95,4 +133,4 @@ const Profile = () => {
   ) : '');
 };
 
-export default Profile;
+export default EditProfile;
