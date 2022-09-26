@@ -9,11 +9,16 @@ class SignInPage {
     this.pageSelector = Selector(this.pageId);
   }
 
-  /** Checks that this page is currently displayed. */
-  async isDisplayed() {
+  /** Checks that component is displayed in landing page. */
+  async isLandingDisplayed() {
     const waitTime = 30;
     console.log(`Waiting ${waitTime} seconds before running SignIn.isDisplayed().`);
     await t.wait(waitTime * 1000).expect(this.pageSelector.exists).ok();
+  }
+
+  /** Checks that this page is currently displayed. */
+  async isDisplayed() {
+    await t.expect(this.pageSelector.exists).ok();
   }
 
   /** Fills out and submits the form to signin, then checks to see that login was successful. */

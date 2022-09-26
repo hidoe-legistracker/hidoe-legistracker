@@ -16,7 +16,7 @@ fixture('hidoe-legistracker localhost test with default db')
   .page('http://localhost:3000');
 
 test('Test that landing / sign in page shows up', async () => {
-  await signInPage.isDisplayed();
+  await signInPage.isLandingDisplayed();
 });
 
 test('Test that signin and signout work', async () => {
