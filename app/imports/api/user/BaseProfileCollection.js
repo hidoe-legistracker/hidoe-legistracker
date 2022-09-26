@@ -163,6 +163,19 @@ class BaseProfileCollection extends BaseCollection {
     throw new Meteor.Error(`User ${profile.email} owns Stuff.`);
   }
 
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    const profile = this._collection.findOne({ _id: profileID });
+    const userID = profile.userID;
+    if (!Users.isReferenced(userID)) {
+      return super.removeIt(profileID);
+    }
+    throw new Meteor.Error(`User ${profile.email} owns Stuff.`);
+  }
+
 }
 
 export default BaseProfileCollection;

@@ -13,7 +13,7 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 import { ROLE } from '../../api/role/Role';
-import { defineMethod, updateMethod, removeItMethod } from '../../api/base/BaseCollection.methods';
+import { defineMethod, updateMethod, transferItMethod } from '../../api/base/BaseCollection.methods';
 
 const house = [];
 const senate = [];
@@ -115,14 +115,14 @@ const EditProfile = () => {
     const instance = _id;
     if (user.role === ROLE.USER) {
       const collectionName = UserProfiles.getCollectionName();
-      removeItMethod.callPromise({ collectionName, instance })
+      transferItMethod.callPromise({ collectionName, instance })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => {
           swal('Success', 'Profile updated successfully (with role change)', 'success');
         });
     } else {
       const collectionName = AdminProfiles.getCollectionName();
-      removeItMethod.callPromise({ collectionName, instance })
+      transferItMethod.callPromise({ collectionName, instance })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => {
           swal('Success', 'Profile updated successfully (with role change)', 'success');

@@ -85,6 +85,17 @@ class AdminProfileCollection extends BaseProfileCollection {
   }
 
   /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    if (this.isDefined(profileID)) {
+      return super.transferIt(profileID);
+    }
+    return null;
+  }
+
+  /**
    * Implementation of assertValidRoleForMethod. Asserts that userId is logged in as an Admin or Admin.
    * This is used in the define, update, and removeIt Meteor methods associated with each class.
    * @param userId The userId of the logged in user. Can be null or undefined
