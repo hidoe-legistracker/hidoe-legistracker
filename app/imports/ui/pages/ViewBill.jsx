@@ -1,13 +1,11 @@
 import React from 'react';
 import { Col, Container, Row, Button, ProgressBar } from 'react-bootstrap';
 import { FileEarmarkText } from 'react-bootstrap-icons';
-// import { useTracker } from 'meteor/react-meteor-data';
-import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
-import { withTracker } from 'meteor/react-meteor-data';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
-import PropTypes from 'prop-types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -15,8 +13,24 @@ import { Measures } from '../../api/measure/MeasureCollection';
 
 const billProgress = 60;
 
-const ViewBill = ({ ready, testimonies, measure }) => (
-  ready ? (
+const ViewBill = () => {
+  const { _id } = useParams();
+
+  const { testimonies, measure, ready } = useTracker(() => {
+    const measureSubscription = Measures.subscribeMeasures();
+    const testimonySubscription = Testimonies.subscribeTestimony();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready();
+
+    const testimonyCollection = Testimonies.find({}, {}).fetch();
+    const measureItem = Measures.findOne({ _id: _id }, {});
+    return {
+      testimonies: testimonyCollection,
+      measure: measureItem,
+      ready: rdy,
+    };
+  }, [_id]);
+
+  return ready ? (
     <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
       <Container>
         <Row>
@@ -150,29 +164,7 @@ const ViewBill = ({ ready, testimonies, measure }) => (
         </Form>
       </Row>
     </Container>
-  ) : <LoadingSpinner message="Loading Data" />);
-
-ViewBill.propTypes = {
-  testimonies: PropTypes.shape().isRequired,
-  measure: PropTypes.shape().isRequired,
-  ready: PropTypes.bool.isRequired,
+  ) : <LoadingSpinner message="Loading Data" />;
 };
 
-// withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-export default withTracker(({ match }) => {
-  // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
-  const id = match.params._id;
-  // Get access to documents.
-  const sub1 = Meteor.subscribe(Measures.getPublicationName());
-  const sub2 = Meteor.subscribe(Testimonies.getPublicationName());
-  // Determine if the subscription is ready
-  const ready = sub1.ready() && sub2.ready();
-  // Get the documents
-  const testimony = Testimonies.collection.find({}).fetch();
-  const measures = Measures.collection.findOne(id);
-  return {
-    testimonies: testimony,
-    measure: measures,
-    ready,
-  };
-})(ViewBill);
+export default ViewBill;
