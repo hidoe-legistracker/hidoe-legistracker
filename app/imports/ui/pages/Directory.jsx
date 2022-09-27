@@ -111,17 +111,17 @@ const Directory = () => {
                   </thead>
                   <tbody>
                     {
-                      // eslint-disable-next-line array-callback-return,consistent-return
                       measure.filter(post => {
                         if (search === '') {
                           return post;
-                        } if (post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
                           return post;
-                        } if (post.description.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
                           return post;
-                        } if (post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
                           return post;
                         }
+                        return undefined;
                       }).map(measures => (
                         <MeasureComponent measure={measures} />
                       ))
