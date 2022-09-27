@@ -49,72 +49,56 @@ const ViewBill = () => {
       <h1>Bill #{measure.measureNumber}</h1>
       <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
         <Col>
+          <Row style={{ fontWeight: 'bold' }}>Title</Row>
+          <Row>{measure.measureTitle}</Row>
+        </Col>
+        <Col className="view-bill-columns">
+          <Row style={{ fontWeight: 'bold' }}>Office</Row>
+          <Row>{measure.currentReferral}</Row>
+        </Col>
+        <Col className="view-bill-columns">
+          <Row style={{ fontWeight: 'bold' }}>Code</Row>
+          <Row>{measure.code}</Row>
+        </Col>
+      </Row>
+      <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
+        <Col>
           <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
           <Row>{measure.description}</Row>
         </Col>
       </Row>
       <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
         <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Office</Row>
-          <Row>{measure.currentReferral}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Action</Row>
-          <Row>Testimony</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Act #</Row>
-          <Row>--</Row>
-        </Col>
-      </Row>
-      <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Rationale</Row>
-          <Row>..............</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Committee Referral</Row>
-          <Row>{measure.currentReferral}</Row>
+          <Row style={{ fontWeight: 'bold' }}>Report Title</Row>
+          <Row>{measure.reportTitle}</Row>
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Committee</Row>
           <Row>Conference</Row>
         </Col>
+        <Col className="view-bill-columns">
+          <Row style={{ fontWeight: 'bold' }}>Type</Row>
+          <Row>{measure.measureType}</Row>
+        </Col>
       </Row>
       <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
         <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>DOE Position</Row>
-          <Row>Support</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Testifier(s)</Row>
-          <Row>John Doe</Row>
+          <Row style={{ fontWeight: 'bold' }}>Introducer</Row>
+          <Row>{measure.introducer}</Row>
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Status</Row>
           <Row>{measure.status}</Row>
         </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Proposed</Row>
-          <Row>..........</Row>
-        </Col>
       </Row>
       <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
         <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Hearing Date</Row>
-          <Row>12/02/2022</Row>
+          <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
+          <Row>{measure.measureArchiveUrl}</Row>
         </Col>
         <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Hearing Time</Row>
-          <Row>12:00pm</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Hearing Location</Row>
-          <Row>CR 229</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Hearing Type</Row>
-          <Row>Hearing</Row>
+          <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
+          <Row>{measure.measurePdfUrl}</Row>
         </Col>
       </Row>
       <Container className="view-testimony-container">
