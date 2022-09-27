@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
+import { Col, Container, Row, Nav, ProgressBar, Form, Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
@@ -34,6 +34,8 @@ MeasureComponent.propTypes = {
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
   const [search, setSearch] = useState('');
+  const [office, setOffice] = useState('');
+  console.log(`office: ${office.toLowerCase()}`);
 
   const { ready, measure } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
@@ -50,41 +52,9 @@ const Directory = () => {
       <Row className="justify-content-center">
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Item>
-              <Nav.Link eventKey="first">BOE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="second">Deputy</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="third">OCID</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="fourth">OFO</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="fifth">OFS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="sixth">OHE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="seventh">OITS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="eighth">OSIP</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="ninth">OSSS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="tenth">OTM</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="eleventh">Supt</Nav.Link>
-            </Nav.Item>
-          </Nav>
+          <Row>
+            <Button onChange={() => setOffice('JDC')} variant="outline-secondary">JDC</Button>
+          </Row>
         </Col>
         <Col xs={10}>
           <Form className="d-flex">
@@ -114,13 +84,13 @@ const Directory = () => {
                     {
                       // eslint-disable-next-line array-callback-return,consistent-return
                       measure.filter(post => {
-                        if (search === '') {
+                        if (search === '' || (post.currentReferral.toLowerCase() === '')) {
                           return post;
-                        } if (post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.measureTitle.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
                           return post;
-                        } if (post.description.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.description.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
                           return post;
-                        } if (post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                        } if (post.currentReferral.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
                           return post;
                         }
                       }).map(measures => (
