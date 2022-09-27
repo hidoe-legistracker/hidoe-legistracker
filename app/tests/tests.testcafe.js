@@ -1,7 +1,7 @@
 import { t } from 'testcafe';
-import { directoryPage, myFoldersPage, inboxPage, signOutPage, createEmailPage } from './simple.page';
+import { myFoldersPage, inboxPage, signOutPage, createEmailPage } from './simple.page';
 import { signInPage } from './signin.page';
-import { createMeasurePage } from './createmeasure.page';
+import { directoryPage } from './directory.page';
 import { navBar } from './navbar.component';
 import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 
@@ -9,7 +9,7 @@ import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 
 /** Credentials for one of the sample users defined in settings.development.json. */
 const credentials = { username: 'john@foo.com', password: 'changeme', firstName: 'John', lastName: 'Doe' };
-const adminCredentials = { username: 'admin@foo.com', password: 'changeme', firstName: 'Admin', lastName: 'MATRP' };
+// const adminCredentials = { username: 'admin@foo.com', password: 'changeme', firstName: 'Admin', lastName: 'MATRP' };
 // const newCredentials = { username: 'jane@foo.com', password: 'changeme' };
 
 fixture('hidoe-legistracker localhost test with default db')
