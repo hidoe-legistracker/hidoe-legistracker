@@ -27,8 +27,7 @@ const MeasureComponent = ({ measure }) => (
 );
 
 MeasureComponent.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  measure: PropTypes.object.isRequired,
+  measure: PropTypes.shape().isRequired,
 };
 
 /* Renders a table containing all of the Measure documents. */
@@ -82,17 +81,17 @@ const Directory = () => {
                   </thead>
                   <tbody>
                     {
-                      // eslint-disable-next-line array-callback-return,consistent-return
                       measure.filter(post => {
                         if (search === '' || (post.currentReferral.toLowerCase() === '')) {
                           return post;
-                        } if (post.measureTitle.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
+                        } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
                           return post;
-                        } if (post.description.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
+                        } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
                           return post;
-                        } if (post.currentReferral.toLowerCase().includes(search.toLowerCase()) || (post.currentReferral.toLowerCase().includes(office.toLowerCase()) || office === '')) {
+                        } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
                           return post;
                         }
+                        return undefined;
                       }).map(measures => (
                         <MeasureComponent measure={measures} />
                       ))

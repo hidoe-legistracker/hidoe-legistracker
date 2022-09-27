@@ -1,6 +1,7 @@
 import { t } from 'testcafe';
-import { directoryPage, myFoldersPage, inboxPage, signOutPage, createEmailPage } from './simple.page';
+import { myFoldersPage, inboxPage, signOutPage, createEmailPage } from './simple.page';
 import { signInPage } from './signin.page';
+import { directoryPage } from './directory.page';
 import { navBar } from './navbar.component';
 import { COMPONENT_IDS } from '../imports/ui/utilities/ComponentIDs';
 
