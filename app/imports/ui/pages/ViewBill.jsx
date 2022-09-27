@@ -2,48 +2,31 @@ import React from 'react';
 import { Col, Container, Row, Button, ProgressBar } from 'react-bootstrap';
 import { FileEarmarkText } from 'react-bootstrap-icons';
 import { useTracker } from 'meteor/react-meteor-data';
-// import { Stuffs } from '../../api/stuff/StuffCollection';
-// import StuffItem from '../components/StuffItem';
 import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
+import { Measures } from '../../api/measure/MeasureCollection';
 
-/* Renders a table containing all of the Stuff documents. Use <StuffItem> to render each row.
-*
-*   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-  const { ready, stuffs } = useTracker(() => {
-    // Note that this subscription will get cleaned up
-    // when your component is unmounted or deps change.
-    // Get access to Stuff documents.
-    const subscription = Stuffs.subscribeStuff();
-    // Determine if the subscription is ready
-    const rdy = subscription.ready();
-    // Get the Stuff documents
-    const stuffItems = Stuffs.find({}, { sort: { name: 1 } }).fetch();
-    return {
-      stuffs: stuffItems,
-      ready: rdy,
-    };
-  }, []);
-  *
-  *  <LoadingSpinner message="Loading Stuff" />
-*
-* */
 const billProgress = 60;
 
 const ViewBill = () => {
-  const { ready, testimonies } = useTracker(() => {
-    const subscription = Testimonies.subscribeTestimony();
-    const rdy = subscription.ready();
+  const { ready, testimonies, measure } = useTracker(({ match }) => {
+    const id = match.params._id;
+    const sub1 = Testimonies.subscribeTestimony();
+    const sub2 = Measures.subscribeMeasures();
+    const rdy = sub1.ready() && sub2.ready();
     const testimonyItems = Testimonies.find().fetch();
+    const measureItems = Measures.findOne(id);
     return {
       ready: rdy,
       testimonies: testimonyItems,
+      measure: measureItems,
     };
   }, []);
+
   return ready ? (
     <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
       <Container>
@@ -60,17 +43,17 @@ const ViewBill = () => {
           </Col>
         </Row>
       </Container>
-      <h1>Bill #1234</h1>
+      <h1>Bill #{measure.measureNumber}</h1>
       <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
         <Col>
           <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
-          <Row>...............</Row>
+          <Row>{measure.description}</Row>
         </Col>
       </Row>
       <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Office</Row>
-          <Row>OCID BOE</Row>
+          <Row>{measure.currentReferral}</Row>
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Action</Row>
@@ -88,7 +71,7 @@ const ViewBill = () => {
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Committee Referral</Row>
-          <Row>EDU, FIN</Row>
+          <Row>{measure.currentReferral}</Row>
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Committee</Row>
@@ -106,7 +89,7 @@ const ViewBill = () => {
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Status</Row>
-          <Row>1st Crossover</Row>
+          <Row>{measure.status}</Row>
         </Col>
         <Col className="view-bill-columns">
           <Row style={{ fontWeight: 'bold' }}>Proposed</Row>
@@ -181,4 +164,34 @@ const ViewBill = () => {
   ) : <LoadingSpinner message="Loading Data" />;
 };
 
+/*
+ViewBill.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  testimony: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  measure: PropTypes.object.isRequired,
+  ready: PropTypes.bool.isRequired,
+};
+
+// withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
+export default withTracker(({ match }) => {
+  // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
+  const id = match.params._id;
+  // Get access to documents.
+  const sub1 = Meteor.subscribe(Measures.getPublicationName());
+  const sub2 = Meteor.subscribe(Testimonies.getPublicationName());
+  // Get access to documents for admin
+  // Determine if the subscription is ready
+  const ready = sub1.ready() && sub2.ready();
+  // Get the documents
+  const testimonies = Testimonies.collection.find().fetch();
+  const measures = Measures.collection.findOne(id);
+  return {
+    testimony: testimonies,
+    measure: measures,
+    ready,
+  };
+})(ViewBill);
+*
+ */
 export default ViewBill;

@@ -14,7 +14,8 @@ const billProgress = 60;
 
 /* Component for layout out a Measures */
 const MeasureComponent = ({ measure }) => (
-  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
+  // eslint-disable-next-line react/destructuring-assignment,react/no-this-in-sfc
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${this.props.measure._id}`}>
     <th scope="row">{measure.measureNumber}</th>
     <td>{measure.measureTitle}</td>
     <td>{measure.description}</td>

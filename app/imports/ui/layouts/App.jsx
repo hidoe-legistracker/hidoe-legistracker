@@ -77,7 +77,7 @@ const App = () => {
  */
 const ProtectedRoute = ({ children }) => {
   const isLogged = Meteor.userId() !== null;
-  console.log('ProtectedRoute', isLogged);
+  // console.log('ProtectedRoute', isLogged);
   return isLogged ? children : <Navigate to="/signin" />;
 };
 
@@ -92,7 +92,7 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/signin" />;
   }
   const isAdmin = Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]);
-  console.log('AdminProtectedRoute', isLogged, isAdmin);
+  // console.log('AdminProtectedRoute', isLogged, isAdmin);
   return (isLogged && isAdmin) ? children : <Navigate to="/notauthorized" />;
 };
 
