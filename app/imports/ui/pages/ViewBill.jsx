@@ -1,10 +1,13 @@
 import React from 'react';
 import { Col, Container, Row, Button, ProgressBar } from 'react-bootstrap';
 import { FileEarmarkText } from 'react-bootstrap-icons';
-import { useTracker } from 'meteor/react-meteor-data';
+// import { useTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 import Form from 'react-bootstrap/Form';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
+import PropTypes from 'prop-types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -12,22 +15,8 @@ import { Measures } from '../../api/measure/MeasureCollection';
 
 const billProgress = 60;
 
-const ViewBill = () => {
-  const { ready, testimonies, measure } = useTracker(({ match }) => {
-    const id = match.params._id;
-    const sub1 = Testimonies.subscribeTestimony();
-    const sub2 = Measures.subscribeMeasures();
-    const rdy = sub1.ready() && sub2.ready();
-    const testimonyItems = Testimonies.find().fetch();
-    const measureItems = Measures.findOne(id);
-    return {
-      ready: rdy,
-      testimonies: testimonyItems,
-      measure: measureItems,
-    };
-  }, []);
-
-  return ready ? (
+const ViewBill = ({ ready, testimonies, measure }) => (
+  ready ? (
     <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
       <Container>
         <Row>
@@ -161,15 +150,11 @@ const ViewBill = () => {
         </Form>
       </Row>
     </Container>
-  ) : <LoadingSpinner message="Loading Data" />;
-};
+  ) : <LoadingSpinner message="Loading Data" />);
 
-/*
 ViewBill.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  testimony: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  measure: PropTypes.object.isRequired,
+  testimonies: PropTypes.shape().isRequired,
+  measure: PropTypes.shape().isRequired,
   ready: PropTypes.bool.isRequired,
 };
 
@@ -180,18 +165,14 @@ export default withTracker(({ match }) => {
   // Get access to documents.
   const sub1 = Meteor.subscribe(Measures.getPublicationName());
   const sub2 = Meteor.subscribe(Testimonies.getPublicationName());
-  // Get access to documents for admin
   // Determine if the subscription is ready
   const ready = sub1.ready() && sub2.ready();
   // Get the documents
-  const testimonies = Testimonies.collection.find().fetch();
+  const testimony = Testimonies.collection.find({}).fetch();
   const measures = Measures.collection.findOne(id);
   return {
-    testimony: testimonies,
+    testimonies: testimony,
     measure: measures,
     ready,
   };
 })(ViewBill);
-*
- */
-export default ViewBill;

@@ -14,8 +14,7 @@ const billProgress = 60;
 
 /* Component for layout out a Measures */
 const MeasureComponent = ({ measure }) => (
-  // eslint-disable-next-line react/destructuring-assignment,react/no-this-in-sfc
-  <Link className="table-row" as={NavLink} exact to={`/view-bill/${this.props.measure._id}`}>
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
     <th scope="row">{measure.measureNumber}</th>
     <td>{measure.measureTitle}</td>
     <td>{measure.description}</td>
@@ -28,8 +27,7 @@ const MeasureComponent = ({ measure }) => (
 );
 
 MeasureComponent.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  measure: PropTypes.object.isRequired,
+  measure: PropTypes.shape().isRequired,
 };
 
 /* Renders a table containing all of the Measure documents. */
