@@ -1,5 +1,5 @@
-import React from 'react';
-import { Col, Container, Row, Nav, ProgressBar } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
@@ -33,6 +33,8 @@ MeasureComponent.propTypes = {
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
+  const [search, setSearch] = useState('');
+
   const { ready, measure } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
@@ -44,7 +46,7 @@ const Directory = () => {
   }, []);
 
   return (ready ? (
-    <Container id={PAGE_IDS.DIRECTORY} className="py-3">
+    <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
@@ -85,6 +87,15 @@ const Directory = () => {
           </Nav>
         </Col>
         <Col xs={10}>
+          <Form className="d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+              onChange={event => setSearch(event.target.value)}
+            />
+          </Form>
           <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
             <Tab eventKey="all-bills" title="All Bills">
               <Row>
@@ -100,9 +111,22 @@ const Directory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {measure.map(measures => (
-                      <MeasureComponent measure={measures} />
-                    ))}
+                    {
+                      // eslint-disable-next-line array-callback-return,consistent-return
+                      measure.filter(post => {
+                        if (search === '') {
+                          return post;
+                        } if (post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        } if (post.description.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        } if (post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        }
+                      }).map(measures => (
+                        <MeasureComponent measure={measures} />
+                      ))
+                    }
                   </tbody>
                 </Table>
               </Row>
