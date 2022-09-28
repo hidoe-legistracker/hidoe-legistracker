@@ -117,7 +117,7 @@ const ViewBill = () => {
             <tbody>
               {testimonies.map(testimony => (
                 <Link className="table-row" to={`/view-testimony/${testimony._id}`}>
-                  <th scope="row">{testimony.hearingDate.toLocaleDateString()}</th>
+                  <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                   <td>{testimony.billNumber}</td>
                   <td>{testimony.testifier}</td>
                   <td>{testimony.deptPosition}</td>

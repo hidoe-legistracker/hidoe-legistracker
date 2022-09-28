@@ -41,15 +41,15 @@ export const Testimony = React.forwardRef((props, ref) => {
             <Row className="testimony-header1">Committee: </Row>
           </Col>
           <Col style={{ padding: 0 }}>
-            <Row>{testimony.hearingDate.toLocaleDateString()}</Row>
-            <Row>{testimony.hearingDate.toLocaleTimeString()}</Row>
-            <Row>{testimony.hearingLocation}</Row>
+            <Row>{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</Row>
+            <Row>{testimony.hearingDate ? testimony.hearingDate.toLocaleTimeString() : '-'}</Row>
+            <Row>{testimony.hearingLocation ? testimony.hearingLocation : '-'}</Row>
             <Row>{testimony.committeeName}</Row>
           </Col>
           <Row className="row-center">
             <Row>
               <Col className="testimony-header2" xs={2}>Department</Col>
-              <Col>{testimony.representing}</Col>
+              <Col>{testimony.representing ? testimony.representing : '-'}</Col>
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Testifier</Col>
@@ -57,11 +57,11 @@ export const Testimony = React.forwardRef((props, ref) => {
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Title of Bill</Col>
-              <Col>{measure.measureType}{measure.measureNumber}</Col>
+              <Col>{measure.measureType.toUpperCase()}{measure.measureNumber}</Col>
             </Row>
             <Row>
               <Col className="testimony-header2" xs={2}>Purpose of Bill</Col>
-              <Col>{measure.description}</Col>
+              <Col>{measure.description ? measure.description : '-'}</Col>
             </Row>
             <Container style={{ marginTop: 10 }}>
               <Col>
@@ -70,7 +70,7 @@ export const Testimony = React.forwardRef((props, ref) => {
               <Col>
                 <Row style={{ marginBottom: 20 }}>{testimony.introduction}</Row>
                 <Row style={{ marginBottom: 20 }}>{testimony.content}</Row>
-                <Row style={{ marginBottom: 20 }}>{testimony.closing}</Row>
+                <Row style={{ marginBottom: 20 }}>{testimony.closing ? testimony.closing : ''}</Row>
               </Col>
             </Container>
           </Row>
