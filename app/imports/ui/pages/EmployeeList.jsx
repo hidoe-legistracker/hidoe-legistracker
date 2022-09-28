@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { Col, Container, Row, Table, InputGroup, Form, Button } from 'react-bootstrap';
+import { Col, Container, Row, Table, InputGroup, Form } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import EmployeeListItem from '../components/EmployeeListItem';
