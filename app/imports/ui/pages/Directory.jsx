@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Col, Container, Row, Nav, ProgressBar, Form, Button } from 'react-bootstrap';
+import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
+import ListGroup from 'react-bootstrap/ListGroup';
 import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
+import _ from 'underscore';
 import Tabs from 'react-bootstrap/Tabs';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -33,8 +35,8 @@ MeasureComponent.propTypes = {
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
   const [search, setSearch] = useState('');
-  const [office, setOffice] = useState('');
-  console.log(`office: ${office.toLowerCase()}`);
+  const [bills, setBills] = useState();
+  const [defaultBills, setDefaultBills] = useState(true);
 
   const { ready, measure } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
@@ -46,14 +48,53 @@ const Directory = () => {
     };
   }, []);
 
+  const filter = (office) => {
+    // setDefaultList(false);
+    // console.log(`office: ${office}`);
+    const filteredData = _.where(measure, { currentReferral: office });
+    // console.log(`filteredData: ${filteredData}`);
+    setDefaultBills(false);
+    setBills(filteredData);
+    console.log(bills);
+    /* const filtered = filteredMeasures.map(m => {
+      const bill = {};
+
+      bill.bitAppropriation = m.bitAppropriation;
+      bill.code = m.code;
+      bill.currentReferral = m.currentReferral;
+      bill.description = m.description;
+      bill.introducer = m.introducer;
+      bill.lastUpdated = m.lastUpdated;
+      bill.measureArchiveUrl = m.measureArchiveUrl;
+      bill.measureNumber = m.measureNumber;
+      bill.measurePdfUrl = m.measurePdfUrl;
+      bill.measureTitle = m.measureTitle;
+      bill.measureType = m.measureType;
+      bill.reportTitle = m.reportTitle;
+      bill.status = m.status;
+      bill.year = m.year;
+
+      console.log(`bill ${bill}`);
+      return bill;
+    });
+
+    console.log(`filtered ${filtered}`);
+     */
+    // const filteredMeasures = _.filter(getCurrentReferral, function (m) { return m?.includes(office); });
+    // console.log(`filteredMeasures: ${filteredMeasures}`);
+  };
+
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
-          <Row>
-            <Button onChange={() => setOffice('JDC')} variant="outline-secondary">JDC</Button>
-          </Row>
+          <ListGroup defaultActiveKey="#link1">
+            <ListGroup.Item action onClick={() => filter('ALLBILLS')}>ALL BILLS</ListGroup.Item>
+            <ListGroup.Item action onClick={() => filter('JDC')}>JDC</ListGroup.Item>
+            <ListGroup.Item action onClick={() => filter('WAM')}>WAM</ListGroup.Item>
+            <ListGroup.Item action onClick={() => filter('CPN')}>CPN</ListGroup.Item>
+          </ListGroup>
         </Col>
         <Col xs={10}>
           <Form className="d-flex">
@@ -81,8 +122,10 @@ const Directory = () => {
                   </thead>
                   <tbody>
                     {
-                      measure.filter(post => {
-                        if (search === '' || (post.currentReferral.toLowerCase() === '')) {
+                      defaultBills ? (measure.filter(post => {
+                        if (search === '') {
+                          return post;
+                        } if (post.measureNumber && post.measureNumber === search.valueOf()) {
                           return post;
                         } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
                           return post;
@@ -94,7 +137,23 @@ const Directory = () => {
                         return undefined;
                       }).map(measures => (
                         <MeasureComponent measure={measures} />
-                      ))
+                      ))) :
+                        (bills.filter(post => {
+                          if (search === '') {
+                            return post;
+                          } if (post.measureNumber && post.measureNumber === search.valueOf()) {
+                            return post;
+                          } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          }
+                          return undefined;
+                        }).map(measures => (
+                          <MeasureComponent measure={measures} />
+                        )))
                     }
                   </tbody>
                 </Table>
