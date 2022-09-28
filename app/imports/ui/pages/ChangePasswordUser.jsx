@@ -46,16 +46,20 @@ const ChangePasswordUser = () => {
   const bridge = new SimpleSchema2Bridge(schema);
   /* Handle ChangePassword submission. Change password of corresponding email, then redirect to the home page. */
   const submit = (doc) => {
-    const { currentPassword, password } = doc;
-    Meteor.loginWithPassword(userId, currentPassword, err => {
-      if (!err) {
-        setValidated(true);
-        setNewPassword(password);
-        setOldPassword(currentPassword);
-      } else {
-        setError(err.reason);
-      }
-    });
+    const { currentPassword, password, confirmPassword } = doc;
+    if (password !== confirmPassword) {
+      setError('Password does not match.');
+    } else {
+      Meteor.loginWithPassword(userId, currentPassword, err => {
+        if (!err) {
+          setValidated(true);
+          setNewPassword(password);
+          setOldPassword(currentPassword);
+        } else {
+          setError(err.reason);
+        }
+      });
+    }
   };
   if (validated) {
     Meteor.call('changePassword', oldPassword, newPassword, err => {
