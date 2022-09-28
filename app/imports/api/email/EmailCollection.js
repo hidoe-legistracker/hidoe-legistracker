@@ -9,11 +9,6 @@ export const emailPublications = {
   emailAdmin: 'EmailAdmin',
 };
 
-const recipientSchema = new SimpleSchema({
-  name: { type: String, optional: true },
-  email: String,
-});
-
 class EmailCollection extends BaseCollection {
   constructor() {
     super('Emails', new SimpleSchema({
@@ -21,11 +16,11 @@ class EmailCollection extends BaseCollection {
       senderName: { type: String, optional: true },
       senderEmail: String,
       recipients: Array,
-      'recipients.$': { type: recipientSchema },
+      'recipients.$': String,
       ccs: { type: Array, optional: true },
-      'ccs.$': { type: recipientSchema, optional: true },
+      'ccs.$': String,
       bccs: { type: Array, optional: true },
-      'bccs.$': { type: recipientSchema, optional: true },
+      'bccs.$': String,
       date: Date,
       attachment: { type: Object, optional: true },
       body: String,
@@ -62,8 +57,7 @@ class EmailCollection extends BaseCollection {
       const instance = this;
       Meteor.publish(emailPublications.email, function publish() {
         if (this.userId) {
-          const username = Meteor.users.findOne(this.userId).username;
-          return instance._collection.find({ recipientEmail: username });
+          return instance._collection.find({});
         }
         return this.ready();
       });
