@@ -76,6 +76,15 @@ const ChangePasswordUser = () => {
                 swal('Success', 'Password updated successfully', 'success');
                 setRedirectToRef(true);
               });
+          } else {
+            const collectionName = AdminProfiles.getCollectionName();
+            const updateData = { id: user._id, newAccount: false };
+            updateMethod.callPromise({ collectionName, updateData })
+              .catch(errr => swal('Error', errr.message, 'error'))
+              .then(() => {
+                swal('Success', 'Password updated successfully', 'success');
+                setRedirectToRef(true);
+              });
           }
         }
       }
