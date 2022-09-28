@@ -17,6 +17,7 @@ import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 const ChangePasswordUser = () => {
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToRef] = useState(false);
+  const [validated, setValidated] = useState(false);
 
   const schema = new SimpleSchema({
     currentPassword: String,
@@ -29,23 +30,35 @@ const ChangePasswordUser = () => {
   const submit = (doc) => {
     const collectionName = UserProfiles.getCollectionName();
     const definitionData = doc;
+    const { currentPassword } = doc;
+    const userId = Meteor.user() ? Meteor.user().username : '';
     // create the new UserProfile
     defineMethod.callPromise({ collectionName, definitionData })
       .then(() => {
         // log the new user in.
-        const userId = COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD;
-        const password = COMPONENT_IDS.SIGN_UP_FORM_PASSWORD;
-        Meteor.call('changePassword', userId, password, err => {
+        // const userId = ;
+        // const password = ;
+        Meteor.loginWithPassword({ email: userId }, { password: currentPassword }, (err) => {
           if (err) {
-            setError(err.reason);
+            setValidated(false);
           } else {
-            setError('');
-            setRedirectToRef(true);
+            setValidated(true);
           }
         });
+        if (validated) {
+          // Meteor.call('changePassword', userId, currentPassword, err => {
+          //   if (err) {
+          //     setError(err.reason);
+          //   } else {
+          //     setError('');
+          //     setRedirectToRef(true);
+          //   }
+          // });
+        }
       })
       .catch((err) => setError(err.reason));
   };
+  console.log(validated);
 
   /* Display the change password form. Redirect to add page after successful password change and login. */
   // if correct authentication, redirect to from: page instead of change password screen
