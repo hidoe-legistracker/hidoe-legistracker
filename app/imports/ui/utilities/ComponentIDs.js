@@ -21,7 +21,6 @@ export const COMPONENT_IDS = {
   NAVBAR_CHANGE_PASSWORD_ADMIN: 'navbar-change-password-admin',
   NAVBAR_CHANGE_PASSWORD_USER: 'navbar-change-password-user',
 
-
   // SIGN IN PAGE
   SIGN_IN_FORM_EMAIL: 'sign-in-form-email',
   SIGN_IN_FORM_PASSWORD: 'sign-in-form-password',
@@ -30,6 +29,7 @@ export const COMPONENT_IDS = {
   // SIGN UP PAGE
   SIGN_UP_FORM_FIRST_NAME: 'sign-up-form-first-name',
   SIGN_UP_FORM_LAST_NAME: 'sign-up-form-last-name',
+  SIGN_UP_FORM_EMAIL: 'sign-up-form-email',
   SIGN_UP_FORM_PASSWORD: 'sign-up-form-password',
   SIGN_UP_FORM_EMPLOYEE_ID: 'sign-up-form-employee-id',
   SIGN_UP_FORM_ROLE: 'sign-up-form-role',

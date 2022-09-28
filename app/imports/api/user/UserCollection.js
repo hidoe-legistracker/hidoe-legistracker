@@ -68,6 +68,13 @@ class UserCollection {
     // return undefined;
   }
 
+  updateRole(user, role) {
+    const userID = this.getID(user);
+
+    Roles.createRole(role, { unlessExists: true });
+    Roles.setUserRoles(userID, role);
+  }
+
   /**
    * Asserts that the passed user has the specified role.
    * @param user The user (username or userID).

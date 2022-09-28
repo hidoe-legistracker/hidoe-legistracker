@@ -14,6 +14,10 @@ body {
   --bs-light-rgb: var(--matr-navbar-bg-rgb);
 }
 
+.montserrat {
+  font-family: 'Montserrat', monospace;
+}
+
 /* Set the SignIn and SignUp alerts background. */
 #signin-page .alert-light, #signup-page .alert-light {
   --bs-alert-bg: var(--matr-navbar-bg);
@@ -108,9 +112,20 @@ body {
   padding: 5px;
 }
 
+.mb-3 {
+  margin-bottom: 1rem!important;
+  margin-top: 10px;
+}
+
 .testimony-header2 {
   font-weight: bold;
   margin-bottom: 20px!important;
+}
+
+.letterhead {
+  font-size: small;
+  font-weight: bold;
+  justify-content: center;
 }
 
 .col .row {
@@ -176,4 +191,9 @@ h1, h3 {
   background-color: white!important;
   border: thin solid black;
   text-decoration: none!important;
+}
+
+.logo {
+  width: 130px!important;
+  height: 100px;
 }

@@ -28,6 +28,7 @@ import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
 import ForgotPassword from '../pages/ForgotPassword';
+import EditProfile from '../pages/EditProfile';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -42,26 +43,25 @@ const App = () => {
           {currentUser ? (
             <Route exact path="/" element={<Directory />} />
           ) : <Route exact path="/" element={<SignIn />} />}
-          <Route exact path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<AdminProtectedRoute><SignUp /></AdminProtectedRoute>} />
           <Route path="/employees" element={<AdminProtectedRoute><EmployeeList /></AdminProtectedRoute>} />
-          <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
           <Route path="/change-password-admin" element={<AdminProtectedRoute><ChangePasswordAdmin /></AdminProtectedRoute>} />
-          <Route path="/change-password-user" element={<ChangePasswordUser />} />
+          <Route path="/change-password-user" element={<ProtectedRoute><ChangePasswordUser /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
-          <Route path="/create-measure" element={<AdminProtectedRoute><AddMeasure /></AdminProtectedRoute>} />
+          <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
-          <Route path="/edit-testimony" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
+          <Route path="/edit-testimony/:_id" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
-          <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
+          <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-          <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
+          <Route path="/view-testimony/:_id" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/notauthorized" element={<NotAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -77,7 +77,7 @@ const App = () => {
  */
 const ProtectedRoute = ({ children }) => {
   const isLogged = Meteor.userId() !== null;
-  console.log('ProtectedRoute', isLogged);
+  // console.log('ProtectedRoute', isLogged);
   return isLogged ? children : <Navigate to="/signin" />;
 };
 
@@ -92,7 +92,7 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/signin" />;
   }
   const isAdmin = Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]);
-  console.log('AdminProtectedRoute', isLogged, isAdmin);
+  // console.log('AdminProtectedRoute', isLogged, isAdmin);
   return (isLogged && isAdmin) ? children : <Navigate to="/notauthorized" />;
 };
 

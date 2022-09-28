@@ -14,7 +14,7 @@ export const testimonyPublications = {
 
 class TestimonyCollection extends BaseCollection {
   constructor() {
-    super('Testimony', new SimpleSchema({
+    super('Testimonies', new SimpleSchema({
       owner: String,
       committeeChair: String,
       committeeName: String,
@@ -217,4 +217,4 @@ class TestimonyCollection extends BaseCollection {
 /**
  * Provides the singleton instance of this class to all other entities.
  */
-export const Testimony = new TestimonyCollection();
+export const Testimonies = new TestimonyCollection();

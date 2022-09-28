@@ -1,120 +1,141 @@
-import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
-import { Col, Container, Row, ProgressBar, Nav } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import { Link, Navigate } from 'react-router-dom';
+import ListGroup from 'react-bootstrap/ListGroup';
 import { useTracker } from 'meteor/react-meteor-data';
+import Tab from 'react-bootstrap/Tab';
+import _ from 'underscore';
+import Tabs from 'react-bootstrap/Tabs';
+import { Link, NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import { UserProfiles } from '../../api/user/UserProfileCollection';
-import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { ROLE } from '../../api/role/Role';
+import { Measures } from '../../api/measure/MeasureCollection';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const billProgress = 60;
 
+/* Component for layout out a Measures */
+const MeasureComponent = ({ measure }) => (
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
+    <th scope="row">{measure.measureNumber}</th>
+    <td>{measure.measureTitle}</td>
+    <td>{measure.description}</td>
+    <td>{measure.currentReferral}</td>
+    <td>{measure.measureType}</td>
+    <td>
+      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+    </td>
+  </Link>
+);
+
+MeasureComponent.propTypes = {
+  measure: PropTypes.shape().isRequired,
+};
+
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
-  const { ready, currentUser } = useTracker(() => {
-    const username = Meteor.user() ? Meteor.user().username : '';
-    let rdy;
-    let usr;
+  const [search, setSearch] = useState('');
+  const [bills, setBills] = useState();
+  const [defaultBills, setDefaultBills] = useState(true);
 
-    if (Roles.userIsInRole(Meteor.userId(), [ROLE.USER])) {
-      const subscription = UserProfiles.subscribe();
-      rdy = subscription.ready();
-      usr = UserProfiles.findByEmail(username);
-    } else {
-      const subscription = AdminProfiles.subscribe();
-      rdy = subscription.ready();
-      usr = AdminProfiles.findByEmail(username);
-    }
+  const { ready, measure } = useTracker(() => {
+    const subscription = Measures.subscribeMeasures();
+    const isReady = subscription.ready();
+    const measureData = Measures.find({}, {}).fetch();
     return {
-      currentUser: usr,
-      ready: rdy,
+      ready: isReady,
+      measure: measureData,
     };
   }, []);
-  if (ready && currentUser.newAccount) {
-    return (<Navigate to="/change-password-user" />);
-  }
+
+  const filter = (office) => {
+    // setDefaultList(false);
+    // console.log(`office: ${office}`);
+    if (office === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = _.where(measure, { currentReferral: office });
+      // console.log(`filteredData: ${filteredData}`);
+      setDefaultBills(false);
+      setBills(filteredData);
+      // console.log(bills);
+    }
+    // console.log(_.uniq(_.pluck(measure, 'currentReferral')));
+  };
+
+  const offices = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
+    'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
+
   return (ready ? (
-    <Container id={PAGE_IDS.DIRECTORY} className="py-3">
+    <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Item>
-              <Nav.Link eventKey="first">BOE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="second">Deputy</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="third">OCID</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="fourth">OFO</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="fifth">OFS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="sixth">OHE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="seventh">OITS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="eighth">OSIP</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="ninth">OSSS</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="tenth">OTM</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="eleventh">Supt</Nav.Link>
-            </Nav.Item>
-          </Nav>
+          <ListGroup defaultActiveKey="#link1">
+            <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ background: 'lightgrey', textAlign: 'center', fontWeight: 'bold' }}>ALL BILLS</ListGroup.Item>
+            {offices.sort().map((o) => <ListGroup.Item action onClick={() => filter(o)}>{o}</ListGroup.Item>)}
+          </ListGroup>
         </Col>
         <Col xs={10}>
+          <Form className="d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+              onChange={event => setSearch(event.target.value)}
+            />
+          </Form>
           <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
             <Tab eventKey="all-bills" title="All Bills">
               <Row>
                 <Table>
-                  <thead>
+                  <thead style={{ marginBottom: 10 }}>
                     <tr>
-                      <th scope="col">Bill #</th>
-                      <th scope="col">Bill</th>
-                      <th scope="col">Office</th>
-                      <th scope="col">Action</th>
-                      <th scope="col">Rationale</th>
-                      <th scope="col">Committee</th>
-                      <th scope="col">Hearing</th>
+                      <th scope="col">#</th>
+                      <th scope="col">Bill Title</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Offices</th>
                       <th scope="col">Type</th>
-                      <th scope="col">Position</th>
-                      <th scope="col">Testifier</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <Link className="table-row" to="/view-bill">
-                      <th scope="row">1234</th>
-                      <td>.....</td>
-                      <td>OCID BOE</td>
-                      <td>Testimony</td>
-                      <td>........</td>
-                      <td>EDU, FIN</td>
-                      <td>12/02/2022</td>
-                      <td>Hearing</td>
-                      <td>Support</td>
-                      <td>John Doe</td>
-                      <td>
-                        <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                      </td>
-                    </Link>
+                    {
+                      defaultBills ? (measure.filter(post => {
+                        if (search === '') {
+                          return post;
+                        } if (post.measureNumber && post.measureNumber === search.valueOf()) {
+                          return post;
+                        } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                          return post;
+                        }
+                        return undefined;
+                      }).map(measures => (
+                        <MeasureComponent measure={measures} />
+                      ))) :
+                        (bills.filter(post => {
+                          if (search === '') {
+                            return post;
+                          } if (post.measureNumber && post.measureNumber === search.valueOf()) {
+                            return post;
+                          } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+                            return post;
+                          }
+                          return undefined;
+                        }).map(measures => (
+                          <MeasureComponent measure={measures} />
+                        )))
+                    }
                   </tbody>
                 </Table>
               </Row>
@@ -139,7 +160,7 @@ const Directory = () => {
         </Col>
       </Row>
     </Container>
-  ) : '');
+  ) : <LoadingSpinner message="Loading Measures" />);
 };
 
 export default Directory;

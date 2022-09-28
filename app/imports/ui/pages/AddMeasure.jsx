@@ -114,6 +114,7 @@ const AddMeasure = () => {
       return { label, value, ...rest };
     });
   });
+  console.log(committeeOptions);
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   return (
