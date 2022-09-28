@@ -51,38 +51,21 @@ const Directory = () => {
   const filter = (office) => {
     // setDefaultList(false);
     // console.log(`office: ${office}`);
-    const filteredData = _.where(measure, { currentReferral: office });
-    // console.log(`filteredData: ${filteredData}`);
-    setDefaultBills(false);
-    setBills(filteredData);
-    console.log(bills);
-    /* const filtered = filteredMeasures.map(m => {
-      const bill = {};
-
-      bill.bitAppropriation = m.bitAppropriation;
-      bill.code = m.code;
-      bill.currentReferral = m.currentReferral;
-      bill.description = m.description;
-      bill.introducer = m.introducer;
-      bill.lastUpdated = m.lastUpdated;
-      bill.measureArchiveUrl = m.measureArchiveUrl;
-      bill.measureNumber = m.measureNumber;
-      bill.measurePdfUrl = m.measurePdfUrl;
-      bill.measureTitle = m.measureTitle;
-      bill.measureType = m.measureType;
-      bill.reportTitle = m.reportTitle;
-      bill.status = m.status;
-      bill.year = m.year;
-
-      console.log(`bill ${bill}`);
-      return bill;
-    });
-
-    console.log(`filtered ${filtered}`);
-     */
-    // const filteredMeasures = _.filter(getCurrentReferral, function (m) { return m?.includes(office); });
-    // console.log(`filteredMeasures: ${filteredMeasures}`);
+    if (office === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = _.where(measure, { currentReferral: office });
+      // console.log(`filteredData: ${filteredData}`);
+      setDefaultBills(false);
+      setBills(filteredData);
+      // console.log(bills);
+    }
+    // console.log(_.uniq(_.pluck(measure, 'currentReferral')));
   };
+
+  const offices = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
+    'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
 
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
@@ -90,10 +73,8 @@ const Directory = () => {
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
           <ListGroup defaultActiveKey="#link1">
-            <ListGroup.Item action onClick={() => filter('ALLBILLS')}>ALL BILLS</ListGroup.Item>
-            <ListGroup.Item action onClick={() => filter('JDC')}>JDC</ListGroup.Item>
-            <ListGroup.Item action onClick={() => filter('WAM')}>WAM</ListGroup.Item>
-            <ListGroup.Item action onClick={() => filter('CPN')}>CPN</ListGroup.Item>
+            <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ background: 'lightgrey', textAlign: 'center', fontWeight: 'bold' }}>ALL BILLS</ListGroup.Item>
+            {offices.sort().map((o) => <ListGroup.Item action onClick={() => filter(o)}>{o}</ListGroup.Item>)}
           </ListGroup>
         </Col>
         <Col xs={10}>
@@ -110,10 +91,10 @@ const Directory = () => {
             <Tab eventKey="all-bills" title="All Bills">
               <Row>
                 <Table>
-                  <thead>
+                  <thead style={{ marginBottom: 10 }}>
                     <tr>
-                      <th scope="col">Bill #</th>
-                      <th scope="col">Bill</th>
+                      <th scope="col">#</th>
+                      <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
                       <th scope="col">Offices</th>
                       <th scope="col">Type</th>
