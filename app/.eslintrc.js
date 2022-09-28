@@ -1,8 +1,11 @@
 module.exports = {
   env: {
     browser: true,
+    commonjs: true,
+    es6: true,
     es2021: true,
     node: true,
+    jquery: true,
   },
   extends: [
     'plugin:react/recommended',
@@ -52,7 +55,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react/no-array-index-key': 'off',
   },
-  "globals": {
-    "Assets": true // Meteor disallows importing of Assets, see https://docs.meteor.com/api/assets.html
-  }
+  globals: {
+    Assets: true, // Meteor disallows importing of Assets, see https://docs.meteor.com/api/assets.html
+  },
 };

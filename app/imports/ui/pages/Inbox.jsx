@@ -5,15 +5,15 @@ import { Button } from 'react-bootstrap';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 /** import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Link } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import { Trash } from 'react-bootstrap-icons';
-import Table from 'react-bootstrap/Table';
-import { PAGE_IDS } from '../utilities/PageIDs';
+ import Col from 'react-bootstrap/Col';
+ import { Link } from 'react-router-dom';
+ import Form from 'react-bootstrap/Form';
+ import { Trash } from 'react-bootstrap-icons';
+ import Table from 'react-bootstrap/Table';
+ import { PAGE_IDS } from '../utilities/PageIDs';
 
-// import InboxItem from '../components/InboxItem';
-// import Button from 'react-bootstrap/Button'; * */
+ // import InboxItem from '../components/InboxItem';
+ // import Button from 'react-bootstrap/Button'; * */
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
