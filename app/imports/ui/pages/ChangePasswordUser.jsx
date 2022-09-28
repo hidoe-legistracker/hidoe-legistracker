@@ -61,24 +61,29 @@ const ChangePasswordUser = () => {
     Meteor.call('changePassword', oldPassword, newPassword, err => {
       if (!err) {
         setError('');
-        setRedirectToRef(true);
-        swal('Success', 'Password Changed!', 'success');
+        // swal('Success', 'Password Changed!', 'success');
         if (ready) {
           if (user.role === ROLE.USER) {
             const collectionName = UserProfiles.getCollectionName();
-            updateMethod.callPromise({ collectionName, newAccount: false });
+            const updateData = { id: user._id, newAccount: false };
+            updateMethod.callPromise({ collectionName, updateData })
+              .catch(errr => swal('Error', errr.message, 'error'))
+              .then(() => {
+                swal('Success', 'Password updated successfully', 'success');
+                setRedirectToRef(true);
+              });
           }
         }
       }
     });
   }
 
-  /* Display the change password form. Redirect to add page after successful password change and login. */
+  /* Display the change password form. Redirect to directory page after successful password change and login. */
   // if correct authentication, redirect to from: page instead of change password screen
   if (redirectToReferer) {
     return <Navigate to="/directory" />;
   }
-  return (
+  return ready ? (
     <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
       <Row className="justify-content-center">
         <Col xs={5}>
@@ -107,7 +112,7 @@ const ChangePasswordUser = () => {
         </Col>
       </Row>
     </Container>
-  );
+  ) : '';
 };
 
 export default ChangePasswordUser;

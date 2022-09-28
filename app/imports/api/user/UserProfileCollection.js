@@ -44,7 +44,7 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param phone
    * @param role
    */
-  update(docID, { firstName, lastName, myFolders, departments, phone, role }) {
+  update(docID, { firstName, lastName, myFolders, departments, phone, role, newAccount }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -66,6 +66,9 @@ class UserProfileCollection extends BaseProfileCollection {
     }
     if (role) {
       updateData.role = role;
+    }
+    if (newAccount !== undefined) {
+      updateData.newAccount = newAccount;
     }
     this._collection.update(docID, { $set: updateData });
   }

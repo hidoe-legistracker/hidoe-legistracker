@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Roles } from 'meteor/alanning:roles';
 import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -6,11 +7,15 @@ import { useTracker } from 'meteor/react-meteor-data';
 import Tab from 'react-bootstrap/Tab';
 import _ from 'underscore';
 import Tabs from 'react-bootstrap/Tabs';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Meteor } from 'meteor/meteor';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { ROLE } from '../../api/role/Role';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 const billProgress = 60;
 
@@ -38,15 +43,33 @@ const Directory = () => {
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
-  const { ready, measure } = useTracker(() => {
+  const { currentUser, ready, init, measure } = useTracker(() => {
+    const username = Meteor.user() ? Meteor.user().username : '';
+    let rdy;
+    let usr;
+    if (Roles.userIsInRole(Meteor.userId(), [ROLE.USER])) {
+      const subscription = UserProfiles.subscribe();
+      rdy = subscription.ready();
+      usr = UserProfiles.findByEmail(username);
+    } else {
+      const subscription = AdminProfiles.subscribe();
+      rdy = subscription.ready();
+      usr = AdminProfiles.findByEmail(username);
+    }
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
     const measureData = Measures.find({}, {}).fetch();
     return {
+      currentUser: usr,
       ready: isReady,
+      init: rdy,
       measure: measureData,
     };
   }, []);
+
+  if (init && currentUser.newAccount) {
+    return (<Navigate to="/change-password-user" />);
+  }
 
   const filter = (office) => {
     // setDefaultList(false);
