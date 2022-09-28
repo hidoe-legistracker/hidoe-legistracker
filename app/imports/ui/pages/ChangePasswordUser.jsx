@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import { useTracker } from 'meteor/react-meteor-data';
 import { Navigate } from 'react-router';
 import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-bootstrap5';
-import { Accounts } from 'meteor/accounts-base';
+import swal from 'sweetalert';
 import { PAGE_IDS } from '../utilities/PageIDs';
-import { UserProfiles } from '../../api/user/UserProfileCollection';
-import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { ROLE } from '../../api/role/Role';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
 
 /**
  * ChangePassword component is similar to signin component, but we change the user's password instead.
@@ -18,6 +21,22 @@ const ChangePasswordUser = () => {
   const [error, setError] = useState('');
   const [redirectToReferer, setRedirectToRef] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const userId = Meteor.user() ? Meteor.user().username : '';
+  const { user, ready } = useTracker(() => {
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = userSubscription.ready() && adminSubscription.ready();
+    let usr = UserProfiles.findOne({ email: userId });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: userId });
+    }
+    return {
+      user: usr,
+      ready: rdy,
+    };
+  }, []);
 
   const schema = new SimpleSchema({
     currentPassword: String,
@@ -25,45 +44,39 @@ const ChangePasswordUser = () => {
     confirmPassword: String,
   });
   const bridge = new SimpleSchema2Bridge(schema);
-
   /* Handle ChangePassword submission. Change password of corresponding email, then redirect to the home page. */
   const submit = (doc) => {
-    const collectionName = UserProfiles.getCollectionName();
-    const definitionData = doc;
-    const { currentPassword } = doc;
-    const userId = Meteor.user() ? Meteor.user().username : '';
-    // create the new UserProfile
-    defineMethod.callPromise({ collectionName, definitionData })
-      .then(() => {
-        // log the new user in.
-        // const userId = ;
-        // const password = ;
-        Meteor.loginWithPassword({ email: userId }, { password: currentPassword }, (err) => {
-          if (err) {
-            setValidated(false);
-          } else {
-            setValidated(true);
-          }
-        });
-        if (validated) {
-          // Meteor.call('changePassword', userId, currentPassword, err => {
-          //   if (err) {
-          //     setError(err.reason);
-          //   } else {
-          //     setError('');
-          //     setRedirectToRef(true);
-          //   }
-          // });
-        }
-      })
-      .catch((err) => setError(err.reason));
+    const { currentPassword, password } = doc;
+    Meteor.loginWithPassword(userId, currentPassword, err => {
+      if (!err) {
+        setValidated(true);
+        setNewPassword(password);
+        setOldPassword(currentPassword);
+      } else {
+        setError(err.reason);
+      }
+    });
   };
-  console.log(validated);
+  if (validated) {
+    Meteor.call('changePassword', oldPassword, newPassword, err => {
+      if (!err) {
+        setError('');
+        setRedirectToRef(true);
+        swal('Success', 'Password Changed!', 'success');
+        if (ready) {
+          if (user.role === ROLE.USER) {
+            const collectionName = UserProfiles.getCollectionName();
+            updateMethod.callPromise({ collectionName, newAccount: false });
+          }
+        }
+      }
+    });
+  }
 
   /* Display the change password form. Redirect to add page after successful password change and login. */
   // if correct authentication, redirect to from: page instead of change password screen
   if (redirectToReferer) {
-    return <Navigate to="/add" />;
+    return <Navigate to="/directory" />;
   }
   return (
     <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
