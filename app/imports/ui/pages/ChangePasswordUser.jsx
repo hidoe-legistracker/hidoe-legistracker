@@ -33,9 +33,9 @@ const ChangePasswordUser = () => {
     defineMethod.callPromise({ collectionName, definitionData })
       .then(() => {
         // log the new user in.
-        const currentPassword = COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD;
-        const newPassword = COMPONENT_IDS.SIGN_UP_FORM_PASSWORD;
-        Accounts.changePassword(currentPassword, newPassword, (err) => {
+        const userId = COMPONENT_IDS.SIGN_UP_FORM_CURRENT_PASSWORD;
+        const password = COMPONENT_IDS.SIGN_UP_FORM_PASSWORD;
+        Meteor.call('changePassword', userId, password, err => {
           if (err) {
             setError(err.reason);
           } else {
