@@ -1,4 +1,5 @@
 import React from 'react';
+import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
@@ -28,7 +29,7 @@ const CreateEmail = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = userSubscription.ready() && adminSubscription.ready();
 
-    const usrs = UserProfiles.find({}, {}).fetch().concat(AdminProfiles.find({}, {}).fetch());
+    const usrs = _.sortBy(UserProfiles.find({}, { }).fetch().concat(AdminProfiles.find({}, {}).fetch()), (obj) => obj.lastName);
     const formattedUsers = [];
     usrs.forEach(user => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user._id });
