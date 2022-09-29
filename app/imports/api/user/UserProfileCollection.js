@@ -14,15 +14,18 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param password The password for this user.
    * @param firstName The first name.
    * @param lastName The last name.
+   * @param employeeID
+   * @param role
+   * @param newAccount
    */
-  define({ email, firstName, lastName, password }) {
+  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, departments }) {
     // if (Meteor.isServer) {
     const username = email;
     const user = this.findOne({ email, firstName, lastName });
     if (!user) {
       const role = ROLE.USER;
-      const userID = Users.define({ username, role, password });
-      const profileID = this._collection.insert({ email, firstName, lastName, userID, role });
+      const newUserID = userID !== undefined ? userID : Users.define({ username, role, password });
+      const profileID = this._collection.insert({ email, firstName, lastName, userID: newUserID, employeeID, role, newAccount, phone, departments });
       // this._collection.update(profileID, { $set: { userID } });
       return profileID;
     }
@@ -37,8 +40,11 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param firstName new first name (optional).
    * @param lastName new last name (optional).
    * @param myFolders array of folders of measures (optional)
+   * @param departments
+   * @param phone
+   * @param role
    */
-  update(docID, { firstName, lastName, myFolders }) {
+  update(docID, { firstName, lastName, myFolders, departments, phone, role, newAccount }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -49,6 +55,20 @@ class UserProfileCollection extends BaseProfileCollection {
     }
     if (myFolders) {
       updateData.myFolders = myFolders;
+    }
+    if (departments) {
+      updateData.departments = departments;
+    }
+    if (phone) {
+      updateData.phone = phone;
+    } else {
+      updateData.phone = '';
+    }
+    if (role) {
+      updateData.role = role;
+    }
+    if (newAccount !== undefined) {
+      updateData.newAccount = newAccount;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -61,6 +81,17 @@ class UserProfileCollection extends BaseProfileCollection {
   removeIt(profileID) {
     if (this.isDefined(profileID)) {
       return super.removeIt(profileID);
+    }
+    return null;
+  }
+
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    if (this.isDefined(profileID)) {
+      return super.transferIt(profileID);
     }
     return null;
   }

@@ -11,38 +11,38 @@ import {
 } from 'uniforms-bootstrap5';
 import swal from 'sweetalert';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-// import { useParams } from 'react-router';
-// import { useTracker } from 'meteor/react-meteor-data';
-import { Testimony } from '../../api/testimony/TestimonyCollection';
+import { useParams } from 'react-router';
+import { useTracker } from 'meteor/react-meteor-data';
+import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-const bridge = new SimpleSchema2Bridge(Testimony._schema);
+const bridge = new SimpleSchema2Bridge(Testimonies._schema);
 
 /* Renders the AddTestimony page for adding a testimony. */
 const EditTestimony = () => {
 
   // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
-  // const { _id } = useParams();
+  const { _id } = useParams();
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-  // const { doc } = useTracker(() => {
-  // Get access to Stuff documents.
-  // const subscription = Stuffs.subscribeStuff();
-  // Determine if the subscription is ready
-  // const rdy = subscription.ready();
-  // Get the document
-  // const document = Stuffs.findDoc(_id);
-  // return {
-  //  doc: document,
-  //  ready: rdy,
-  // };
-  // }, [_id]);
+  const { doc } = useTracker(() => {
+  // Get access to Testimony documents.
+    const subscription = Testimonies.subscribeTestimony();
+    // Determine if the subscription is ready
+    const rdy = subscription.ready();
+    // Get the document
+    const document = Testimonies.findOne({ _id: _id });
+    return {
+      doc: document,
+      ready: rdy,
+    };
+  }, [_id]);
 
   // On submit, insert the data.
   const submit = (data) => {
     const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
-    const collectionName = Testimony.getCollectionName();
-    const updateData = { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
+    const collectionName = Testimonies.getCollectionName();
+    const updateData = { id: _id, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Testimony updated successfully', 'success'));
@@ -53,7 +53,7 @@ const EditTestimony = () => {
     <Container id={PAGE_IDS.EDIT_TESTIMONY} className="py-3">
       <Row className="justify-content-center">
         <Col>
-          <AutoForm schema={bridge} onSubmit={data => submit(data)}>
+          <AutoForm schema={bridge} onSubmit={data => submit(data)} model={doc}>
             <Card>
               <Card.Body>
                 <Row>

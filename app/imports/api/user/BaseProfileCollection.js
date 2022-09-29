@@ -17,6 +17,23 @@ class BaseProfileCollection extends BaseCollection {
       lastName: String,
       role: String,
       userID: SimpleSchema.RegEx.Id,
+      employeeID: String,
+      newAccount: Boolean,
+      phone: {
+        type: String,
+        optional: true,
+      },
+      departments: {
+        type: Array,
+        optional: true,
+      },
+      'departments.$': {
+        type: new SimpleSchema({
+          label: String,
+          value: String,
+          group: String,
+        }),
+      },
       // Array of folders
       myFolders: {
         type: Array,
@@ -141,6 +158,20 @@ class BaseProfileCollection extends BaseCollection {
     const userID = profile.userID;
     if (!Users.isReferenced(userID)) {
       Meteor.users.remove({ _id: userID });
+      return super.removeIt(profileID);
+    }
+    throw new Meteor.Error(`User ${profile.email} owns Stuff.`);
+  }
+
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    const profile = this._collection.findOne({ _id: profileID });
+    const userID = profile.userID;
+    if (!Users.isReferenced(userID)) {
+      Users.updateRole(userID, profile.role === ROLE.USER ? ROLE.ADMIN : ROLE.USER);
       return super.removeIt(profileID);
     }
     throw new Meteor.Error(`User ${profile.email} owns Stuff.`);

@@ -47,6 +47,8 @@ function addMeasures(data) {
  */
 
 if (Meteor.settings.loadAssetsFile && Meteor.isServer) {
-  const measureData = JSON.parse(Assets.getText('measures.json'));
-  measureData.measures.map(measures => addMeasures(measures));
+  if (Measures.count() === 0) {
+    const measureData = JSON.parse(Assets.getText('measures.json'));
+    measureData.measures.map(measures => addMeasures(measures));
+  }
 }
