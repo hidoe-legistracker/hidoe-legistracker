@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Container, Row, Col, Form } from 'react-bootstrap';
+import { Button, Container, Row, Col, Form, Nav } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
-import { PencilSquare, ArrowRepeat } from 'react-bootstrap-icons';
+import { PencilSquare, ArrowRepeat, EnvelopeFill, PenFill, Trash3Fill, SendFill } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
@@ -22,6 +22,26 @@ const Inbox = () => {
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
       <Row className="justify-content-center">
+        <Col>
+          <Row>
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+            <h1> </h1>
+          </Row>
+          <div>
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="primary" size="md" style={{ marginTop: 10 }}>
+              COMPOSE
+            </Button>
+          </div>
+          <Nav defaultActiveKey="/home" className="flex-column">
+            <Nav.Link eventKey="link-1"><EnvelopeFill size={20} /> Messages</Nav.Link>
+            <Nav.Link eventKey="link-2"><Trash3Fill size={20} /> Deleted</Nav.Link>
+            <Nav.Link eventKey="link-3"><PenFill size={20} /> Drafts</Nav.Link>
+            <Nav.Link eventKey="link-4"><SendFill size={20} /> Sent</Nav.Link>
+          </Nav>
+        </Col>
         <Col xs={10}>
           <Row>
             <div>
@@ -37,6 +57,8 @@ const Inbox = () => {
               <Button variant="secondary" size="sm" style={{ marginTop: 10 }}>
                 <ArrowRepeat size={15} />
               </Button>{' '}
+            </div>
+            <div>
               <h3 align="center">INBOX</h3>
             </div>
             <ItemEmail key={email._id} email={email} Emails={Emails} />
