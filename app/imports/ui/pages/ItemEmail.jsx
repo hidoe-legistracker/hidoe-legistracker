@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Trash } from 'react-bootstrap-icons';
@@ -16,6 +16,11 @@ class ItemEmail extends React.Component {
     const { email } = this.props;
     return (
       <Table striped bordered hover>
+        <th scope="row">
+          <Form>
+            <Form.Check inline />
+          </Form>
+        </th>
         <tbody>
           <tr>
             <td>{email.date}</td>
