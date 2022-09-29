@@ -19,18 +19,14 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 
 const bridge = new SimpleSchema2Bridge(Testimonies._schema);
 
-/* Renders the AddTestimony page for adding a testimony. */
+/* Renders the EditTestimony page for editing a testimony. */
 const EditTestimony = () => {
 
-  // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
   const { _id } = useParams();
-  // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
+
   const { doc } = useTracker(() => {
-  // Get access to Testimony documents.
     const subscription = Testimonies.subscribeTestimony();
-    // Determine if the subscription is ready
     const rdy = subscription.ready();
-    // Get the document
     const document = Testimonies.findOne({ _id: _id });
     return {
       doc: document,

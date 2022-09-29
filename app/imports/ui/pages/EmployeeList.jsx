@@ -7,7 +7,7 @@ import EmployeeListItem from '../components/EmployeeListItem';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
-/* Renders a table containing all of the Stuff documents. Use <StuffItemAdmin> to render each row. */
+/* Renders a table containing all of the Employees. Use <EmployeeListItem> to render each row. */
 const EmployeeList = () => {
   const [search, setSearch] = useState('');
 

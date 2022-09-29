@@ -66,7 +66,7 @@ const EditProfile = () => {
   };
 
   const submit = () => {
-    const role = document.getElementById('role-input').value;
+    const role = document.getElementById('role-input') ? document.getElementById('role-input').value : user.role;
     const phone = document.getElementById('phone-input').value.toString();
 
     if (role !== user.role) {

@@ -13,8 +13,7 @@ import {
 
 import { PAGE_IDS } from '../utilities/PageIDs';
 
-/* A simple static component to render some text for the landing page. */
-const Landing = () => (
+const MonitoringReport = () => (
   <Container id={PAGE_IDS.MONITORING_REPORT} className="py-3">
     <Row className="mb-5">
       <Col className="align-left">
@@ -162,4 +161,4 @@ const Landing = () => (
   </Container>
 );
 
-export default Landing;
+export default MonitoringReport;
