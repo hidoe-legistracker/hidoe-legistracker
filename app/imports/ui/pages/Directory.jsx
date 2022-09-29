@@ -72,19 +72,14 @@ const Directory = () => {
   }
 
   const filter = (office) => {
-    // setDefaultList(false);
-    // console.log(`office: ${office}`);
     if (office === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
     } else {
       const filteredData = _.where(measure, { currentReferral: office });
-      // console.log(`filteredData: ${filteredData}`);
       setDefaultBills(false);
       setBills(filteredData);
-      // console.log(bills);
     }
-    // console.log(_.uniq(_.pluck(measure, 'currentReferral')));
   };
 
   const offices = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',

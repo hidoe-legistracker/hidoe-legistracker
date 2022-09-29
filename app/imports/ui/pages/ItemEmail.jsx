@@ -2,31 +2,23 @@ import React from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useTracker } from 'meteor/react-meteor-data';
-// import { Link, NavLink } from 'react-router-dom';
 import { Trash } from 'react-bootstrap-icons';
 import { Emails } from '../../api/email/EmailCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Measures } from '../../api/measure/MeasureCollection';
 
-/**
-const removeEmail(docID) {
-  return Emails.collection.remove(docID);
-}
-* */
 /** Renders a single email row in the Inbox. See pages/Inbox.jsx. */
 const ItemEmail = () => {
-  const { ready, measure, email } = useTracker(() => {
+  const { ready, email } = useTracker(() => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready();
-    const measureData = Measures.find({}, {}).fetch();
+    // const measureData = Measures.find({}, {}).fetch();
     const emailData = Emails.find({}, {}).fetch();
     return {
       ready: isReady,
-      measure: measureData,
       email: emailData,
     };
   }, []);
-  console.log(measure);
   return (ready ? (
     <Table hover>
       <thead>
@@ -132,7 +124,7 @@ const ItemEmail = () => {
     </Table>
   ) : <LoadingSpinner message="Loading Notifications" />);
 };
-// <Link as={NavLink} exact to={`/view-bill/${measure._id}`}>
+
 // Require a document to be passed to this component.
 ItemEmail.propTypes = {
   email: PropTypes.shape({

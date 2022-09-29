@@ -24,6 +24,7 @@ const ChangePasswordUser = () => {
   const [newPassword, setNewPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const userId = Meteor.user() ? Meteor.user().username : '';
+
   const { user, ready } = useTracker(() => {
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
@@ -44,6 +45,7 @@ const ChangePasswordUser = () => {
     confirmPassword: String,
   });
   const bridge = new SimpleSchema2Bridge(schema);
+
   /* Handle ChangePassword submission. Change password of corresponding email, then redirect to the home page. */
   const submit = (doc) => {
     const { currentPassword, password, confirmPassword } = doc;
@@ -65,7 +67,6 @@ const ChangePasswordUser = () => {
     Meteor.call('changePassword', oldPassword, newPassword, err => {
       if (!err) {
         setError('');
-        // swal('Success', 'Password Changed!', 'success');
         if (ready) {
           if (user.role === ROLE.USER) {
             const collectionName = UserProfiles.getCollectionName();
