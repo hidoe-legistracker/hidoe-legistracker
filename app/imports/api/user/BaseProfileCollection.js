@@ -43,6 +43,12 @@ class BaseProfileCollection extends BaseCollection {
       'myFolders.$': {
         type: Array,
       },
+      'myFolders.$.title': {
+        type: String,
+      },
+      'myFolders.$.position': {
+        type: Number,
+      },
       // Measure Number
       'myFolders.$.$': {
         type: Number,
