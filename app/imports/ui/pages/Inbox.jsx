@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Container, Row, Col, Table } from 'react-bootstrap';
+import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
-import { PencilSquare } from 'react-bootstrap-icons';
+import { PencilSquare, ArrowRepeat } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
@@ -25,35 +25,28 @@ const Inbox = () => {
         <Col xs={10}>
           <Row>
             <div>
-              <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="secondary" size="md" style={{ marginTop: 10 }}>
+              <Button variant="secondary" size="sm" style={{ marginTop: 10 }}>
+                <Form>
+                  <Form.Check inline />
+                  SELECT ALL
+                </Form>
+              </Button>{' '}
+              <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="secondary" size="sm" style={{ marginTop: 10 }}>
                 <PencilSquare size={15} />
               </Button>{' '}
+              <Button variant="secondary" size="sm" style={{ marginTop: 10 }}>
+                <ArrowRepeat size={15} />
+              </Button>{' '}
+              <h3 align="center">INBOX</h3>
             </div>
-            <div>
-              <h3 align="center">Bill Updates</h3>
-            </div>
-            <Table>
-              <thead>
-                <tr>
-                  <th scope="col">Select</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Sender</th>
-                  <th scope="col">Subject</th>
-                </tr>
-              </thead>
-              <tbody style={{ marginTop: 5, paddingTop: 5 }}>
-                <td>
-                  {email.map((emails) => <ItemEmail key={emails._id} email={emails} Emails={Emails} />)}
-                </td>
-              </tbody>
-            </Table>
+            <ItemEmail key={email._id} email={email} Emails={Emails} />
           </Row>
         </Col>
       </Row>
     </Container>
   ) : <LoadingSpinner message="Loading Notifications" />);
 };
-
+// {email.map((emails) => <ItemEmail key={emails._id} email={emails} Emails={Emails} />)}
 /**
  * // Require an array of email documents in the props.
  Inbox.propTypes = {

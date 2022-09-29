@@ -1,0 +1,13 @@
+{
+  "email": [
+    {
+      "subject": "ASSIGNED BILL",
+      "senderEmail": "john@foo.com",
+      "recipients": "john@foo.com",
+      "date": "2022-09-29",
+      "body": "String",
+      "isRead": false
+    }
+  ],
+  "loadAssetsFile":  true
+}
