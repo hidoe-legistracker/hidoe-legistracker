@@ -23,8 +23,14 @@ const billProgress = 60;
 const MeasureComponent = ({ measure }) => (
   <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
     <th scope="row">{measure.measureNumber}</th>
-    <td>{measure.measureTitle}</td>
-    <td>{measure.description}</td>
+    <td>{`${measure.measureTitle?.substring(0, 100)}`}</td>
+    <td>
+      {
+        measure.description === undefined ? (
+          '-'
+        ) : `${measure.description?.substring(0, 150)}...`
+      }
+    </td>
     <td>{measure.currentReferral}</td>
     <td>{measure.measureType}</td>
     <td>
@@ -108,7 +114,7 @@ const Directory = () => {
           <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
             <Tab eventKey="all-bills" title="All Bills">
               <Row>
-                <Table>
+                <Table className="directory-table">
                   <thead style={{ marginBottom: 10 }}>
                     <tr>
                       <th scope="col">#</th>
@@ -119,7 +125,7 @@ const Directory = () => {
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{ overflowY: 'auto' }}>
                     {
                       defaultBills ? (measure.filter(post => {
                         if (search === '') {
@@ -138,9 +144,10 @@ const Directory = () => {
                         <MeasureComponent measure={measures} />
                       ))) :
                         (bills.filter(post => {
+                          console.log(search);
                           if (search === '') {
                             return post;
-                          } if (post.measureNumber && post.measureNumber === search.valueOf()) {
+                          } if (post.measureNumber.toInteger() === search) {
                             return post;
                           } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
                             return post;

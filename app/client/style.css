@@ -34,12 +34,10 @@ body {
 .folder-section {
   align-content: center;
   margin-right: 5px;
-  overflow-y: auto;
 }
 
 .bill-section {
   outline: gray solid thin;
-  overflow-y: auto;
 }
 
 .testimony-container {
@@ -47,7 +45,6 @@ body {
   border-spacing: inherit;
   padding-top: 40px;
   padding-bottom: 40px;
-  overflow-y: auto;
 }
 
 .bill-button-spacing {
@@ -58,8 +55,25 @@ body {
   font-weight: normal;
 }
 
-.table {
-  margin-bottom: 1px;
+.directory-table {
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--bs-border-color);
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-color: var(--bs-body-color);
+  --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+  --bs-table-active-color: var(--bs-body-color);
+  --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+  --bs-table-hover-color: var(--bs-body-color);
+  --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+  width: 100%;
+  margin-bottom: 1rem;
+  display: block;
+  overflow-y: auto;
+  height: 600px;
+  color: var(--bs-table-color);
+  vertical-align: top;
+  border-color: var(--bs-table-border-color);
 }
 
 .view-bill-container {
