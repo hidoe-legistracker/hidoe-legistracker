@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Roles } from 'meteor/alanning:roles';
-import { Col, Container, Row, Nav, ProgressBar, Form } from 'react-bootstrap';
+import { Col, Container, Row, ProgressBar, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useTracker } from 'meteor/react-meteor-data';
+import Accordion from 'react-bootstrap/Accordion';
 import Tab from 'react-bootstrap/Tab';
 import _ from 'underscore';
 import Tabs from 'react-bootstrap/Tabs';
@@ -32,7 +33,7 @@ const MeasureComponent = ({ measure }) => (
       }
     </td>
     <td>{measure.currentReferral}</td>
-    <td>{measure.measureType}</td>
+    <td>Testimony/Monitor</td>
     <td>
       <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
     </td>
@@ -88,18 +89,37 @@ const Directory = () => {
     }
   };
 
-  const offices = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
+  const committees = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
+  const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
         <Col className="folder-section">
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
-          <ListGroup defaultActiveKey="#link1">
-            <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ background: 'lightgrey', textAlign: 'center', fontWeight: 'bold' }}>ALL BILLS</ListGroup.Item>
-            {offices.sort().map((o) => <ListGroup.Item action onClick={() => filter(o)}>{o}</ListGroup.Item>)}
+          <ListGroup style={{ marginBottom: 10 }}>
+            <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ textAlign: 'center' }}>ALL BILLS</ListGroup.Item>
           </ListGroup>
+          <Accordion defaultActiveKey="0">
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>Offices</Accordion.Header>
+              <Accordion.Body>
+                <ListGroup defaultActiveKey="#link1" variant="flush">
+                  {offices.map((o) => <ListGroup.Item action>{o}</ListGroup.Item>)}
+                </ListGroup>
+              </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="1">
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
+              <Accordion.Header>Committee's</Accordion.Header>
+              <Accordion.Body>
+                <ListGroup defaultActiveKey="#link2" variant="flush">
+                  {committees.sort().map((c) => <ListGroup.Item action onClick={() => filter(c)}>{c}</ListGroup.Item>)}
+                </ListGroup>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
         </Col>
         <Col xs={10}>
           <Form className="d-flex">
@@ -121,7 +141,7 @@ const Directory = () => {
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
                       <th scope="col">Offices</th>
-                      <th scope="col">Type</th>
+                      <th scope="col">Actions</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
@@ -167,16 +187,6 @@ const Directory = () => {
             </Tab>
             <Tab eventKey="inactive-bills" title="Inactive Bills">
               ...
-            </Tab>
-            <Tab eventKey="actions" title="Actions">
-              <Nav variant="pills" className="flex-column">
-                <Nav.Item>
-                  <Nav.Link eventKey="first">Monitor</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="second">Testimony</Nav.Link>
-                </Nav.Item>
-              </Nav>
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
               ...

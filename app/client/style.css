@@ -34,6 +34,9 @@ body {
 .folder-section {
   align-content: center;
   margin-right: 5px;
+  display: block;
+  overflow-y: auto;
+  height: 705px;
 }
 
 .bill-section {
