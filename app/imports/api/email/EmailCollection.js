@@ -25,10 +25,11 @@ class EmailCollection extends BaseCollection {
       attachment: { type: Object, optional: true },
       body: String,
       isRead: { type: Boolean, defaultValue: false },
+      isDraft: { type: Boolean, defaultValue: true },
     }));
   }
 
-  define({ subject, senderName, senderEmail, recipients, ccs, bccs, date, attachment, body, isRead }) {
+  define({ subject, senderName, senderEmail, recipients, ccs, bccs, date, attachment, body, isRead, isDraft }) {
     const docID = this._collection.insert({
       subject,
       senderName,
@@ -40,14 +41,18 @@ class EmailCollection extends BaseCollection {
       attachment,
       body,
       isRead,
+      isDraft,
     });
     return docID;
   }
 
-  update(docID, { isRead }) {
+  update(docID, { isRead, isDraft }) {
     const updateData = {};
     if (isRead) {
       updateData.isRead = isRead;
+    }
+    if (isDraft) {
+      updateData.isDraft = isDraft;
     }
     this._collection.update(docID, { $set: updateData });
   }

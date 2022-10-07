@@ -32,7 +32,7 @@ const CreateEmail = () => {
     const usrs = _.sortBy(UserProfiles.find({}, { }).fetch().concat(AdminProfiles.find({}, {}).fetch()), (obj) => obj.lastName);
     const formattedUsers = [];
     usrs.forEach(user => {
-      formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user._id });
+      formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
     });
 
     let thisUsr = UserProfiles.findOne({ email: currUser }, {});
@@ -49,7 +49,7 @@ const CreateEmail = () => {
   };
 
   // On submit, insert the data.
-  const submit = () => {
+  const submit = (type) => {
     const { subject, body } = email;
     const recipients = [];
     const ccs = [];
@@ -73,11 +73,15 @@ const CreateEmail = () => {
     const senderName = `${thisUser.firstName} ${thisUser.lastName}`;
     const date = new Date(); // new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
     const collectionName = Emails.getCollectionName();
-    const definitionData = { subject, senderName, senderEmail, recipients, ccs, bccs, date, body };
+    const definitionData = { subject, senderName, senderEmail, recipients, ccs, bccs, date, body, isDraft: type === 'draft' };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
-        swal('Success', 'Email Sent!', 'success');
+        if (type === 'draft') {
+          swal('Draft Saved', '', 'success');
+        } else {
+          swal('Success', 'Email Sent!', 'success');
+        }
       });
   };
 
@@ -120,7 +124,8 @@ const CreateEmail = () => {
           </Form.Group>
         </Form>
         <Col>
-          <Button type="button" onClick={submit} variant="primary" size="lg">Send</Button>
+          <Button type="button" onClick={() => submit('draft')} variant="success">Save Draft</Button>
+          <Button type="button" onClick={() => submit('send')} variant="primary" className="mx-3">Send</Button>
         </Col>
       </Row>
     </Container>
