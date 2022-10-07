@@ -29,6 +29,7 @@ import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
 import ForgotPassword from '../pages/ForgotPassword';
 import EditProfile from '../pages/EditProfile';
+import EditEmailDraft from '../pages/EditEmailDraft';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -55,6 +56,7 @@ const App = () => {
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
+          <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />
           <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoringreport/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />

@@ -70,7 +70,12 @@ const Profile = () => {
             </Row>
             <Row>
               <Col>
-                <p><b>Department(s): </b>{user.departments && user.departments.length > 0 ? _.pluck(user.departments, 'value').toString() : 'N/A'}</p>
+                <p><b>Offices(s): </b>{user.offices && user.offices.length > 0 ? user.offices.toString() : 'N/A'}</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p><b>Committees(s): </b>{user.committees && user.committees.length > 0 ? _.pluck(user.committees, 'value').toString() : 'N/A'}</p>
               </Col>
             </Row>
           </Row>

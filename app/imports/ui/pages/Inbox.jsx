@@ -1,92 +1,116 @@
 import React from 'react';
-import { Button, Container, Row, Col, Form, Nav } from 'react-bootstrap';
+import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
+import { Button, Container, Row, Col, Form, Nav, Table, Tab } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
-import { PencilSquare, ArrowRepeat, EnvelopeFill, PenFill, Trash3Fill, SendFill } from 'react-bootstrap-icons';
+import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
-import ItemEmail from './ItemEmail';
+import InboxItem from '../components/InboxItem';
+import SentItem from '../components/SentItem';
+import DraftItem from '../components/DraftItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Inbox = () => {
-  const { ready, email } = useTracker(() => {
-    const subscription = Emails.subscribeEmail();
-    const isReady = subscription.ready();
-    const emailData = Emails.find({}, {}).fetch();
+  const { ready, emails, drafts, sent } = useTracker(() => {
+    const username = Meteor.user() ? Meteor.user().username : '';
+    const emailSubscription = Emails.subscribeEmail();
+    const isReady = emailSubscription.ready();
+    const emailData = Emails.find({ recipients: username, isDraft: false }, {}).fetch();
+    const ccData = Emails.find({ ccs: username, isDraft: false }, {}).fetch();
+    const bccData = Emails.find({ bccs: username, isDraft: false }, {}).fetch();
+    const sentData = Emails.find({ senderEmail: username, isDraft: false }, {}).fetch();
+    const draftData = Emails.find({ senderEmail: username, isDraft: true }, {}).fetch();
+
+    ccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
+    bccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
     return {
       ready: isReady,
-      email: emailData,
+      emails: emailData,
+      drafts: draftData,
+      sent: sentData,
     };
   }, []);
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
-      <Row className="justify-content-center">
-        <Col>
-          <Row>
-            <h1> </h1>
-            <h1> </h1>
-            <h1> </h1>
-            <h1> </h1>
-            <h1> </h1>
-          </Row>
-          <div>
-            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="primary" size="md" style={{ marginTop: 10 }}>
+      <Tab.Container defaultActiveKey="inbox">
+        <Row className="justify-content-center">
+          <Col className="pt-5">
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="primary" size="md">
               COMPOSE
             </Button>
-          </div>
-          <Nav defaultActiveKey="/home" className="flex-column">
-            <Nav.Link eventKey="link-1"><EnvelopeFill size={20} /> Messages</Nav.Link>
-            <Nav.Link eventKey="link-2"><Trash3Fill size={20} /> Deleted</Nav.Link>
-            <Nav.Link eventKey="link-3"><PenFill size={20} /> Drafts</Nav.Link>
-            <Nav.Link eventKey="link-4"><SendFill size={20} /> Sent</Nav.Link>
-          </Nav>
-        </Col>
-        <Col xs={10}>
-          <Row>
-            <div>
-              <Button variant="secondary" size="sm" style={{ marginTop: 10 }}>
-                <Form>
-                  <Form.Check inline />
-                  SELECT ALL
-                </Form>
-              </Button>{' '}
-              <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} href="/create-email" variant="secondary" size="sm" style={{ marginTop: 10 }}>
-                <PencilSquare size={15} />
-              </Button>{' '}
-              <Button variant="secondary" size="sm" style={{ marginTop: 10 }}>
-                <ArrowRepeat size={15} />
-              </Button>{' '}
-            </div>
-            <div>
-              <h3 align="center">INBOX</h3>
-            </div>
-            <ItemEmail key={email._id} email={email} Emails={Emails} />
-          </Row>
-        </Col>
-      </Row>
+            <Nav variant="pills" className="flex-column mt-4">
+              <Nav.Link eventKey="inbox"><EnvelopeFill size={20} /> Inbox</Nav.Link>
+              <Nav.Link eventKey="drafts"><PenFill size={20} /> Drafts</Nav.Link>
+              <Nav.Link eventKey="sent"><SendFill size={20} /> Sent</Nav.Link>
+            </Nav>
+          </Col>
+          <Col xs={10}>
+            <Tab.Content>
+              <Tab.Pane eventKey="inbox">
+                <h1 className="text-center montserrat">INBOX</h1>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">Sender</th>
+                      <th scope="col">Subject</th>
+                      <th scope="col" className="d-flex flex-row-reverse">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* eslint-disable-next-line max-len */}
+                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString() }} />)}
+                  </tbody>
+                </Table>
+              </Tab.Pane>
+              <Tab.Pane eventKey="drafts">
+                <h1 className="text-center montserrat">DRAFTS</h1>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">Subject</th>
+                      <th scope="col"> </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {drafts.map((emailItem, index) => <DraftItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject }} />)}
+                  </tbody>
+                </Table>
+              </Tab.Pane>
+              <Tab.Pane eventKey="sent">
+                <h1 className="text-center montserrat">SENT</h1>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">Subject</th>
+                      <th scope="col" className="d-flex flex-row-reverse">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* eslint-disable-next-line max-len */}
+                    {sent.map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
+                  </tbody>
+                </Table>
+              </Tab.Pane>
+            </Tab.Content>
+          </Col>
+        </Row>
+      </Tab.Container>
     </Container>
   ) : <LoadingSpinner message="Loading Notifications" />);
 };
-// {email.map((emails) => <ItemEmail key={emails._id} email={emails} Emails={Emails} />)}
-/**
- * // Require an array of email documents in the props.
- Inbox.propTypes = {
-  emails: PropTypes.array.isRequired,
-  ready: PropTypes.bool.isRequired,
-};
- // withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-export default withTracker(() => {
-  // Get access to Contacts documents.
-  const subscription = Meteor.subscribe(Emails.userPublicationName);
-  // Determine if the subscription is ready
-  const ready = subscription.ready();
-  // Get the Contacts documents
-  const emails = Emails.collection.find({}).fetch();
-  return {
-    emails,
-    ready,
-  };
-})(Inbox);
-* */
+
 export default Inbox;

@@ -1,34 +1,61 @@
 import React from 'react';
-import { Col, Container, Row, Button, ProgressBar } from 'react-bootstrap';
-import { FileEarmarkText } from 'react-bootstrap-icons';
+import { Col, Container, Row, Button, ProgressBar, Dropdown } from 'react-bootstrap';
+import { FileEarmarkText, BookmarkPlus } from 'react-bootstrap-icons';
+import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
+import swal from 'sweetalert';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
 
 const billProgress = 60;
 
 const ViewBill = () => {
   const { _id } = useParams();
 
-  const { testimonies, measure, ready } = useTracker(() => {
+  const { testimonies, measure, ready, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready();
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
 
     const testimonyCollection = Testimonies.find({}, {}).fetch();
     const measureItem = Measures.findOne({ _id: _id }, {});
+
+    const username = Meteor.user() ? Meteor.user().username : '';
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
+
     return {
       testimonies: testimonyCollection,
       measure: measureItem,
       ready: rdy,
+      user: usr,
     };
   }, [_id]);
+
+  const addMeasure = (bill, index, measId) => {
+    // eslint-disable-next-line no-param-reassign
+    bill.measureId = measId;
+    const folder = user.myFolders.find(element => element.position === index);
+    folder.listMeasures.push(bill);
+    const collectionName = UserProfiles.getCollectionName();
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Measure added', 'success'));
+  };
 
   return ready ? (
     <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
@@ -39,9 +66,20 @@ const ViewBill = () => {
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Create Testimony
             </Button>
-            <Link className="table-row" as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
-              <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-            </Link>Monitoring Report
+            <Button>
+              <Link className="table-row" as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
+                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />Monitoring Report
+              </Link>
+            </Button>
+            <Dropdown className="float-end">
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                Bookmark
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
+              </Dropdown.Menu>
+            </Dropdown>
           </Col>
         </Row>
       </Container>
