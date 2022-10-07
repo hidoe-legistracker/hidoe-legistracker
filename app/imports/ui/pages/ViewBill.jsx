@@ -8,6 +8,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
+import _ from 'underscore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -15,12 +16,21 @@ import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
+import AddTestimony from './AddTestimony';
+
+/*
+<Button variant="secondary" size="sm" className="bill-button-spacing">
+              <Link as={NavLink} exact to={`/create-testimony/${measure._id}`}>
+                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                Create Testimony
+              </Link>
+            </Button>
+ */
 
 const billProgress = 60;
 
 const ViewBill = () => {
   const { _id } = useParams();
-
   const { testimonies, measure, ready, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
@@ -28,8 +38,8 @@ const ViewBill = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
 
-    const testimonyCollection = Testimonies.find({}, {}).fetch();
     const measureItem = Measures.findOne({ _id: _id }, {});
+    const testimonyCollection = Testimonies.find({}, {}).fetch();
 
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
@@ -62,10 +72,7 @@ const ViewBill = () => {
       <Container>
         <Row>
           <Col>
-            <Button href="/create-testimony" variant="secondary" size="sm" className="bill-button-spacing">
-              <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-              Create Testimony
-            </Button>
+            <AddTestimony measureNumber={measure.measureNumber} />
             <Button variant="secondary" size="sm" className="bill-button-spacing" href="/monitoringreport">
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Monitoring Report
@@ -138,8 +145,8 @@ const ViewBill = () => {
         </Col>
       </Row>
       <Container className="view-testimony-container">
-        <h3>{testimonies.length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
-        {testimonies.length === 0 ? '' : (
+        <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
+        {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
           <Table>
             <thead>
               <tr>
@@ -151,7 +158,7 @@ const ViewBill = () => {
               </tr>
             </thead>
             <tbody>
-              {testimonies.map(testimony => (
+              {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
                 <Link className="table-row" to={`/view-testimony/${testimony._id}`}>
                   <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                   <td>{testimony.billNumber}</td>
