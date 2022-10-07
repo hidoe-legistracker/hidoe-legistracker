@@ -57,7 +57,7 @@ const App = () => {
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
-          <Route path="/monitoringreport" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
+          <Route path="/monitoringreport/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony/:_id" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />

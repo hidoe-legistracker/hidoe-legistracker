@@ -4,7 +4,7 @@ import { FileEarmarkText } from 'react-bootstrap-icons';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -39,10 +39,9 @@ const ViewBill = () => {
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Create Testimony
             </Button>
-            <Button variant="secondary" size="sm" className="bill-button-spacing" href="/monitoringreport">
+            <Link className="table-row" as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-              Monitoring Report
-            </Button>
+            </Link>Monitoring Report
           </Col>
         </Row>
       </Container>
