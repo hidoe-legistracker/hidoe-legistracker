@@ -15,6 +15,7 @@ import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { ROLE } from '../../api/role/Role';
 
 const billProgress = 60;
 
@@ -50,7 +51,12 @@ const ViewBill = () => {
     bill.measureId = measId;
     const folder = user.myFolders.find(element => element.position === index);
     folder.listMeasures.push(bill);
-    const collectionName = UserProfiles.getCollectionName();
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
     const updateData = { id: user._id, myFolders: user.myFolders };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
