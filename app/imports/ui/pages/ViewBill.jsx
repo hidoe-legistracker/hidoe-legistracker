@@ -67,7 +67,7 @@ const ViewBill = () => {
               Create Testimony
             </Button>
             <Button>
-              <Link className="table-row" as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
+              <Link as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
                 <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />Monitoring Report
               </Link>
             </Button>
