@@ -89,9 +89,21 @@ const Directory = () => {
     }
   };
 
+  const actionFilter = (action) => {
+    if (action === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = _.where(measure, { measure: action });
+      setDefaultBills(false);
+      setBills(filteredData);
+    }
+  };
+
   const committees = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
+  const actions = [];
 
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
@@ -118,6 +130,14 @@ const Directory = () => {
                   {committees.sort().map((c) => <ListGroup.Item action onClick={() => filter(c)}>{c}</ListGroup.Item>)}
                 </ListGroup>
               </Accordion.Body>
+              <Accordion.Item eventKey="2">
+                <Accordion.Header>Actions</Accordion.Header>
+                <Accordion.Body>
+                  <ListGroup defaultActiveKey="#link3" variant="flush">
+                    {actions.map((d) => <ListGroup.Item action onClick={() => actionFilter(d)}>{d}</ListGroup.Item>)}
+                  </ListGroup>
+                </Accordion.Body>
+              </Accordion.Item>
             </Accordion.Item>
           </Accordion>
         </Col>
