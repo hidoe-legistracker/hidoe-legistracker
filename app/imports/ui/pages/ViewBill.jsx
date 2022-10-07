@@ -43,6 +43,10 @@ const ViewBill = () => {
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Monitoring Report
             </Button>
+            <Button variant="secondary" size="sm" className="bill-button-spacing" href="/monitoringreport">
+              <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+              Monitoring Report
+            </Button>
           </Col>
         </Row>
       </Container>
