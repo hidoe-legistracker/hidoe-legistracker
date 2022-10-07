@@ -37,22 +37,39 @@ class BaseProfileCollection extends BaseCollection {
       // Array of folders
       myFolders: {
         type: Array,
-        optional: true,
+        defaultValue: [],
       },
-      // Array of Measure Numbers
       'myFolders.$': {
-        type: Array,
+        type: new SimpleSchema({
+          title: String,
+          position: Number,
+          listMeasures: {
+            type: Array,
+          },
+          'listMeasures.$': {
+            type: new SimpleSchema({
+              year: Number,
+              measureType: String,
+              measureNumber: Number,
+              measureId: String,
+              lastUpdated: { type: Date, optional: true },
+              code: { type: String, optional: true },
+              measurePdfUrl: { type: String, optional: true },
+              measureArchiveUrl: { type: String, optional: true },
+              measureTitle: { type: String, optional: true },
+              reportTitle: { type: String, optional: true },
+              bitAppropriation: { type: Number, optional: true },
+              description: { type: String, optional: true },
+              status: { type: String, optional: true },
+              introducer: { type: String, optional: true },
+              currentReferral: { type: String, optional: true },
+              companion: { type: String, optional: true },
+            }),
+            optional: true,
+          },
+        }),
       },
-      'myFolders.$.title': {
-        type: String,
-      },
-      'myFolders.$.position': {
-        type: Number,
-      },
-      // Measure Number
-      'myFolders.$.$': {
-        type: Number,
-      },
+
     })));
   }
 

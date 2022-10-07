@@ -6,7 +6,6 @@ import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import _ from 'underscore';
 import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -46,18 +45,16 @@ const ViewBill = () => {
     };
   }, [_id]);
 
-  const submit = (bill, index) => {
-    if (user.myFolders !== undefined) {
-      const measureNumber = bill.measureNumber;
-      const folder = _.find(user.myFolders, function (fol) { return fol === index; });
-      console.log(user.myFolders);
-      /**folder.push(measureNumber);
-      const collectionName = UserProfiles.getCollectionName();
-      const updateData = { id: user._id, myFolders: folder };
-      updateMethod.callPromise({ collectionName, updateData })
-        .catch(error => swal('Error', error.message, 'error'))
-        .then(() => swal('Success', 'Measure added', 'success')); */
-    }
+  const addMeasure = (bill, index, measId) => {
+    // eslint-disable-next-line no-param-reassign
+    bill.measureId = measId;
+    const folder = user.myFolders.find(element => element.position === index);
+    folder.listMeasures.push(bill);
+    const collectionName = UserProfiles.getCollectionName();
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Measure added', 'success'));
   };
 
   return ready ? (
@@ -73,13 +70,13 @@ const ViewBill = () => {
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Monitoring Report
             </Button>
-            <Dropdown>
+            <Dropdown className="float-end">
               <Dropdown.Toggle variant="success" id="dropdown-basic">
                 <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
                 Bookmark
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                {user.myFolders.map((folder, index) => <Dropdown.Item onClick={submit(measure, index)}>Folder {index}</Dropdown.Item>)}
+                {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
               </Dropdown.Menu>
             </Dropdown>
           </Col>
