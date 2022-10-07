@@ -15,12 +15,21 @@ import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
+import AddTestimony from './AddTestimony';
+
+/*
+<Button variant="secondary" size="sm" className="bill-button-spacing">
+              <Link as={NavLink} exact to={`/create-testimony/${measure._id}`}>
+                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                Create Testimony
+              </Link>
+            </Button>
+ */
 
 const billProgress = 60;
 
 const ViewBill = () => {
   const { _id } = useParams();
-
   const { testimonies, measure, ready, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
@@ -28,8 +37,9 @@ const ViewBill = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
 
-    const testimonyCollection = Testimonies.find({}, {}).fetch();
     const measureItem = Measures.findOne({ _id: _id }, {});
+    const currBill = measure.measureNumber;
+    const testimonyCollection = Testimonies.find({ billNumber: currBill }, {}).fetch();
 
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
@@ -62,10 +72,7 @@ const ViewBill = () => {
       <Container>
         <Row>
           <Col>
-            <Button href="/create-testimony" variant="secondary" size="sm" className="bill-button-spacing">
-              <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-              Create Testimony
-            </Button>
+            <AddTestimony measureNumber={measure.measureNumber} />
             <Button variant="secondary" size="sm" className="bill-button-spacing" href="/monitoringreport">
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Monitoring Report
