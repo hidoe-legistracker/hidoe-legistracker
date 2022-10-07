@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
 import _ from 'underscore';
@@ -16,16 +16,6 @@ import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
-import AddTestimony from './AddTestimony';
-
-/*
-<Button variant="secondary" size="sm" className="bill-button-spacing">
-              <Link as={NavLink} exact to={`/create-testimony/${measure._id}`}>
-                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                Create Testimony
-              </Link>
-            </Button>
- */
 
 const billProgress = 60;
 
@@ -72,10 +62,11 @@ const ViewBill = () => {
       <Container>
         <Row>
           <Col>
-            <AddTestimony measureNumber={measure.measureNumber} />
-            <Button variant="secondary" size="sm" className="bill-button-spacing" href="/monitoringreport">
-              <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-              Monitoring Report
+            <Button variant="secondary" size="sm" className="bill-button-spacing">
+              <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
+                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                Monitoring Report
+              </Link>
             </Button>
             <Dropdown className="float-end">
               <Dropdown.Toggle variant="success" id="dropdown-basic">

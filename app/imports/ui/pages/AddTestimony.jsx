@@ -63,23 +63,7 @@ const bridge = new SimpleSchema2Bridge(formSchema);
 
 /* Renders the AddTestimony page for adding a testimony. */
 const AddTestimony = ({ measureNumber }) => {
-  /* const [bill, setBill] = useState(0);
-  console.log(Measures.findOne({ measureNumber: 123123123 }));
-  if (Measures.findOne({ measureNumber: bill }) === undefined) {
-    setBill(1);
 
-  const { ready, measure } = useTracker(() => {
-    const subscription = Measures.subscribeMeasures();
-    const isReady = subscription.ready();
-    const measureData = Measures.findOne({ measureNumber: bill }, {});
-    return {
-      ready: isReady,
-      measure: measureData,
-    };
-  }, []);
-  */
-
-  // On submit, insert the data.
 
   const submit = (data, formRef) => {
     const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
@@ -212,10 +196,6 @@ const AddTestimony = ({ measureNumber }) => {
       </Row>
     </Container>
   );
-};
-
-AddTestimony.propTypes = {
-  measureNumber: PropTypes.number.isRequired,
 };
 
 export default AddTestimony;
