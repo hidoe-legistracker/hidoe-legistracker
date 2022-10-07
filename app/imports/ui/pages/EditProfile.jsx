@@ -14,6 +14,7 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 import { ROLE } from '../../api/role/Role';
 import { defineMethod, updateMethod, transferItMethod } from '../../api/base/BaseCollection.methods';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const house = [];
 const senate = [];
@@ -30,6 +31,12 @@ const committees = [{
   label: 'Senate',
   options: senate,
 }];
+
+const officeNames = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
+const offices = [];
+officeNames.forEach((name) => {
+  offices.push({ label: name, value: name });
+});
 
 /* Renders the Profile page for viewing your profile. */
 const EditProfile = () => {
@@ -57,21 +64,34 @@ const EditProfile = () => {
     };
   }, [_id]);
 
-  let selectedDepartments = [];
+  let selectedCommittees = [];
+  let selectedOffices = [];
+  let defaultSelectedOffices = [];
   if (ready) {
-    selectedDepartments = user.departments;
+    selectedCommittees = user.committees;
+    selectedOffices = user.offices;
+    user.offices.forEach((office) => {
+      defaultSelectedOffices.push({ label: office, value: office });
+    });
   }
-  const selectDepartments = e => {
-    selectedDepartments = e;
+  const selectCommittees = e => {
+    selectedCommittees = e;
+  };
+  const selectOffices = e => {
+    selectedOffices = [];
+    e.forEach((x) => {
+      selectedOffices.push(x.value);
+    });
   };
 
   const submit = () => {
-    const role = document.getElementById('role-input') ? document.getElementById('role-input').value : user.role;
-    const phone = document.getElementById('phone-input').value.toString();
+    const role = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE) ? document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE).value : user.role;
+    const phone = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_PHONE).value.toString();
 
     if (role !== user.role) {
       const definitionData = _.clone(user);
-      definitionData.departments = selectedDepartments;
+      definitionData.committees = selectedCommittees;
+      definitionData.offices = selectedOffices;
       definitionData.phone = phone;
       definitionData.role = role;
 
@@ -100,7 +120,7 @@ const EditProfile = () => {
       } else {
         collectionName = AdminProfiles.getCollectionName();
       }
-      const updateData = { id: user._id, departments: selectedDepartments, phone: phone, role: role };
+      const updateData = { id: user._id, committees: selectedCommittees, offices: selectedOffices, phone: phone, role: role };
       updateMethod.callPromise({ collectionName, updateData })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => swal('Success', 'Profile updated successfully', 'success'));
@@ -164,8 +184,14 @@ const EditProfile = () => {
             </Row>
             <Row>
               <Col>
-                <p><b>Department(s): </b></p>
-                <Select id="select-departments" options={committees} isMulti closeMenuOnSelect={false} onChange={selectDepartments} defaultValue={user.departments} />
+                <Form.Label><b>Office(s): </b></Form.Label>
+                <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_OFFICES} options={offices} isMulti closeMenuOnSelect={false} onChange={selectOffices} defaultValue={defaultSelectedOffices} />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Label><b>Committee(s): </b></Form.Label>
+                <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_COMMITTEES} options={committees} isMulti closeMenuOnSelect={false} onChange={selectCommittees} defaultValue={selectedCommittees} />
               </Col>
             </Row>
           </Row>
@@ -181,12 +207,7 @@ const EditProfile = () => {
               <Col>
                 <InputGroup size="sm">
                   <InputGroup.Text><b>Phone</b></InputGroup.Text>
-                  <Form.Control
-                    id="phone-input"
-                    placeholder="(xxx) xxx-xxxx"
-                    aria-label="Phone"
-                    defaultValue={user.phone ? user.phone : ''}
-                  />
+                  <Form.Control id={COMPONENT_IDS.EDIT_PROFILE_FORM_PHONE} placeholder="(xxx) xxx-xxxx" aria-label="Phone" defaultValue={user.phone ? user.phone : ''} />
                 </InputGroup>
               </Col>
             </Row>
@@ -202,7 +223,7 @@ const EditProfile = () => {
         </Row>,
         <Row>
           <Col xs={3}>
-            <Form.Select id="role-input" aria-label="Role Select" defaultValue={user.role}>
+            <Form.Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE} aria-label="Role Select" defaultValue={user.role}>
               <option disabled>Select User Role</option>
               <option value={ROLE.USER}>{ROLE.USER}</option>
               <option value={ROLE.ADMIN}>{ROLE.ADMIN}</option>

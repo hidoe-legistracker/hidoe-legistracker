@@ -59,10 +59,10 @@ class AdminProfileCollection extends BaseProfileCollection {
       updateData.myFolders = myFolders;
     }
     if (offices) {
-      updateData.departments = offices;
+      updateData.offices = offices;
     }
     if (committees) {
-      updateData.departments = committees;
+      updateData.committees = committees;
     }
     if (phone) {
       updateData.phone = phone;

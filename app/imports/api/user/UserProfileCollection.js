@@ -57,7 +57,7 @@ class UserProfileCollection extends BaseProfileCollection {
       updateData.myFolders = myFolders;
     }
     if (offices) {
-      updateData.departments = offices;
+      updateData.offices = offices;
     }
     if (committees) {
       updateData.committees = committees;

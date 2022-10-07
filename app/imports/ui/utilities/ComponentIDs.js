@@ -38,6 +38,12 @@ export const COMPONENT_IDS = {
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
   SIGN_UP_FORM_CURRENT_PASSWORD: 'sign-up-form-current-password',
 
+  // EDIT PROFILE PAGE
+  EDIT_PROFILE_FORM_OFFICES: 'edit-profile-form-offices',
+  EDIT_PROFILE_FORM_COMMITTEES: 'edit-profile-form-committees',
+  EDIT_PROFILE_FORM_PHONE: 'edit-profile-form-phone',
+  EDIT_PROFILE_FORM_ROLE: 'edit-profile-form-role',
+
   // CREATE MEASURE PAGE
   CREATE_MEASURE_FORM_YEAR: 'create-measure-form-year',
   CREATE_MEASURE_FORM_MEASURE_NUMBER: 'create-measure-form-measure-number',
