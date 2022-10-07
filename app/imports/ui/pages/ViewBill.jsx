@@ -8,6 +8,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
+import _ from 'underscore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -38,8 +39,7 @@ const ViewBill = () => {
     const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
 
     const measureItem = Measures.findOne({ _id: _id }, {});
-    const currBill = measure.measureNumber;
-    const testimonyCollection = Testimonies.find({ billNumber: currBill }, {}).fetch();
+    const testimonyCollection = Testimonies.find({}, {}).fetch();
 
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
@@ -145,8 +145,8 @@ const ViewBill = () => {
         </Col>
       </Row>
       <Container className="view-testimony-container">
-        <h3>{testimonies.length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
-        {testimonies.length === 0 ? '' : (
+        <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
+        {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
           <Table>
             <thead>
               <tr>
@@ -158,7 +158,7 @@ const ViewBill = () => {
               </tr>
             </thead>
             <tbody>
-              {testimonies.map(testimony => (
+              {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
                 <Link className="table-row" to={`/view-testimony/${testimony._id}`}>
                   <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                   <td>{testimony.billNumber}</td>

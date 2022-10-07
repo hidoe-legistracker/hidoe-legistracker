@@ -94,7 +94,7 @@ const AddTestimony = ({ measureNumber }) => {
           formRef.reset();
         });
     } else {
-      swal('Error', 'Bill number is not in database. Please enter another bill number.');
+      swal('Error', 'Bill number is not in database or does not match current bill number. Please enter another bill number.');
     }
   };
 
