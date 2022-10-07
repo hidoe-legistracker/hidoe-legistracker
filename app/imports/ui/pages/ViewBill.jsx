@@ -66,8 +66,8 @@ const ViewBill = () => {
               <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
               Create Testimony
             </Button>
-            <Button>
-              <Link as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
+            <Button variant="secondary" size="sm" className="bill-button-spacing">
+              <Link style={{ textDecoration: 'none', color: 'white' }} as={NavLink} exact to={`/monitoringreport/${measure._id}`}>
                 <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />Monitoring Report
               </Link>
             </Button>
