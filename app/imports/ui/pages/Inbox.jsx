@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
 import { Button, Container, Row, Col, Form, Nav, Table, Tab } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
@@ -17,8 +18,21 @@ const Inbox = () => {
     const emailSubscription = Emails.subscribeEmail();
     const isReady = emailSubscription.ready();
     const emailData = Emails.find({ recipients: username, isDraft: false }, {}).fetch();
+    const ccData = Emails.find({ ccs: username, isDraft: false }, {}).fetch();
+    const bccData = Emails.find({ bccs: username, isDraft: false }, {}).fetch();
     const sentData = Emails.find({ senderEmail: username, isDraft: false }, {}).fetch();
     const draftData = Emails.find({ senderEmail: username, isDraft: true }, {}).fetch();
+
+    ccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
+    bccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
     return {
       ready: isReady,
       emails: emailData,
@@ -55,7 +69,8 @@ const Inbox = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, subject: emailItem.subject, time: emailItem.date.toISOString() }} />)}
+                    {/* eslint-disable-next-line max-len */}
+                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString() }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
@@ -85,7 +100,8 @@ const Inbox = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {sent.map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, time: emailItem.date.toISOString() }} />)}
+                    {/* eslint-disable-next-line max-len */}
+                    {sent.map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
