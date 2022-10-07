@@ -23,11 +23,16 @@ class BaseProfileCollection extends BaseCollection {
         type: String,
         optional: true,
       },
-      departments: {
+      offices: {
         type: Array,
         optional: true,
       },
-      'departments.$': {
+      'offices.$': String,
+      committees: {
+        type: Array,
+        optional: true,
+      },
+      'committees.$': {
         type: new SimpleSchema({
           label: String,
           value: String,

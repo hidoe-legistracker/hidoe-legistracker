@@ -19,14 +19,14 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param role
    * @param newAccount
    */
-  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, departments }) {
+  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, offices, committees }) {
     if (Meteor.isServer) {
       // console.log('define', email, firstName, lastName, password, employeeID, newAccount);
       const username = email;
       const user = this.findOne({ email, firstName, lastName });
       if (!user) {
         const role = ROLE.ADMIN;
-        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount, phone, departments });
+        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount, phone, offices, committees });
         const newUserID = userID !== undefined ? userID : Users.define({ username, role, password });
         this._collection.update(profileID, { $set: { userID: newUserID } });
         return profileID;
@@ -46,7 +46,7 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param phone
    * @param role
    */
-  update(docID, { firstName, lastName, myFolders, departments, phone, role, newAccount }) {
+  update(docID, { firstName, lastName, myFolders, phone, role, newAccount, offices, committees }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -58,8 +58,11 @@ class AdminProfileCollection extends BaseProfileCollection {
     if (myFolders) {
       updateData.myFolders = myFolders;
     }
-    if (departments) {
-      updateData.departments = departments;
+    if (offices) {
+      updateData.departments = offices;
+    }
+    if (committees) {
+      updateData.departments = committees;
     }
     if (phone) {
       updateData.phone = phone;
