@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert';
-// import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -78,7 +78,7 @@ const MyFolders = () => {
   };
 
   const getTitle = () => {
-    swal.fire({
+    Swal.fire({
       title: 'Add Folder',
       text: 'Name of folder:',
       input: 'text',
