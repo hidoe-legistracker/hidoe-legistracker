@@ -2,7 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Button, Container, Row, Col, Form, Nav, Table, Tab } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
-import { PencilSquare, ArrowRepeat, EnvelopeFill, PenFill, Trash3Fill, SendFill } from 'react-bootstrap-icons';
+import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';

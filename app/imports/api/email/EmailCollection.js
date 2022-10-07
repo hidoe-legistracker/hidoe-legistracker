@@ -46,13 +46,31 @@ class EmailCollection extends BaseCollection {
     return docID;
   }
 
-  update(docID, { isRead, isDraft }) {
+  update(docID, { isRead, isDraft, subject, recipients, ccs, bccs, date, body }) {
     const updateData = {};
-    if (isRead) {
+    if (isRead !== undefined) {
       updateData.isRead = isRead;
     }
-    if (isDraft) {
+    if (isDraft !== undefined) {
       updateData.isDraft = isDraft;
+    }
+    if (subject) {
+      updateData.subject = subject;
+    }
+    if (recipients.length > 0) {
+      updateData.recipients = recipients;
+    }
+    if (ccs.length > 0) {
+      updateData.ccs = ccs;
+    }
+    if (bccs.length > 0) {
+      updateData.bccs = bccs;
+    }
+    if (date) {
+      updateData.date = date;
+    }
+    if (body) {
+      updateData.body = body;
     }
     this._collection.update(docID, { $set: updateData });
   }

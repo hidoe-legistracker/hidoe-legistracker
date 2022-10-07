@@ -1,9 +1,6 @@
 import React from 'react';
-import { Button, Form, Row, Table } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { Trash } from 'react-bootstrap-icons';
-import { Emails } from '../../api/email/EmailCollection';
-// import { PAGE_IDS } from '../utilities/PageIDs';
 
 // used https://www.npmjs.com/package/react-to-print
 const SentItem = ({ email }) => {
@@ -11,7 +8,6 @@ const SentItem = ({ email }) => {
     if (event.target.type === 'checkbox') {
       return;
     }
-    console.log(emailID);
   };
   return (
     <tr onClick={(event) => openEmail(event, email._id)}>
