@@ -184,7 +184,7 @@ const ViewBill = () => {
         </Form>
       </Row>
     </Container>
-  ) : <LoadingSpinner message="Loading Data" />;
+  ) : <LoadingSpinner message="Loading Bill Data" />;
 };
 
 export default ViewBill;

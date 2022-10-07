@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Row,
@@ -8,10 +8,218 @@ import {
   Alert,
   DropdownButton,
   Dropdown,
-  Button, Accordion, Badge,
+  Button, Accordion, Badge, Card,
 } from 'react-bootstrap';
-
+import Modal from 'react-bootstrap/Modal';
+import SimpleSchema from 'simpl-schema';
+import { Meteor } from 'meteor/meteor';
+import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
+import swal from 'sweetalert';
+import { AutoForm, DateField, LongTextField, SelectField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { Testimonies } from '../../api/testimony/TestimonyCollection';
+import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
+
+// Create a schema to specify the structure of the data to appear in the form.
+const formSchema = new SimpleSchema({
+  committeeChair: String,
+  committeeName: String,
+  billNumber: String,
+  billDraftNumber: {
+    type: String,
+    optional: true,
+  },
+  hearingDate: {
+    type: Date,
+    optional: true,
+  },
+  hearingLocation: {
+    type: String,
+    optional: true,
+  },
+  deptPosition: {
+    type: String,
+    allowedValues: ['In Support', 'In Opposition', 'Comments'],
+  },
+  introduction: String,
+  content: String,
+  closing: {
+    type: String,
+    optional: true,
+  },
+  testifier: String,
+  representing: {
+    type: String,
+    optional: true,
+  },
+  contactEmail: {
+    type: String,
+    optional: true,
+  },
+  contactPhone: {
+    type: String,
+    optional: true,
+  },
+});
+
+const bridge = new SimpleSchema2Bridge(formSchema);
+
+// On submit, insert the data.
+const submit = (data, formRef) => {
+  const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
+  const owner = Meteor.user().username;
+  const collectionName = Testimonies.getCollectionName();
+  const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
+  defineMethod.callPromise({ collectionName, definitionData })
+    .catch(error => swal('Error', error.message, 'error'))
+    .then(() => {
+      swal('Success', 'Item added successfully', 'success');
+      formRef.reset();
+    });
+};
+
+let fRef = null;
+
+const CreateTestimony = () => {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        Create Testimony
+      </Button>
+
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        dialogClassName="modal-90w"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ justifyContent: 'center' }}>Testimony</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Row className="justify-content-center">
+              <Col>
+                <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => submit(data, fRef)}>
+                  <Card>
+                    <Card.Body>
+                      <Row>
+                        <h4>Address To</h4>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <TextField name="committeeChair" label="Committee Chair *" />
+                        </Col>
+                        <Col>
+                          <TextField name="committeeName" label="Committee Name *" />
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <h4>Bill / Resolution Information</h4>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <TextField name="billNumber" label="Bill / Resolution Number *" />
+                        </Col>
+                        <Col>
+                          <TextField name="billDraftNumber" label="Draft Number" />
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <h4>Hearing Information</h4>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <DateField name="hearingDate" label="Hearing Date" />
+                        </Col>
+                        <Col>
+                          <TextField name="hearingLocation" label="Hearing Location" />
+                        </Col>
+                      </Row>
+
+                      <br />
+                      <Row>
+                        <h4>Testimony</h4>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <SelectField name="deptPosition" label="Position *" />
+                        </Col>
+                        <Col />
+                      </Row>
+                      <Row>
+                        <LongTextField name="introduction" label="Introduction *" />
+                      </Row>
+                      <ul>
+                        <li>Introduce who you are and/or the group or organization you represent</li>
+                        <li>State your position on the measure (&quot;I am testifying in favor of…&quot; or &quot;I am testifying against…&quot;)</li>
+                      </ul>
+                      <Row>
+                        <LongTextField name="content" label="Content *" />
+                      </Row>
+                      <ul>
+                        <li>Reasons for taking your position</li>
+                        <li>Start with most important or compelling</li>
+                        <li>Include facts, figures, experiences, or narratives to support your position</li>
+                      </ul>
+                      <Row>
+                        <LongTextField name="closing" label="Closing" />
+                      </Row>
+                      <ul>
+                        <li>Include any summary remarks and re-state your position</li>
+                      </ul>
+
+                      <br />
+                      <Row>
+                        <h4>Affiliations</h4>
+                      </Row>
+                      <Row>
+                        <TextField name="representing" label="Name any groups you are representing here:" />
+                      </Row>
+
+                      <br />
+                      <Row>
+                        <h4>Testifier Information</h4>
+                      </Row>
+                      <Row>
+                        <TextField name="testifier" label="Your Name (First, Last) *" />
+                      </Row>
+                      <Row>
+                        <Col>
+                          <TextField name="contactPhone" label="Phone" />
+                        </Col>
+                        <Col>
+                          <TextField name="contactEmail" label="Email" />
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Row>
+                      <SubmitField value="Submit Testimony" />
+                    </Row>
+                  </Modal.Footer>
+                </AutoForm>
+              </Col>
+            </Row>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};
 
 const MonitoringReport = () => (
   <Container id={PAGE_IDS.MONITORING_REPORT} className="py-3">
@@ -44,7 +252,7 @@ const MonitoringReport = () => (
         <ListGroup>
           <ListGroup.Item><strong>Department: </strong>Education </ListGroup.Item>
           <ListGroup.Item><strong>Testifier: </strong> Keith T. Hayashi Interim Superintendent of Education </ListGroup.Item>
-          <ListGroup.Item><strong>Title of Bill: </strong> SB 2184, SD1, HD1, CD1 Relating to Digital Learning  </ListGroup.Item>
+          <ListGroup.Item><strong>Title of Bill: </strong> SB 2184, SD1, HD1, CD1 Relating to Digital Learning </ListGroup.Item>
           <ListGroup.Item><strong>Purpose of Bill: </strong> Establishes a Digital Learning Center within the Department of Education.
             Appropriates funds to staff and administer the Digital Learning Center. (CD1)
           </ListGroup.Item>
@@ -71,10 +279,7 @@ const MonitoringReport = () => (
           />
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Control
-            as="textarea"
-            placeholder="Start Testimony Here"
-          />
+          <CreateTestimony />
         </Form.Group>
         <Form.Group className="mb-5">
           <Form.Control type="file" className="mb-2" />
@@ -147,7 +352,7 @@ const MonitoringReport = () => (
     <Row className="mb-5">
       <Col>
         <ListGroup variant="flush">
-          <ListGroup.Item className="text-secondary">Created by: Brandon Lee/OSIP/HIDOE  </ListGroup.Item>
+          <ListGroup.Item className="text-secondary">Created by: Brandon Lee/OSIP/HIDOE </ListGroup.Item>
           <ListGroup.Item className="text-secondary">Created on: 08/25/2022 1:48:59</ListGroup.Item>
         </ListGroup>
       </Col>
