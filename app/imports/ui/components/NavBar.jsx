@@ -4,7 +4,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
 import { Roles } from 'meteor/alanning:roles';
 import { Container, Navbar, Nav, NavDropdown, ProgressBar } from 'react-bootstrap';
-import { BoxArrowRight, PersonFill, House, EnvelopePaper, QuestionCircle } from 'react-bootstrap-icons';
+import { BoxArrowRight, PersonFill, House, EnvelopePaper, QuestionCircle, Calendar } from 'react-bootstrap-icons';
 import { ROLE } from '../../api/role/Role';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
@@ -60,6 +60,9 @@ const NavBar = () => {
                 {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
               </Nav.Link>
             )}
+            <Nav.Link id={COMPONENT_IDS.NAVBAR_CALENDAR} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/calendar" key="calendar">
+              <Calendar size={25} />
+            </Nav.Link>
             {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employee List</NavDropdown.Item>
