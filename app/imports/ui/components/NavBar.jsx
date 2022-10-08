@@ -55,12 +55,12 @@ const NavBar = () => {
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/forgot-password"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/inbox" key="inbox">
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1em' }} as={NavLink} to="/inbox" key="inbox">
                 <EnvelopePaper size={25} />
                 {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
               </Nav.Link>
             )}
-            <Nav.Link id={COMPONENT_IDS.NAVBAR_CALENDAR} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/calendar" key="calendar">
+            <Nav.Link id={COMPONENT_IDS.NAVBAR_CALENDAR} style={{ position: 'relative', marginRight: '1em' }} as={NavLink} to="/calendar" key="calendar">
               <Calendar size={25} />
             </Nav.Link>
             {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
