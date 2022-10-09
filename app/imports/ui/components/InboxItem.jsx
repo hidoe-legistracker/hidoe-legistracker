@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 const InboxItem = ({ email }) => {
   const [show, setShow] = useState(false);
@@ -36,6 +37,7 @@ const InboxItem = ({ email }) => {
           </Card>
         </Modal.Body>
         <Modal.Footer>
+          {email.hasBillReference ? <NavLink to={`/view-bill/${email.billID}`}><Button>View Bill #{email.billNumber}</Button></NavLink> : ''}
           <Button variant="secondary" onClick={modalClose}>Close</Button>
         </Modal.Footer>
       </Modal>
@@ -53,6 +55,9 @@ InboxItem.propTypes = {
     subject: PropTypes.string,
     body: PropTypes.string,
     time: PropTypes.string,
+    hasBillReference: PropTypes.bool,
+    billNumber: PropTypes.number,
+    billID: PropTypes.string,
   }).isRequired,
 };
 
