@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Roles } from 'meteor/alanning:roles';
-import { Col, Container, Row, ProgressBar, Form } from 'react-bootstrap';
+import { Col, Container, Row, ProgressBar, Form, Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -100,10 +100,21 @@ const Directory = () => {
     }
   };
 
+  const flip = (action) => {
+    if (action === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = measure.measureNumber.reverse();
+      setDefaultBills(false);
+      setBills(filteredData);
+    }
+  };
+
   const committees = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
-  const actions = [];
+  const actions = ['Testimony', 'Monitor'];
 
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
@@ -134,7 +145,7 @@ const Directory = () => {
                 <Accordion.Header>Actions</Accordion.Header>
                 <Accordion.Body>
                   <ListGroup defaultActiveKey="#link3" variant="flush">
-                    {actions.map((d) => <ListGroup.Item action onClick={() => actionFilter(d)}>{d}</ListGroup.Item>)}
+                    {actions.sort().map((d) => <ListGroup.Item action onClick={() => actionFilter(d)}>{d}</ListGroup.Item>)}
                   </ListGroup>
                 </Accordion.Body>
               </Accordion.Item>
@@ -157,7 +168,7 @@ const Directory = () => {
                 <Table className="directory-table">
                   <thead style={{ marginBottom: 10 }}>
                     <tr>
-                      <th scope="col">#</th>
+                      <Button variant="light" action onClick={() => flip('')}>#</Button>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
                       <th scope="col">Offices</th>
