@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Form, Modal, Card } from 'react-bootstrap';
+import { Button, Card, Form, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 
-const InboxItem = ({ email }) => {
+const SentItem = ({ email }) => {
   const [show, setShow] = useState(false);
   const modalClose = () => setShow(false);
   const modalShow = () => setShow(true);
@@ -16,7 +15,6 @@ const InboxItem = ({ email }) => {
   return (
     <tr onClick={(event) => openEmail(event)}>
       <td style={{ width: '1em' }}><Form.Check inline /></td>
-      <td>{email.from}</td>
       <td>{email.subject}</td>
       <td className="d-flex flex-row-reverse">{(new Date(email.time)).toLocaleDateString()}</td>
 
@@ -25,9 +23,9 @@ const InboxItem = ({ email }) => {
           <Modal.Title>{email.subject}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p><h6 style={{ display: 'inline' }}>From: </h6> {email.from}</p>
           <p><h6 style={{ display: 'inline' }}>To: </h6> {email.to}</p>
           {email.cc !== '' ? <p><h6 style={{ display: 'inline' }}>cc: </h6> {email.cc}</p> : ''}
+          {email.bcc !== '' ? <p><h6 style={{ display: 'inline' }}>bcc: </h6> {email.bcc}</p> : ''}
           <hr />
           <h6>Body:</h6>
           <Card>
@@ -37,7 +35,6 @@ const InboxItem = ({ email }) => {
           </Card>
         </Modal.Body>
         <Modal.Footer>
-          {email.hasBillReference ? <NavLink to={`/view-bill/${email.billID}`}><Button>View Bill #{email.billNumber}</Button></NavLink> : ''}
           <Button variant="secondary" onClick={modalClose}>Close</Button>
         </Modal.Footer>
       </Modal>
@@ -46,19 +43,16 @@ const InboxItem = ({ email }) => {
 };
 
 // Require a document to be passed to this component.
-InboxItem.propTypes = {
+SentItem.propTypes = {
   email: PropTypes.shape({
     _id: PropTypes.string,
-    from: PropTypes.string,
+    subject: PropTypes.string,
     to: PropTypes.string,
     cc: PropTypes.string,
-    subject: PropTypes.string,
+    bcc: PropTypes.string,
     body: PropTypes.string,
     time: PropTypes.string,
-    hasBillReference: PropTypes.bool,
-    billNumber: PropTypes.number,
-    billID: PropTypes.string,
   }).isRequired,
 };
 
-export default InboxItem;
+export default SentItem;
