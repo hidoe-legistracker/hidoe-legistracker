@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert';
-// import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -12,6 +12,7 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { ROLE } from '../../api/role/Role';
 
 /* Renders a menu folders that has a collection of bills that were bookmarked */
 
@@ -64,7 +65,12 @@ const MyFolders = () => {
       position: user.myFolders.length,
       listMeasures: [],
     });
-    const collectionName = UserProfiles.getCollectionName();
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
     const updateData = { id: user._id, myFolders: user.myFolders };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
@@ -72,7 +78,7 @@ const MyFolders = () => {
   };
 
   const getTitle = () => {
-    swal.fire({
+    Swal.fire({
       title: 'Add Folder',
       text: 'Name of folder:',
       input: 'text',
@@ -86,9 +92,17 @@ const MyFolders = () => {
   };
 
   const removeFolder = (remove) => {
-    const folder = user.myFolders.filter(element => element.position !== remove);
-    const collectionName = UserProfiles.getCollectionName();
-    const updateData = { id: user._id, myFolders: folder };
+    user.myFolders.splice(remove, 1);
+    /*  Remaps position of folders to new index */
+    user.myFolders.map((folder, index) => folder.position === index);
+
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
+    const updateData = { id: user._id, myFolders: user.myFolders };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Folder deleted', 'success'));

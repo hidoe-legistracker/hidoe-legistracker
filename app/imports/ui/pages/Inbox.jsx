@@ -7,21 +7,24 @@ import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
+import { Measures } from '../../api/measure/MeasureCollection';
 import InboxItem from '../components/InboxItem';
 import SentItem from '../components/SentItem';
 import DraftItem from '../components/DraftItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Inbox = () => {
-  const { ready, emails, drafts, sent } = useTracker(() => {
+  const { ready, emails, drafts, sent, measures } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     const emailSubscription = Emails.subscribeEmail();
-    const isReady = emailSubscription.ready();
+    const measureSubscription = Measures.subscribeMeasures();
+    const isReady = emailSubscription.ready() && measureSubscription.ready();
     const emailData = Emails.find({ recipients: username, isDraft: false }, {}).fetch();
     const ccData = Emails.find({ ccs: username, isDraft: false }, {}).fetch();
     const bccData = Emails.find({ bccs: username, isDraft: false }, {}).fetch();
     const sentData = Emails.find({ senderEmail: username, isDraft: false }, {}).fetch();
     const draftData = Emails.find({ senderEmail: username, isDraft: true }, {}).fetch();
+    const measureData = Measures.find({}, {}).fetch();
 
     ccData.forEach(data => {
       if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
@@ -38,8 +41,32 @@ const Inbox = () => {
       emails: emailData,
       drafts: draftData,
       sent: sentData,
+      measures: measureData,
     };
   }, []);
+
+  // Get bill number from subject field
+  function getBillNumber(subjectField) {
+    const string = String(subjectField.toLowerCase().match(/bill.*[0-9]+/));
+    const billNumber = Number(string.match(/[0-9]+/));
+    return billNumber;
+  }
+  // Get bill number from subject field. Search measures for document with matching bill number. Return _id
+  function getBillID(subjectField) {
+    const billNumber = getBillNumber(subjectField);
+    const index = measures.map(function (measure) { return measure.measureNumber; }).indexOf(billNumber);
+    if (index !== -1) {
+      return measures[index]._id;
+    }
+    return '';
+  }
+  // Check if subject field contains the keyword 'bill' followed by a number
+  function checkEmailItem(subjectField) {
+    if (subjectField.toLowerCase().match(/bill.*[0-9]+/)) {
+      return true;
+    }
+    return false;
+  }
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
@@ -70,7 +97,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString() }} />)}
+                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject) }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
