@@ -1,15 +1,16 @@
-import React from 'react';
+import React  from 'react';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
 import { Roles } from 'meteor/alanning:roles';
 import { Container, Navbar, Nav, NavDropdown, ProgressBar } from 'react-bootstrap';
-import { BoxArrowRight, PersonFill, House, EnvelopePaper, QuestionCircle, Calendar } from 'react-bootstrap-icons';
+import { BoxArrowRight, PersonFill, House, EnvelopePaper, QuestionCircle } from 'react-bootstrap-icons';
 import { ROLE } from '../../api/role/Role';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import BillCalendar from './Calendar';
 
 const NavBar = () => {
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
@@ -55,14 +56,14 @@ const NavBar = () => {
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/forgot-password"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1em' }} as={NavLink} to="/inbox" key="inbox">
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative' }} as={NavLink} to="/inbox" key="inbox">
                 <EnvelopePaper size={25} />
                 {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
               </Nav.Link>
             )}
-            <Nav.Link id={COMPONENT_IDS.NAVBAR_CALENDAR} style={{ position: 'relative', marginRight: '1em' }} as={NavLink} to="/calendar" key="calendar">
-              <Calendar size={25} />
-            </Nav.Link>
+            <Nav.Item>
+              <BillCalendar show />
+            </Nav.Item>
             {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
               <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin">
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employee List</NavDropdown.Item>
