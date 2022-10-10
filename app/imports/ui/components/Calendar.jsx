@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 const BillCalendar = () => {
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   // eslint-disable-next-line no-shadow
   const onChange = date => {
@@ -28,9 +27,6 @@ const BillCalendar = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
