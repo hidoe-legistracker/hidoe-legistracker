@@ -60,8 +60,8 @@ const TestimonyPage = () => {
         </Row>
         <Testimony
           ref={componentRef}
-          testimony={{ hearingDate: (testimony.hearingDate ? testimony.hearingDate.toDateString() : '-'),
-            hearingTime: (testimony.hearingDate ? testimony.hearingDate.toTimeString() : '-'),
+          testimony={{ hearingDate: (testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'),
+            hearingTime: (testimony.hearingDate ? testimony.hearingDate.toLocaleTimeString() : '-'),
             hearingLocation: (testimony.hearingLocation ? testimony.hearingLocation : '-'),
             committeeName: (testimony.committeeName ? testimony.committeeName : '-'),
             department: '-',
