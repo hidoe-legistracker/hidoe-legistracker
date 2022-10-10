@@ -18,7 +18,7 @@ class TestimonyCollection extends BaseCollection {
       owner: String,
       committeeChair: String,
       committeeName: String,
-      billNumber: String,
+      billNumber: Number,
       billDraftNumber: { type: String, optional: true },
       title: { type: String, optional: true },
       hearingDate: { type: Date, optional: true },

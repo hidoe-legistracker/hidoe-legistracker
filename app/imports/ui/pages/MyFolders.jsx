@@ -1,160 +1,169 @@
 import React from 'react';
-import { Container, ProgressBar } from 'react-bootstrap';
-import Col from 'react-bootstrap/Col';
-import Nav from 'react-bootstrap/Nav';
-import Row from 'react-bootstrap/Row';
-import Tab from 'react-bootstrap/Tab';
-import { Link } from 'react-router-dom';
-import Table from 'react-bootstrap/Table';
-import Tabs from 'react-bootstrap/Tabs';
+import { Container, ProgressBar, Row, Tab, Col, Nav, Table, Tabs } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
+import swal from 'sweetalert';
+import Swal from 'sweetalert2';
+import { Link, NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { PAGE_IDS } from '../utilities/PageIDs';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { ROLE } from '../../api/role/Role';
 
-/* Renders a drop down menu  that has a collection of bills that are favorited */
-// eslint-disable-next-line no-unused-vars
+/* Renders a menu folders that has a collection of bills that were bookmarked */
 
 const billProgress = 60;
 
-const MyFolders = () => (
-  <Container id={PAGE_IDS.MY_FOLDERS} className="py-3">
-    <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-      <Row>
-        <Col sm={3}>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Item>
-              <Nav.Link eventKey="first">DOE</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="second">Deputy</Nav.Link>
-            </Nav.Item>
-          </Nav>
-        </Col>
-        <Col sm={9} className="overflow-auto">
-          <Tab.Content>
-            <Tab.Pane eventKey="first">
-              <Col xs={12}>
-                <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
-                  <Tab eventKey="all-bills" title="All Bills">
-                    <Row>
-                      <Table>
-                        <thead>
-                          <tr>
-                            <th scope="col">Bill #</th>
-                            <th scope="col">Bill</th>
-                            <th scope="col">Office</th>
-                            <th scope="col">Action</th>
-                            <th scope="col">Rationale</th>
-                            <th scope="col">Committee</th>
-                            <th scope="col">Hearing</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Testifier</th>
-                            <th scope="col">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <Link className="table-row" to="/view-bill">
-                            <th scope="row">1234</th>
-                            <td>.....</td>
-                            <td>OCID BOE</td>
-                            <td>Testimony</td>
-                            <td>........</td>
-                            <td>EDU, FIN</td>
-                            <td>12/02/2022</td>
-                            <td>Hearing</td>
-                            <td>Support</td>
-                            <td>John Doe</td>
-                            <td>
-                              <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                            </td>
-                          </Link>
-                        </tbody>
-                      </Table>
-                    </Row>
-                  </Tab>
-                  <Tab eventKey="inactive-bills" title="Inactive Bills">
-                    ...
-                  </Tab>
-                  <Tab eventKey="actions" title="Actions">
-                    <Nav variant="pills" className="flex-column">
-                      <Nav.Item>
-                        <Nav.Link eventKey="first">Monitor</Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link eventKey="second">Testimony</Nav.Link>
-                      </Nav.Item>
-                    </Nav>
-                  </Tab>
-                  <Tab eventKey="hearings" title="Hearings">
-                    ...
-                  </Tab>
-                </Tabs>
-              </Col>
-            </Tab.Pane>
-            <Tab.Pane eventKey="second">
-              <Col xs={12}>
-                <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
-                  <Tab eventKey="all-bills" title="All Bills">
-                    <Row>
-                      <Table>
-                        <thead>
-                          <tr>
-                            <th scope="col">Bill #</th>
-                            <th scope="col">Bill</th>
-                            <th scope="col">Office</th>
-                            <th scope="col">Action</th>
-                            <th scope="col">Rationale</th>
-                            <th scope="col">Committee</th>
-                            <th scope="col">Hearing</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Testifier</th>
-                            <th scope="col">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <Link className="table-row" to="/view-bill">
-                            <th scope="row">1234</th>
-                            <td>.....</td>
-                            <td>OCID BOE</td>
-                            <td>Testimony</td>
-                            <td>........</td>
-                            <td>EDU, FIN</td>
-                            <td>12/02/2022</td>
-                            <td>Hearing</td>
-                            <td>Support</td>
-                            <td>John Doe</td>
-                            <td>
-                              <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                            </td>
-                          </Link>
-                        </tbody>
-                      </Table>
-                    </Row>
-                  </Tab>
-                  <Tab eventKey="inactive-bills" title="Inactive Bills">
-                    ...
-                  </Tab>
-                  <Tab eventKey="actions" title="Actions">
-                    <Nav variant="pills" className="flex-column">
-                      <Nav.Item>
-                        <Nav.Link eventKey="first">Monitor</Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link eventKey="second">Testimony</Nav.Link>
-                      </Nav.Item>
-                    </Nav>
-                  </Tab>
-                  <Tab eventKey="hearings" title="Hearings">
-                    ...
-                  </Tab>
-                </Tabs>
-              </Col>
-            </Tab.Pane>
-          </Tab.Content>
-        </Col>
-      </Row>
-    </Tab.Container>
-  </Container>
+/* Component for layout out a Measures */
+const MeasureComponent = ({ measure }) => (
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure.measureId}`}>
+    <th scope="row">{measure.measureNumber}</th>
+    <td>{measure.measureTitle}</td>
+    <td>{measure.description}</td>
+    <td>{measure.currentReferral}</td>
+    <td>{measure.measureType}</td>
+    <td>
+      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+    </td>
+  </Link>
 );
+
+MeasureComponent.propTypes = {
+  measure: PropTypes.shape().isRequired,
+};
+
+const MyFolders = () => {
+
+  const { ready, user } = useTracker(() => {
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = userSubscription.ready() && adminSubscription.ready();
+    const username = Meteor.user() ? Meteor.user().username : '';
+
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
+
+    return ({
+      ready: rdy,
+      user: usr,
+    });
+  }, []);
+
+  /** const numFilter = (number) => {
+    const filteredData = _.where(measure, { measureNumber: number });
+  }; */
+
+  const addFolder = (folderTitle) => {
+    user.myFolders.push({
+      title: folderTitle,
+      position: user.myFolders.length,
+      listMeasures: [],
+    });
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Folder created', 'success'));
+  };
+
+  const getTitle = () => {
+    Swal.fire({
+      title: 'Add Folder',
+      text: 'Name of folder:',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonColor: 'green',
+    }).then((result) => {
+      if (result.value) {
+        addFolder(result.value);
+      }
+    });
+  };
+
+  const removeFolder = (remove) => {
+    user.myFolders.splice(remove, 1);
+    /*  Remaps position of folders to new index */
+    user.myFolders.map((folder, index) => folder.position === index);
+
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Folder deleted', 'success'));
+  };
+
+  return (
+    ready ? (
+      <Container id={PAGE_IDS.MY_FOLDERS}>
+        <Button className="mb-3" onClick={getTitle}>
+          Add Folder
+        </Button>
+        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+          <Row>
+            <Col>
+              <Nav variant="pills" className="flex-column">
+                {user.myFolders.map((folder, index) => (
+                  <Nav.Item><Nav.Link eventKey={index}>{folder.title}</Nav.Link>
+                  </Nav.Item>
+                ))}
+              </Nav>
+            </Col>
+          </Row>
+          <Col>
+            <Tab.Content>
+              { user.myFolders.map((folder, index) => (
+                <Tab.Pane eventKey={index}>
+                  <Col>
+                    <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
+                      <Tab eventKey="all-bills" title={folder.title}>
+                        <Row>
+                          <Table>
+                            <thead style={{ marginBottom: 10 }}>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Bill Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Offices</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              { folder.listMeasures.map((meas) => <MeasureComponent measure={meas} />) }
+                              <Button variant="danger" className="mt-5" onClick={() => removeFolder(index)}>
+                                Remove Folder
+                              </Button>
+                            </tbody>
+                          </Table>
+                        </Row>
+                      </Tab>
+                    </Tabs>
+                  </Col>
+                </Tab.Pane>
+              ))}
+            </Tab.Content>
+          </Col>
+
+        </Tab.Container>
+      </Container>
+    ) : <LoadingSpinner message="Loading Measures" />);
+
+};
 
 export default MyFolders;

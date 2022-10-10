@@ -23,11 +23,16 @@ class BaseProfileCollection extends BaseCollection {
         type: String,
         optional: true,
       },
-      departments: {
+      offices: {
         type: Array,
         optional: true,
       },
-      'departments.$': {
+      'offices.$': String,
+      committees: {
+        type: Array,
+        optional: true,
+      },
+      'committees.$': {
         type: new SimpleSchema({
           label: String,
           value: String,
@@ -37,16 +42,39 @@ class BaseProfileCollection extends BaseCollection {
       // Array of folders
       myFolders: {
         type: Array,
-        optional: true,
+        defaultValue: [],
       },
-      // Array of Measure Numbers
       'myFolders.$': {
-        type: Array,
+        type: new SimpleSchema({
+          title: String,
+          position: Number,
+          listMeasures: {
+            type: Array,
+          },
+          'listMeasures.$': {
+            type: new SimpleSchema({
+              year: Number,
+              measureType: String,
+              measureNumber: Number,
+              measureId: String,
+              lastUpdated: { type: Date, optional: true },
+              code: { type: String, optional: true },
+              measurePdfUrl: { type: String, optional: true },
+              measureArchiveUrl: { type: String, optional: true },
+              measureTitle: { type: String, optional: true },
+              reportTitle: { type: String, optional: true },
+              bitAppropriation: { type: Number, optional: true },
+              description: { type: String, optional: true },
+              status: { type: String, optional: true },
+              introducer: { type: String, optional: true },
+              currentReferral: { type: String, optional: true },
+              companion: { type: String, optional: true },
+            }),
+            optional: true,
+          },
+        }),
       },
-      // Measure Number
-      'myFolders.$.$': {
-        type: Number,
-      },
+
     })));
   }
 
