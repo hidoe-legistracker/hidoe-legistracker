@@ -10,6 +10,7 @@ import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { Emails } from '../../api/email/EmailCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import BillCalendar from './Calendar';
 
 const NavBar = () => {
   // useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
@@ -55,20 +56,25 @@ const NavBar = () => {
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_LOGIN_DROPDOWN_SIGN_UP} as={NavLink} to="/forgot-password"><QuestionCircle />Forgot password?</NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ position: 'relative', marginRight: '1.5em' }} as={NavLink} to="/inbox" key="inbox">
-                <EnvelopePaper size={25} />
-                {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
-              </Nav.Link>
+              <>
+                <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ margin: 5 }} as={NavLink} to="/inbox" key="inbox">
+                  <EnvelopePaper size={25} />
+                  {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
+                </Nav.Link>
+                <Nav.Link to="#">
+                  <BillCalendar show />
+                </Nav.Link>
+              </>
             )}
             {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
-              <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin">
+              <NavDropdown id={COMPONENT_IDS.NAVBAR_ADMIN} title="Admin" key="Admin" style={{ marginTop: 5 }}>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_MEMBERS} as={NavLink} to="/employees" key="employees">Employee List</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_REGISTER_USER} as={NavLink} to="/signup" key="signup">Register User</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_ADMIN} as={NavLink} to="/change-password-admin" key="change-password-admin">Reset Employee Password</NavDropdown.Item>
               </NavDropdown>
             ) : ''}
             {currentUser !== '' ? (
-              <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={currentUser} key="currUser">
+              <NavDropdown id={COMPONENT_IDS.NAVBAR_CURRENT_USER} title={currentUser} key="currUser" style={{ marginTop: 5 }}>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_PROFILE} as={NavLink} to={`/profile/${user._id}`} key="profile">Profile</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_USER} as={NavLink} to="/change-password-user" key="change-password-user">Change Password</NavDropdown.Item>
                 <NavDropdown.Item id={COMPONENT_IDS.NAVBAR_SIGN_OUT} as={NavLink} to="/signout" key="signout"><BoxArrowRight /> Sign out</NavDropdown.Item>
