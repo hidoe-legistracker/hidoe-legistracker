@@ -9,6 +9,7 @@ import { Link, NavLink } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
 import _ from 'underscore';
+import Swal from 'sweetalert2';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -46,6 +47,38 @@ const ViewBill = () => {
     };
   }, [_id]);
 
+  const addFolder = (folderTitle) => {
+    user.myFolders.push({
+      title: folderTitle,
+      position: user.myFolders.length,
+      listMeasures: [],
+    });
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Folder created', 'success'));
+  };
+
+  const getTitle = () => {
+    Swal.fire({
+      title: 'Create Folder',
+      text: 'Name of folder:',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonColor: 'green',
+    }).then((result) => {
+      if (result.value) {
+        addFolder(result.value);
+      }
+    });
+  };
+
   const addMeasure = (bill, index, measId) => {
     // eslint-disable-next-line no-param-reassign
     bill.measureId = measId;
@@ -81,6 +114,8 @@ const ViewBill = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Col>
