@@ -57,7 +57,7 @@ const NavBar = () => {
               </NavDropdown>
             ) : (
               <>
-                <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ margin: 5 }} as={NavLink} to="/inbox" key="inbox">
+                <Nav.Link id={COMPONENT_IDS.NAVBAR_INBOX} style={{ margin: 5, position: 'relative' }} as={NavLink} to="/inbox" key="inbox">
                   <EnvelopePaper size={25} />
                   {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
                 </Nav.Link>
