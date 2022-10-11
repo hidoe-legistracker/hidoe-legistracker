@@ -181,7 +181,7 @@ const Directory = () => {
                       defaultBills ? (measure.filter(post => {
                         if (search === '') {
                           return post;
-                        } if (post.measureNumber && post.measureNumber === search.valueOf()) {
+                        } if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
                           return post;
                         } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
                           return post;
@@ -195,7 +195,6 @@ const Directory = () => {
                         <MeasureComponent measure={measures} />
                       ))) :
                         (bills.filter(post => {
-                          console.log(search);
                           if (search === '') {
                             return post;
                           } if (post.measureNumber.toInteger() === search) {

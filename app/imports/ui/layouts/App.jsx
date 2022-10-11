@@ -30,6 +30,7 @@ import EmployeeList from '../pages/EmployeeList';
 import ForgotPassword from '../pages/ForgotPassword';
 import EditProfile from '../pages/EditProfile';
 import EditEmailDraft from '../pages/EditEmailDraft';
+import BillCalendar from '../components/Calendar';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
+          <Route path="/calendar" element={<ProtectedRoute><BillCalendar /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />
