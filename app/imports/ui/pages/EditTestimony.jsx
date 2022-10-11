@@ -22,23 +22,23 @@ const bridge = new SimpleSchema2Bridge(Testimonies._schema);
 /* Renders the EditTestimony page for editing a testimony. */
 const EditTestimony = () => {
 
-  const { _id } = useParams();
+  const { measureID, testimonyID } = useParams();
 
   const { doc } = useTracker(() => {
     const subscription = Testimonies.subscribeTestimony();
     const rdy = subscription.ready();
-    const document = Testimonies.findOne({ _id: _id });
+    const document = Testimonies.findOne({ _id: testimonyID });
     return {
       doc: document,
       ready: rdy,
     };
-  }, [_id]);
+  }, [measureID, testimonyID]);
 
   // On submit, insert the data.
   const submit = (data) => {
     const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
     const collectionName = Testimonies.getCollectionName();
-    const updateData = { id: _id, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
+    const updateData = { id: testimonyID, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Testimony updated successfully', 'success'));
