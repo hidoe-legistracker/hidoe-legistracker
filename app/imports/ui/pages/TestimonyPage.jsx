@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useReactToPrint } from 'react-to-print';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Breadcrumb, Button, Col, Container, Row } from 'react-bootstrap';
 import { Testimony } from '../components/Testimony';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -31,6 +31,15 @@ const TestimonyPage = () => {
 
   return ready ? (
     <div>
+      <Container>
+        <Row>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href={`/view-bill/${measureID}`}>View Bill</Breadcrumb.Item>
+            <Breadcrumb.Item active>View Testimony</Breadcrumb.Item>
+          </Breadcrumb>
+        </Row>
+      </Container>
       <Container id={PAGE_IDS.VIEW_TESTIMONY} className="view-testimony-container">
         <Row>
           <Col>
