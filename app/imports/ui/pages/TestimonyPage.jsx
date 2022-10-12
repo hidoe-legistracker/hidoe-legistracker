@@ -34,7 +34,7 @@ const TestimonyPage = () => {
       <Container>
         <Row>
           <Breadcrumb>
-            <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-bill/${measureID}`}>View Bill</Breadcrumb.Item>
             <Breadcrumb.Item active>View Testimony</Breadcrumb.Item>
           </Breadcrumb>
@@ -54,11 +54,11 @@ const TestimonyPage = () => {
         <Testimony
           ref={componentRef}
           testimony={{ hearingDate: (testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'),
-            hearingTime: (testimony.hearingDate ? testimony.hearingDate.toLocaleTimeString() : '-'),
+            hearingTime: (testimony.hearingDate ? testimony.hearingDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'),
             hearingLocation: (testimony.hearingLocation ? testimony.hearingLocation : '-'),
             committeeName: (testimony.committeeName ? testimony.committeeName : '-'),
             department: '-',
-            testifier: (testimony.testifier ? testimony.testifier : ' '),
+            testifier: (testimony.testifier ? testimony.testifier : '-'),
             introduction: (testimony.introduction ? testimony.introduction : ''),
             content: (testimony.content ? testimony.content : ''),
             closing: (testimony.closing ? testimony.closing : ''),

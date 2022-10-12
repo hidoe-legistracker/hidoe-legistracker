@@ -101,7 +101,7 @@ const ViewBill = () => {
       <Container>
         <Row>
           <Breadcrumb>
-            <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item active>View Bill</Breadcrumb.Item>
           </Breadcrumb>
         </Row>

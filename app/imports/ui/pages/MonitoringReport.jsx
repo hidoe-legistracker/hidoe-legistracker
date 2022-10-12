@@ -252,7 +252,7 @@ const MonitoringReport = () => {
       <Container>
         <Row>
           <Breadcrumb>
-            <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-bill/${_id}`}>View Bill</Breadcrumb.Item>
             <Breadcrumb.Item active>Monitoring Report</Breadcrumb.Item>
           </Breadcrumb>

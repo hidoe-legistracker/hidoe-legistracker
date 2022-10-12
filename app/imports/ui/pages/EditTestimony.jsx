@@ -50,7 +50,7 @@ const EditTestimony = () => {
       <Container>
         <Row>
           <Breadcrumb>
-            <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-bill/${measureID}`}>View Bill</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-testimony/${measureID}&${testimonyID}`}>View Testimony</Breadcrumb.Item>
             <Breadcrumb.Item active>Edit Testimony</Breadcrumb.Item>
