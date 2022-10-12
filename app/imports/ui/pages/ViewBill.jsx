@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row, Button, ProgressBar, Dropdown, Breadcrumb } from 'react-bootstrap';
-import { FileEarmarkText, BookmarkPlus } from 'react-bootstrap-icons';
+import { FileEarmarkText, BookmarkPlus, FilePlus } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
@@ -120,6 +120,17 @@ const ViewBill = () => {
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
                   Bookmark
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Dropdown className="float-end">
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <FilePlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                  Assign to Office
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
