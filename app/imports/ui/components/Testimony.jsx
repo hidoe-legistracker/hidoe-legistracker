@@ -28,19 +28,19 @@ export const Testimony = React.forwardRef(({ testimony }, ref) => (
         </Col>
         <Row className="row-center">
           <Row>
-            <Col className="testimony-header2" xs={2}>Department: </Col>
+            <Col className="testimony-header2" xs={2}>Department</Col>
             <Col>{testimony.department}</Col>
           </Row>
           <Row>
-            <Col className="testimony-header2" xs={2}>Testifier: </Col>
+            <Col className="testimony-header2" xs={2}>Testifier</Col>
             <Col>{testimony.testifier}</Col>
           </Row>
           <Row>
-            <Col className="testimony-header2" xs={2}>Title of Bill: </Col>
+            <Col className="testimony-header2" xs={2}>Title of Bill</Col>
             <Col>{testimony.measureTitle}</Col>
           </Row>
           <Row>
-            <Col className="testimony-header2" xs={2}>Purpose of Bill: </Col>
+            <Col className="testimony-header2" xs={2}>Purpose of Bill</Col>
             <Col>{testimony.measureDescription}</Col>
           </Row>
           <Container style={{ marginTop: 10 }}>

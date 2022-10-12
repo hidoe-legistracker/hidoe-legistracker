@@ -43,7 +43,7 @@ const TestimonyPage = () => {
       <Container id={PAGE_IDS.VIEW_TESTIMONY} className="view-testimony-container">
         <Row>
           <Col>
-            <Button href={`/edit-testimony/${measureID}/${testimonyID}`} variant="secondary" size="sm" className="bill-button-spacing">
+            <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="sm" className="bill-button-spacing">
               Edit
             </Button>
             <Button onClick={handlePrint} variant="secondary" size="sm" className="bill-button-spacing">

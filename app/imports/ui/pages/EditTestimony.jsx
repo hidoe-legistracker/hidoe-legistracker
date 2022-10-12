@@ -52,7 +52,7 @@ const EditTestimony = () => {
           <Breadcrumb>
             <Breadcrumb.Item href="/directory">Home</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-bill/${measureID}`}>View Bill</Breadcrumb.Item>
-            <Breadcrumb.Item href={`/view-testimony/${measureID}/${testimonyID}`}>View Testimony</Breadcrumb.Item>
+            <Breadcrumb.Item href={`/view-testimony/${measureID}&${testimonyID}`}>View Testimony</Breadcrumb.Item>
             <Breadcrumb.Item active>Edit Testimony</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
