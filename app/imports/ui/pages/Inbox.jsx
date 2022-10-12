@@ -62,34 +62,43 @@ const Inbox = () => {
     };
   }, []);
 
+  const newEmail = {
+    subject: '',
+    recipients: [],
+    ccs: [],
+    bccs: [],
+    date: '',
+    body: '',
+  };
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const updateEmail = (event, property) => {
-    emails[property] = event;
+    newEmail[property] = event;
   };
 
   // On submit, insert the data.
   const submit = (type) => {
-    const { subject, body } = emails;
+    const { subject, body } = newEmail;
     const recipients = [];
     const ccs = [];
     const bccs = [];
     setShow(false);
 
-    if (subject === '' || emails.recipients.length === 0 || body === '') {
+    if (subject === '' || newEmail.recipients.length === 0 || body === '') {
       return;
     }
 
-    emails.recipients.forEach(recipient => {
+    newEmail.recipients.forEach(recipient => {
       recipients.push(recipient.value);
     });
-    emails.ccs.forEach(cc => {
+    newEmail.ccs.forEach(cc => {
       ccs.push(cc.value);
     });
-    emails.bccs.forEach(bcc => {
+    newEmail.bccs.forEach(bcc => {
       bccs.push(bcc.value);
     });
 
