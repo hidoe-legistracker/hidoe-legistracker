@@ -96,6 +96,22 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
+  const assignMeasure = (bill, index, measId) => {
+    // eslint-disable-next-line no-param-reassign
+    bill.measureId = measId;
+    const folder = user.myFolders.find(element => element.position === index);
+    folder.listMeasures.push(bill);
+    let collectionName;
+    if (user.role === ROLE.USER) {
+      collectionName = UserProfiles.getCollectionName();
+    } else {
+      collectionName = AdminProfiles.getCollectionName();
+    }
+    const updateData = { id: user._id, myFolders: user.myFolders };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Success', 'Measure added', 'success'));
+  };
   return ready ? (
     <div>
       <Container>
@@ -133,7 +149,7 @@ const ViewBill = () => {
                   Assign to Office
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
+                  {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
                 </Dropdown.Menu>
