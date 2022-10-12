@@ -1,7 +1,7 @@
 {
   "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Admin", "lastName": "MATRP", "employeeID": 1, "newAccount": false, "myFolders": []},
-    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false, "myFolders": [] }
+    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Admin", "lastName": "MATRP", "employeeID": 1, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false, "myFolders": [], "offices": [] }
   ],
   
   "loadAssetsFile":  true
