@@ -152,6 +152,7 @@ const ViewBill = () => {
                   {/* {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)} */}
                   <Dropdown.Item onClick={() => Measures.update(Measures.measureNumber, { Measures: 'OITS' })}> OITS </Dropdown.Item>
                   <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => console.log('Test')}> test </Dropdown.Item>
                   <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
