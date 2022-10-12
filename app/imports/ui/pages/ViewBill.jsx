@@ -149,8 +149,10 @@ const ViewBill = () => {
                   Assign to Office
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {/* {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)} */}
-                  <Dropdown.Item onClick={() => Measures.update(Measures.measureNumber, { Measures: 'OITS' })}> OITS </Dropdown.Item>
+                  {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id)}> {folder.title} </Dropdown.Item>)}
+                  {/* <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id, office) }) */}
+                  {/*  .catch(error => swal('Error', error.message, 'error')) */}
+                  {/*  .then(() => swal('Success', 'Measure added', 'success'))}> OITS </Dropdown.Item> */}
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => console.log('Test')}> test </Dropdown.Item>
                   <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
