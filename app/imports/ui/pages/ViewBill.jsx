@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Button, ProgressBar, Dropdown } from 'react-bootstrap';
+import { Col, Container, Row, Button, ProgressBar, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -97,132 +97,142 @@ const ViewBill = () => {
   };
 
   return ready ? (
-    <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+    <div>
       <Container>
         <Row>
-          <Col>
-            <Button variant="secondary" size="sm" className="bill-button-spacing">
-              <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
-                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                Monitoring Report
-              </Link>
-            </Button>
-            <Dropdown className="float-end">
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                Bookmark
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
+            <Breadcrumb.Item active>View Bill</Breadcrumb.Item>
+          </Breadcrumb>
         </Row>
       </Container>
-      <h1>Bill #{measure.measureNumber}</h1>
-      <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
-        <Col>
-          <Row style={{ fontWeight: 'bold' }}>Title</Row>
-          <Row>{measure.measureTitle}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Office</Row>
-          <Row>{measure.currentReferral}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Code</Row>
-          <Row>{measure.code}</Row>
-        </Col>
-      </Row>
-      <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
-        <Col>
-          <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
-          <Row>{measure.description}</Row>
-        </Col>
-      </Row>
-      <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Report Title</Row>
-          <Row>{measure.reportTitle}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Committee</Row>
-          <Row>Conference</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Type</Row>
-          <Row>{measure.measureType}</Row>
-        </Col>
-      </Row>
-      <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Introducer</Row>
-          <Row>{measure.introducer}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Status</Row>
-          <Row>{measure.status}</Row>
-        </Col>
-      </Row>
-      <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
-          <Row>{measure.measureArchiveUrl}</Row>
-        </Col>
-        <Col className="view-bill-columns">
-          <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
-          <Row>{measure.measurePdfUrl}</Row>
-        </Col>
-      </Row>
-      <Container className="view-testimony-container">
-        <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
-        {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
-          <Table>
-            <thead>
-              <tr>
-                <th scope="col">Hearing Date</th>
-                <th scope="col">Bill #</th>
-                <th scope="col">Prepared By</th>
-                <th scope="col">DOE Positon</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
-                <Link className="table-row" to={`/view-testimony/${testimony._id}`}>
-                  <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
-                  <td>{testimony.billNumber}</td>
-                  <td>{testimony.testifier}</td>
-                  <td>{testimony.deptPosition}</td>
-                  <td>
-                    <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
-                  </td>
+      <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+        <Container>
+          <Row>
+            <Col>
+              <Button variant="secondary" size="sm" className="bill-button-spacing">
+                <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
+                  <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                  Monitoring Report
                 </Link>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </Container>
+              </Button>
+              <Dropdown className="float-end">
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                  Bookmark
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Col>
+          </Row>
+        </Container>
+        <h1>Bill #{measure.measureNumber}</h1>
+        <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
+          <Col>
+            <Row style={{ fontWeight: 'bold' }}>Title</Row>
+            <Row>{measure.measureTitle}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Office</Row>
+            <Row>{measure.currentReferral}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Code</Row>
+            <Row>{measure.code}</Row>
+          </Col>
+        </Row>
+        <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
+          <Col>
+            <Row style={{ fontWeight: 'bold' }}>Bill / Resolution</Row>
+            <Row>{measure.description}</Row>
+          </Col>
+        </Row>
+        <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Report Title</Row>
+            <Row>{measure.reportTitle}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Committee</Row>
+            <Row>Conference</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Type</Row>
+            <Row>{measure.measureType}</Row>
+          </Col>
+        </Row>
+        <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Introducer</Row>
+            <Row>{measure.introducer}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Status</Row>
+            <Row>{measure.status}</Row>
+          </Col>
+        </Row>
+        <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
+            <Row>{measure.measureArchiveUrl}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
+            <Row>{measure.measurePdfUrl}</Row>
+          </Col>
+        </Row>
+        <Container className="view-testimony-container">
+          <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
+          {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
+            <Table>
+              <thead>
+                <tr>
+                  <th scope="col">Hearing Date</th>
+                  <th scope="col">Bill #</th>
+                  <th scope="col">Prepared By</th>
+                  <th scope="col">DOE Positon</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
+                  <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
+                    <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
+                    <td>{testimony.billNumber}</td>
+                    <td>{testimony.testifier}</td>
+                    <td>{testimony.deptPosition}</td>
+                    <td>
+                      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+                    </td>
+                  </Link>
+                ))}
+              </tbody>
+            </Table>
+          )}
+        </Container>
 
-      <hr
-        style={{
-          background: 'black',
-          color: 'black',
-          borderColor: 'black',
-          height: '1px',
-        }}
-      />
-      <Row style={{ marginTop: 10 }}>
-        <Form>
-          <Form.Check
-            inline
-            label="I want to receive hearing notifications for this bill"
-          />
-        </Form>
-      </Row>
-    </Container>
+        <hr
+          style={{
+            background: 'black',
+            color: 'black',
+            borderColor: 'black',
+            height: '1px',
+          }}
+        />
+        <Row style={{ marginTop: 10 }}>
+          <Form>
+            <Form.Check
+              inline
+              label="I want to receive hearing notifications for this bill"
+            />
+          </Form>
+        </Row>
+      </Container>
+    </div>
   ) : <LoadingSpinner message="Loading Bill Data" />;
 };
 
