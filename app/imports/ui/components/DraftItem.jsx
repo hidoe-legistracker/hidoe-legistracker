@@ -33,7 +33,10 @@ const DraftItem = ({ email }) => {
     const instance = email._id;
     removeItMethod.callPromise({ collectionName, instance })
       .catch(error => swal('Error', error.message, 'error'))
-      .then(() => swal('Success', 'Item deleted successfully', 'success'));
+      .then(() => {
+        setShowDelete(false);
+        swal('Success', 'Item deleted successfully', 'success');
+      });
   };
 
   if (emailID !== '') {
