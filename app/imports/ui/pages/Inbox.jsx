@@ -16,6 +16,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const Inbox = () => {
   const { thisUser, users, ready, emails, drafts, sent, measures } = useTracker(() => {
@@ -62,34 +63,43 @@ const Inbox = () => {
     };
   }, []);
 
+  const newEmail = {
+    subject: '',
+    recipients: [],
+    ccs: [],
+    bccs: [],
+    date: '',
+    body: '',
+  };
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const updateEmail = (event, property) => {
-    emails[property] = event;
+    newEmail[property] = event;
   };
 
   // On submit, insert the data.
   const submit = (type) => {
-    const { subject, body } = emails;
+    const { subject, body } = newEmail;
     const recipients = [];
     const ccs = [];
     const bccs = [];
     setShow(false);
 
-    if (subject === '' || emails.recipients.length === 0 || body === '') {
+    if (subject === '' || newEmail.recipients.length === 0 || body === '') {
       return;
     }
 
-    emails.recipients.forEach(recipient => {
+    newEmail.recipients.forEach(recipient => {
       recipients.push(recipient.value);
     });
-    emails.ccs.forEach(cc => {
+    newEmail.ccs.forEach(cc => {
       ccs.push(cc.value);
     });
-    emails.bccs.forEach(bcc => {
+    newEmail.bccs.forEach(bcc => {
       bccs.push(bcc.value);
     });
 
@@ -137,10 +147,11 @@ const Inbox = () => {
       <Tab.Container defaultActiveKey="inbox">
         <Row className="justify-content-center">
           <Col className="pt-5">
-            <Button size="md" variant="primary" onClick={handleShow}>
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={handleShow}>
               COMPOSE
             </Button>
             <Modal
+              id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
               show={show}
               onHide={handleClose}
               backdrop="static"

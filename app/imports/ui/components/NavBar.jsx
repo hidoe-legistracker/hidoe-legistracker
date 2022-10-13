@@ -61,7 +61,7 @@ const NavBar = () => {
                   <EnvelopePaper size={25} />
                   {notificationCount !== 0 ? <p style={notifNum}>{notificationCount}</p> : ''}
                 </Nav.Link>
-                <Nav.Link to="#">
+                <Nav.Link to="#" style={{ position: 'relative' }}>
                   <BillCalendar show />
                 </Nav.Link>
               </>

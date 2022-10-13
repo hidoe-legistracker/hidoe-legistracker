@@ -17,20 +17,20 @@ const BillCalendar = () => {
 
   return (
     <>
-      <Button variant="outline-secondary" onClick={() => setShow(true)}>
+      <Button variant="outline-secondary" onClick={() => setShow(true)} className="calendar-button">
         <Calendar3 size={25} />
       </Button>
 
-      <Container style={{ alignContent: 'center' }}>
+      <Container>
         <Modal
           show={show}
-          centered
           onHide={() => setShow(false)}
+          dialogClassName="modal-90w"
         >
           <Modal.Header closeButton>
             <Modal.Title>Bill Calendar</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body style={{ alignContent: 'center' }}>
             <Calendar onChange={onChange} value={date} />
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>

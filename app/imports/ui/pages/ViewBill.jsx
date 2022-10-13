@@ -19,8 +19,6 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
 
-const billProgress = 60;
-
 const ViewBill = () => {
   const { _id } = useParams();
   const { testimonies, measure, ready, user } = useTracker(() => {
@@ -117,14 +115,14 @@ const ViewBill = () => {
           </Breadcrumb>
         </Row>
       </Container>
-      <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+      <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container" style={{ marginTop: 0 }}>
         <Container>
           <Row>
             <Col>
               <Button variant="secondary" size="sm" className="bill-button-spacing">
                 <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
                   <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                  Monitoring Report
+                  Create Testimony
                 </Link>
               </Button>
               <Dropdown className="float-end">
@@ -239,7 +237,8 @@ const ViewBill = () => {
                     <td>{testimony.testifier}</td>
                     <td>{testimony.deptPosition}</td>
                     <td>
-                      <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
+                      { testimony.testimonyProgress.length === 6 ? 'Completed'
+                        : <ProgressBar now={testimony.testimonyProgress.length * 20} label={`${testimony.testimonyProgress.length * 20}`} visuallyHidden />}
                     </td>
                   </Link>
                 ))}

@@ -158,7 +158,7 @@ const SignUp = () => {
       </Row>
       <Row className="py-4">
         <Col>
-          <Button onClick={submit}>Register User</Button>
+          <Button id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} onClick={submit}>Register User</Button>
         </Col>
       </Row>
     </Container>

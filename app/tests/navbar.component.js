@@ -63,17 +63,6 @@ class NavBar {
     await t.click(`#${COMPONENT_IDS.NAVBAR_MY_FOLDERS}`);
   }
 
-  /* Go to my folders page */
-  async gotoCreateMeasurePage() {
-    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
-    if (!visible) {
-      await t.click('button.navbar-toggler');
-    }
-    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
-    await t.click(`#${COMPONENT_IDS.NAVBAR_ADD_MEASURE}`);
-  }
-
-  /* Go to my folders page */
   async gotoInboxPage() {
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
@@ -81,6 +70,46 @@ class NavBar {
     }
     await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
     await t.click(`#${COMPONENT_IDS.NAVBAR_INBOX}`);
+  }
+
+  async gotoEmployeeListPage() {
+    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
+    if (!visible) {
+      await t.click('button.navbar-toggler');
+    }
+    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_ADMIN}`).exists).ok();
+    await t.click(`#${COMPONENT_IDS.NAVBAR_ADMIN}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_MEMBERS}`);
+  }
+
+  async gotoRegisterUserPage() {
+    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
+    if (!visible) {
+      await t.click('button.navbar-toggler');
+    }
+    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_ADMIN}`).exists).ok();
+    await t.click(`#${COMPONENT_IDS.NAVBAR_ADMIN}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_REGISTER_USER}`);
+  }
+
+  async gotoResetEmployeePasswordPage() {
+    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
+    if (!visible) {
+      await t.click('button.navbar-toggler');
+    }
+    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_ADMIN}`).exists).ok();
+    await t.click(`#${COMPONENT_IDS.NAVBAR_ADMIN}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_ADMIN}`);
+  }
+
+  async gotoChangePasswordPage() {
+    const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
+    if (!visible) {
+      await t.click('button.navbar-toggler');
+    }
+    await t.expect(Selector(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`).exists).ok();
+    await t.click(`#${COMPONENT_IDS.NAVBAR_CURRENT_USER}`);
+    await t.click(`#${COMPONENT_IDS.NAVBAR_CHANGE_PASSWORD_USER}`);
   }
 
   /* Go to the manage database page. Must be adimin. */
