@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row, Button, ProgressBar, Dropdown, Breadcrumb } from 'react-bootstrap';
-import { FileEarmarkText, BookmarkPlus, FilePlus } from 'react-bootstrap-icons';
+import { FileEarmarkText, BookmarkPlus, ArrowLeftRight } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
@@ -125,10 +125,10 @@ const ViewBill = () => {
         <Container>
           <Row>
             <Col>
-              <Button variant="secondary" size="sm" className="bill-button-spacing">
+              <Button variant="secondary">
                 <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
                   <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                  Create Testimony
+                  Monitoring Report
                 </Link>
               </Button>
               <Dropdown className="float-end">
@@ -143,9 +143,9 @@ const ViewBill = () => {
                 </Dropdown.Menu>
               </Dropdown>
               {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
-                <Dropdown className="float-end">
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    <FilePlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                <Dropdown className="float-end" style={{ marginRight: 5 }}>
+                  <Dropdown.Toggle id="dropdown-basic">
+                    <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
                     Assign to Office
                   </Dropdown.Toggle>
                   <Dropdown.Menu>

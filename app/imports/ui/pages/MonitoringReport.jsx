@@ -253,7 +253,7 @@ const MonitoringReport = () => {
           <Breadcrumb>
             <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item href={`/view-bill/${_id}`}>View Bill</Breadcrumb.Item>
-            <Breadcrumb.Item active>Create Testimony</Breadcrumb.Item>
+            <Breadcrumb.Item active>Monitoring Report</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
       </Container>
@@ -287,7 +287,7 @@ const MonitoringReport = () => {
 
             </Form>
           </Row>
-          <Row className="mb-5">
+          <Row>
             <Col>
               <ListGroup variant="flush">
                 <ListGroup.Item className="text-secondary">Created By: {`${Meteor.user().username}`}</ListGroup.Item>
