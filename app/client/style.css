@@ -33,10 +33,9 @@ body {
 
 .folder-section {
   align-content: center;
-  margin-right: 5px;
   display: block;
   overflow-y: auto;
-  height: 705px;
+  height: 100vh!important;
 }
 
 .bill-section {
@@ -94,8 +93,8 @@ body {
   width: 100%;
   margin-bottom: 1rem;
   display: block;
-  overflow-y: auto;
-  height: 550px;
+  overflow-y: auto!important;
+  height: 85vh!important;
   color: var(--bs-table-color);
   vertical-align: top;
   border-color: var(--bs-table-border-color);

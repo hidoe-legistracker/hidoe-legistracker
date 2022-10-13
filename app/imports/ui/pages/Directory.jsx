@@ -145,7 +145,7 @@ const Directory = () => {
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
-                  <tbody style={{ overflowY: 'auto' }}>
+                  <tbody style={{ position: 'relative' }}>
                     {
                       defaultBills ? (measure.filter(post => {
                         if (search === '') {
