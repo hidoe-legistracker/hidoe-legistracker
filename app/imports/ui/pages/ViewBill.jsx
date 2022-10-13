@@ -101,7 +101,6 @@ const ViewBill = () => {
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    console.log('hello');
     const updateData = { id: bill._id, officeType: office };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
@@ -151,9 +150,6 @@ const ViewBill = () => {
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => console.log('Test')}> test </Dropdown.Item>
-                    <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ) : ''}
