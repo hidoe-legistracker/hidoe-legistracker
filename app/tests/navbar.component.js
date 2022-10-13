@@ -73,7 +73,6 @@ class NavBar {
   }
 
   async gotoEmployeeListPage() {
-    await this.ensureLogout(t);
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');
@@ -84,7 +83,6 @@ class NavBar {
   }
 
   async gotoRegisterUserPage() {
-    await this.ensureLogout(t);
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');
@@ -95,7 +93,6 @@ class NavBar {
   }
 
   async gotoResetEmployeePasswordPage() {
-    await this.ensureLogout(t);
     const visible = await Selector(`#${COMPONENT_IDS.NAVBAR_COLLAPSE}`).visible;
     if (!visible) {
       await t.click('button.navbar-toggler');

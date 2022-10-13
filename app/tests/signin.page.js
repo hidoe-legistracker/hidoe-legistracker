@@ -11,7 +11,7 @@ class SignInPage {
 
   /** Checks that component is displayed in landing page. */
   async isLandingDisplayed() {
-    const waitTime = 10;
+    const waitTime = 3;
     console.log(`Waiting ${waitTime} seconds before running SignIn.isLandingDisplayed().`);
     await t.wait(waitTime * 1000).expect(this.pageSelector.exists).ok();
   }
