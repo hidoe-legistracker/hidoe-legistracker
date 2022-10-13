@@ -53,13 +53,13 @@ test('Test My Folders Page', async () => {
   await signOutPage.isDisplayed();
 });
 
-test('Test Inbox and Create Email Pages', async () => {
+test('Test Inbox Page', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(credentials.username, credentials.password);
   await navBar.isLoggedIn(credentials.username);
   await navBar.gotoInboxPage();
   await inboxPage.isDisplayed();
-  await inboxPage.createEmail();
+  // await inboxPage.createEmail();
   await navBar.logout();
   await signOutPage.isDisplayed();
 });
