@@ -100,32 +100,13 @@ const ViewBill = () => {
     <div>
       <Container>
         <Row>
-          <Col>
-            <Button variant="secondary" className="bill-button-spacing">
-              <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
-                <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                Monitoring Report
-              </Link>
-            </Button>
-            <Dropdown className="float-end">
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                Bookmark
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {user.myFolders.map((folder, index) => <Dropdown.Item onClick={() => addMeasure(measure, index, measure._id)}>{folder.title}</Dropdown.Item>)}
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Col>
           <Breadcrumb>
             <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
             <Breadcrumb.Item active>View Bill</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
       </Container>
-      <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container">
+      <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container" style={{ marginTop: 0 }}>
         <Container>
           <Row>
             <Col>

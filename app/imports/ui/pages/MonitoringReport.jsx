@@ -258,7 +258,7 @@ const MonitoringReport = () => {
           </Breadcrumb>
         </Row>
       </Container>
-      <Container id={PAGE_IDS.MONITORING_REPORT} className="view-bill-container">
+      <Container id={PAGE_IDS.MONITORING_REPORT} className="view-bill-container" style={{ marginTop: 0 }}>
         <Container style={{ padding: 20 }}>
           <Row className="mb-5">
             <Col className="align-left">
