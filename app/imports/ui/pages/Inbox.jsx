@@ -156,6 +156,7 @@ const Inbox = () => {
               onHide={handleClose}
               backdrop="static"
               keyboard={false}
+              dialogClassName="modal-90w"
             >
               <Modal.Header closeButton>
                 <Modal.Title>New Message</Modal.Title>
