@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import { Button, Container, Row, Col, Form, Nav, Table, Tab, Modal } from 'react-bootstrap';
+import { Button, Col, Container, DropdownButton, Dropdown, Form, Modal, Nav, Row, Tab, Table } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
 import swal from 'sweetalert';
@@ -71,8 +71,16 @@ const Inbox = () => {
     date: '',
     body: '',
   };
+  const sampleMail = [
+    'Sample 1',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
+    'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
+    'Ut enim ad minim veniam, quis nostrud exercitation ullamco ' +
+    'laboris nisi ut aliquip ex ea commodo consequat.',
+  ];
 
   const [show, setShow] = useState(false);
+  const [mail, setMail] = useState('');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -122,8 +130,7 @@ const Inbox = () => {
   // Get bill number from subject field
   function getBillNumber(subjectField) {
     const string = String(subjectField.toLowerCase().match(/bill.*[0-9]+/));
-    const billNumber = Number(string.match(/[0-9]+/));
-    return billNumber;
+    return Number(string.match(/[0-9]+/));
   }
   // Get bill number from subject field. Search measures for document with matching bill number. Return _id
   function getBillID(subjectField) {
@@ -136,10 +143,7 @@ const Inbox = () => {
   }
   // Check if subject field contains the keyword 'bill' followed by a number
   function checkEmailItem(subjectField) {
-    if (subjectField.toLowerCase().match(/bill.*[0-9]+/)) {
-      return true;
-    }
-    return false;
+    return !!subjectField.toLowerCase().match(/bill.*[0-9]+/);
   }
 
   return (ready ? (
@@ -147,7 +151,7 @@ const Inbox = () => {
       <Tab.Container defaultActiveKey="inbox">
         <Row className="justify-content-center">
           <Col className="pt-5">
-            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={handleShow}>
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => { handleShow(); }}>
               COMPOSE
             </Button>
             <Modal
@@ -162,6 +166,10 @@ const Inbox = () => {
               </Modal.Header>
               <Modal.Body>
                 <Form>
+                  <DropdownButton drop="down" className="mb-2" title="Template Mails">
+                    <Dropdown.Item onClick={() => { setMail(sampleMail[0]); updateEmail(sampleMail[0], 'body'); }}>Template 1</Dropdown.Item>
+                    <Dropdown.Item onClick={() => { setMail(sampleMail[1]); updateEmail(sampleMail[1], 'body'); }}>Template 2</Dropdown.Item>
+                  </DropdownButton>
                   <Form.Group className="to">
                     <Form.Label>To: *</Form.Label>
                     <Select id="email-to" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
@@ -189,7 +197,7 @@ const Inbox = () => {
                   </Form.Group>
                   <Form.Group className="body">
                     <Form.Label> </Form.Label>
-                    <Form.Control type="body" as="textarea" rows={5} onChange={(e) => updateEmail(e.target.value, 'body')} />
+                    <Form.Control type="body" as="textarea" value={mail} rows={5} onChange={(e) => { setMail(e.target.value); updateEmail(e.target.value, 'body'); }} />
                   </Form.Group>
                   <Form.Group controlId="formFile" className="mb-3">
                     <Form.Label />
