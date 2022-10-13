@@ -74,17 +74,6 @@ test('Test EmployeeList Page', async () => {
   await signOutPage.isDisplayed();
 });
 
-test('Test Register User Page', async () => {
-  await navBar.gotoSignInPage();
-  await signInPage.signin(adminCredentials.username, adminCredentials.password);
-  await navBar.isLoggedIn(adminCredentials.username);
-  await navBar.gotoRegisterUserPage();
-  await signUpPage.isDisplayed();
-  await signUpPage.signupUser(newCredentials);
-  await navBar.logout();
-  await signOutPage.isDisplayed();
-});
-
 test('Test Reset Employee Password Page', async () => {
   await navBar.gotoSignInPage();
   await signInPage.signin(adminCredentials.username, adminCredentials.password);
@@ -103,4 +92,13 @@ test('Test Change Password Page', async () => {
   await changePasswordPage.isDisplayed();
   await navBar.logout();
   await signOutPage.isDisplayed();
+});
+
+test('Test Register User Page', async () => {
+  await navBar.gotoSignInPage();
+  await signInPage.signin(adminCredentials.username, adminCredentials.password);
+  await navBar.isLoggedIn(adminCredentials.username);
+  await navBar.gotoRegisterUserPage();
+  await signUpPage.isDisplayed();
+  await signUpPage.signupUser(newCredentials);
 });

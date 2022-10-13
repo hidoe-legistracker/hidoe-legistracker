@@ -20,7 +20,7 @@ class SignUpPage {
     await t.typeText(`#${COMPONENT_IDS.SIGN_UP_FORM_EMAIL}`, newCredentials.username);
     await t.typeText(`#${COMPONENT_IDS.SIGN_UP_FORM_PASSWORD}`, newCredentials.password);
     await t.typeText(`#${COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID}`, newCredentials.employeeID);
-    await t.click(`#${COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} input.btn.btn-primary`);
+    await t.click(`#${COMPONENT_IDS.SIGN_UP_FORM_SUBMIT}`);
   }
 }
 
