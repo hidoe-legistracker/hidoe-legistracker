@@ -94,13 +94,16 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
-  const assignOffice = (bill, office) => {
+  const assignOffice = (bill, office, measId) => {
+    // eslint-disable-next-line no-param-reassign
+    bill.measureId = measId;
+    // const officeType = Measures.update(measId, { officeType: office });
     let collectionName;
     if (user.role === ROLE.USER) {
       collectionName = UserProfiles.getCollectionName();
     }
     console.log('hello');
-    const updateData = { id: bill._id, officeName: office };
+    const updateData = { id: bill._id, officeType: office };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Measure assigned to office', 'success'));
@@ -142,14 +145,14 @@ const ViewBill = () => {
                   Assign to Office
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OCID </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OFO </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OFS </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OHE </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OITS </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OSIP </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OSSS </Dropdown.Item>)}
-                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> OTM </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OCID </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OFO </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OFS </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OHE </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OITS </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OSIP </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OSSS </Dropdown.Item>)}
+                  {user.myFolders.map((bill, officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName, measure._id)}> OTM </Dropdown.Item>)}
                   {/* <Dropdown.Item onClick={() => assignMeasure(measure, index, measure._id, office) }) */}
                   {/*  .catch(error => swal('Error', error.message, 'error')) */}
                   {/*  .then(() => swal('Success', 'Measure added', 'success'))}> OITS </Dropdown.Item> */}
