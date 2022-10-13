@@ -10,6 +10,7 @@ import Table from 'react-bootstrap/Table';
 import swal from 'sweetalert';
 import _ from 'underscore';
 import Swal from 'sweetalert2';
+import { Roles } from 'meteor/alanning:roles';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -21,7 +22,7 @@ import { ROLE } from '../../api/role/Role';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { testimonies, measure, ready, user } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
@@ -31,6 +32,8 @@ const ViewBill = () => {
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
 
+    const currUser = Meteor.user() ? Meteor.user().username : '';
+
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
     if (usr === undefined) {
@@ -38,6 +41,7 @@ const ViewBill = () => {
     }
 
     return {
+      currentUser: currUser,
       testimonies: testimonyCollection,
       measure: measureItem,
       ready: rdy,
@@ -96,14 +100,7 @@ const ViewBill = () => {
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
-    // bill.measureId = measId;
-    // const officeType = Measures.update(measId, { officeType: office });
-    let collectionName;
-    if (user.role === ROLE.USER) {
-      collectionName = UserProfiles.getCollectionName();
-    } else {
-      collectionName = AdminProfiles.getCollectionName();
-    }
+    const collectionName = Measures.getCollectionName();
     console.log('hello');
     const updateData = { id: bill._id, officeType: office };
     updateMethod.callPromise({ collectionName, updateData })
@@ -113,7 +110,7 @@ const ViewBill = () => {
 
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 
-  const bill = Measures.measureNumber;
+  const bill = measure;
 
   return ready ? (
     <div>
@@ -146,18 +143,20 @@ const ViewBill = () => {
                   <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown className="float-end">
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                  <FilePlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                  Assign to Office
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={() => console.log('Test')}> test </Dropdown.Item>
-                  <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                <Dropdown className="float-end">
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <FilePlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                    Assign to Office
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={() => console.log('Test')}> test </Dropdown.Item>
+                    <Dropdown.Item onClick={() => getTitle()}>Create Folder</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : ''}
             </Col>
           </Row>
         </Container>
@@ -169,7 +168,7 @@ const ViewBill = () => {
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Office</Row>
-            <Row>{measure.currentReferral}</Row>
+            <Row>{measure.officeType}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Code</Row>
@@ -189,7 +188,7 @@ const ViewBill = () => {
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Committee</Row>
-            <Row>Conference</Row>
+            <Row>{measure.currentReferral}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Type</Row>
