@@ -101,7 +101,7 @@ const ViewBill = () => {
       <Container>
         <Row>
           <Col>
-            <Button variant="secondary" size="sm" className="bill-button-spacing">
+            <Button variant="secondary" className="bill-button-spacing">
               <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/monitoring-report/${measure._id}`}>
                 <FileEarmarkText style={{ marginRight: '0.5em', marginTop: '-5px' }} />
                 Monitoring Report
