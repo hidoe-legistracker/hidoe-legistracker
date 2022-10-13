@@ -15,17 +15,20 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param password The password for this user.
    * @param firstName The first name.
    * @param lastName The last name.
+   * @param employeeID
+   * @param role
+   * @param newAccount
    */
-  define({ email, firstName, lastName, password }) {
+  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, offices, committees }) {
     if (Meteor.isServer) {
-      // console.log('define', email, firstName, lastName, password);
+      // console.log('define', email, firstName, lastName, password, employeeID, newAccount);
       const username = email;
       const user = this.findOne({ email, firstName, lastName });
       if (!user) {
         const role = ROLE.ADMIN;
-        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), role });
-        const userID = Users.define({ username, role, password });
-        this._collection.update(profileID, { $set: { userID } });
+        const profileID = this._collection.insert({ email, firstName, lastName, userID: this.getFakeUserId(), employeeID, role, newAccount, phone, offices, committees });
+        const newUserID = userID !== undefined ? userID : Users.define({ username, role, password });
+        this._collection.update(profileID, { $set: { userID: newUserID } });
         return profileID;
       }
       return user._id;
@@ -38,8 +41,12 @@ class AdminProfileCollection extends BaseProfileCollection {
    * @param docID the id of the AdminProfile
    * @param firstName new first name (optional).
    * @param lastName new last name (optional).
+   * @param myFolders array of folders of measures (optional)
+   * @param departments
+   * @param phone
+   * @param role
    */
-  update(docID, { firstName, lastName }) {
+  update(docID, { firstName, lastName, myFolders, phone, role, newAccount, offices, committees }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -47,6 +54,26 @@ class AdminProfileCollection extends BaseProfileCollection {
     }
     if (lastName) {
       updateData.lastName = lastName;
+    }
+    if (myFolders) {
+      updateData.myFolders = myFolders;
+    }
+    if (offices) {
+      updateData.offices = offices;
+    }
+    if (committees) {
+      updateData.committees = committees;
+    }
+    if (phone) {
+      updateData.phone = phone;
+    } else {
+      updateData.phone = '';
+    }
+    if (role) {
+      updateData.role = role;
+    }
+    if (newAccount !== undefined) {
+      updateData.newAccount = newAccount;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -59,6 +86,17 @@ class AdminProfileCollection extends BaseProfileCollection {
   removeIt(profileID) {
     if (this.isDefined(profileID)) {
       return super.removeIt(profileID);
+    }
+    return null;
+  }
+
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    if (this.isDefined(profileID)) {
+      return super.transferIt(profileID);
     }
     return null;
   }

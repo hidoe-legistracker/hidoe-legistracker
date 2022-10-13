@@ -14,6 +14,10 @@ body {
   --bs-light-rgb: var(--matr-navbar-bg-rgb);
 }
 
+.montserrat {
+  font-family: 'Montserrat', monospace;
+}
+
 /* Set the SignIn and SignUp alerts background. */
 #signin-page .alert-light, #signup-page .alert-light {
   --bs-alert-bg: var(--matr-navbar-bg);
@@ -29,13 +33,13 @@ body {
 
 .folder-section {
   align-content: center;
-  margin-right: 5px;
+  display: block;
   overflow-y: auto;
+  height: 100vh!important;
 }
 
 .bill-section {
   outline: gray solid thin;
-  overflow-y: auto;
 }
 
 .testimony-container {
@@ -43,7 +47,6 @@ body {
   border-spacing: inherit;
   padding-top: 40px;
   padding-bottom: 40px;
-  overflow-y: auto;
 }
 
 .bill-button-spacing {
@@ -54,8 +57,47 @@ body {
   font-weight: normal;
 }
 
-.table {
-  margin-bottom: 1px;
+.react-calendar__tile--now {
+  background: #a3a3a3!important;
+  color: white!important;
+}
+
+.react-calendar {
+  width: 1500px!important;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #a3a3a3!important;
+  line-height: 1.125em;
+}
+
+.react-calendar__tile--active {
+  background: #006edc;
+  color: white;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: black!important;
+}
+
+.directory-table {
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--bs-border-color);
+  --bs-table-accent-bg: transparent;
+  --bs-table-striped-color: var(--bs-body-color);
+  --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+  --bs-table-active-color: var(--bs-body-color);
+  --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+  --bs-table-hover-color: var(--bs-body-color);
+  --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+  width: 100%;
+  margin-bottom: 1rem;
+  display: block;
+  overflow-y: auto!important;
+  height: 85vh!important;
+  color: var(--bs-table-color);
+  vertical-align: top;
+  border-color: var(--bs-table-border-color);
 }
 
 .view-bill-container {
@@ -67,6 +109,29 @@ body {
   padding: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.modal-90w {
+  align-content: center;
+  width: 80%!important;
+  max-width: none!important;
+}
+
+.calendar-button {
+  --bs-btn-color: #6c757d;
+  --bs-btn-border-color: none!important;
+  --bs-btn-hover-color: none!important;
+  --bs-btn-hover-bg: none!important;
+  --bs-btn-hover-border-color: none!important;
+  --bs-btn-focus-shadow-rgb: none!important;
+  --bs-btn-active-color: none!important;
+  --bs-btn-active-bg: none!important;
+  --bs-btn-active-border-color: none!important;
+  --bs-btn-active-shadow: none!important;
+  --bs-btn-disabled-color: #6c757d;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #6c757d;
+  --bs-gradient: none;
 }
 
 .view-testimony-container {
@@ -99,9 +164,29 @@ body {
   justify-content: flex-end;
 }
 
+.table-row {
+  display: table-row;
+  border-style: solid;
+  border-width: thin;
+  text-decoration: none!important;
+  color: black;
+  padding: 5px;
+}
+
+.mb-3 {
+  margin-bottom: 1rem!important;
+  margin-top: 10px;
+}
+
 .testimony-header2 {
   font-weight: bold;
   margin-bottom: 20px!important;
+}
+
+.letterhead {
+  font-size: small;
+  font-weight: bold;
+  justify-content: center;
 }
 
 .col .row {
@@ -118,6 +203,10 @@ a:link th {
   margin: auto;
   text-decoration: none!important;
   font-weight: normal;
+}
+
+a {
+  text-decoration: none!important;
 }
 
 .testimonies-table, .bill-table {
@@ -144,4 +233,28 @@ h1, h3 {
   text-align: center;
   justify-content: center;
   align-items: center;
+}
+
+.nav-pills {
+  --bs-nav-pills-border-radius: 0.375rem;
+  --bs-nav-pills-link-active-color: #fff;
+}
+
+.nav-pills .nav-link {
+  background: 0 0;
+  border: 0;
+  border-radius: var(--bs-nav-pills-border-radius);
+  color: black;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  color: #141619!important;
+  background-color: white!important;
+  border: thin solid black;
+  text-decoration: none!important;
+}
+
+.logo {
+  width: 130px!important;
+  height: 100px;
 }

@@ -56,6 +56,20 @@ export const removeItMethod = new ValidatedMethod({
   },
 });
 
+export const transferItMethod = new ValidatedMethod({
+  name: 'BaseCollection.transferIt',
+  mixins: [CallPromiseMixin],
+  validate: null,
+  run({ collectionName, instance }) {
+    if (Meteor.isServer) {
+      const collection = MATP.getCollection(collectionName);
+      collection.assertValidRoleForMethod(this.userId);
+      return collection.transferIt(instance);
+    }
+    return true;
+  },
+});
+
 export const dumpDatabaseMethod = new ValidatedMethod({
   name: 'base.dumpDatabase',
   mixins: [CallPromiseMixin],

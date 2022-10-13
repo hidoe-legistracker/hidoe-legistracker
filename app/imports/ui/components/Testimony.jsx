@@ -1,35 +1,18 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-// import { useTracker } from 'meteor/react-meteor-data';
-// import { Stuffs } from '../../api/stuff/StuffCollection';
-// import StuffItem from '../components/StuffItem';
-// import LoadingSpinner from '../components/LoadingSpinner';
-import { PAGE_IDS } from '../utilities/PageIDs';
-// import ViewBill from './ViewBill';
-
-/*
-// useTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
-const { ready, stuffs } = useTracker(() => {
-  // Note that this subscription will get cleaned up
-  // when your component is unmounted or deps change.
-  // Get access to Stuff documents.
-  const subscription = Stuffs.subscribeStuff();
-  // Determine if the subscription is ready
-  const rdy = subscription.ready();
-  // Get the Stuff documents
-  const stuffItems = Stuffs.find({}, { sort: { name: 1 } }).fetch();
-  return {
-    stuffs: stuffItems,
-    ready: rdy,
-  };
-}, []);
-* : <LoadingSpinner message="Loading Stuff" />)
- */
+import { Col, Container, Image, Row } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 // used https://www.npmjs.com/package/react-to-print
-export const Testimony = React.forwardRef((props, ref) => (
+export const Testimony = React.forwardRef(({ testimony }, ref) => (
   <div ref={ref}>
-    <Container id={PAGE_IDS.VIEW_TESTIMONY} className="view-testimony-container">
+    <Container>
+      <Row className="row-center">
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/d/d3/HSSC_Seal.png" className="logo" />
+        <Row className="letterhead" style={{ marginTop: 10 }}>STATE OF HAWAII</Row>
+        <Row className="letterhead">DEPARTMENT OF EDUCATION</Row>
+        <Row className="letterhead" style={{ fontWeight: 'normal' }}>P.O. BOX 2360</Row>
+        <Row className="letterhead" style={{ marginBottom: 20, fontWeight: 'normal' }}>HONOLULU, HAWAI`I 96894</Row>
+      </Row>
       <Row className="row-center">
         <Col>
           <Row className="testimony-header1">Date: </Row>
@@ -38,43 +21,36 @@ export const Testimony = React.forwardRef((props, ref) => (
           <Row className="testimony-header1">Committee: </Row>
         </Col>
         <Col style={{ padding: 0 }}>
-          <Row>04/05/2006</Row>
-          <Row>04:30 PM</Row>
-          <Row>3412 via Videoconference</Row>
-          <Row>House of Finance</Row>
+          <Row>{testimony.hearingDate}</Row>
+          <Row>{testimony.hearingTime}</Row>
+          <Row>{testimony.hearingLocation}</Row>
+          <Row>{testimony.committeeName}</Row>
         </Col>
         <Row className="row-center">
-          <Col xs={2} style={{ marginLeft: 20 }}>
-            <Row className="testimony-header2">Department: </Row>
-            <Row className="testimony-header2">Testifier: </Row>
-            <Row className="testimony-header2">Title of Bill: </Row>
-            <Row className="testimony-header2">Purpose of Bill: </Row>
-          </Col>
-          <Col>
-            <Row style={{ marginBottom: 20 }}>Education</Row>
-            <Row style={{ marginBottom: 20 }}>Jane Doe, Superintendent of Education</Row>
-            <Row style={{ marginBottom: 20 }}>SBC 13134798</Row>
-            <Row style={{ marginBottom: 20 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-              dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-              proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </Row>
-          </Col>
-          <Container>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Department</Col>
+            <Col>{testimony.department}</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Testifier</Col>
+            <Col>{testimony.testifier}</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Title of Bill</Col>
+            <Col>{testimony.measureTitle}</Col>
+          </Row>
+          <Row>
+            <Col className="testimony-header2" xs={2}>Purpose of Bill</Col>
+            <Col>{testimony.measureDescription}</Col>
+          </Row>
+          <Container style={{ marginTop: 10 }}>
             <Col>
               <Row className="testimony-header2">Department Position: </Row>
             </Col>
             <Col>
-              <Row style={{ marginBottom: 20 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </Row>
+              <Row style={{ marginBottom: 20 }}>{testimony.introduction}</Row>
+              <Row style={{ marginBottom: 20 }}>{testimony.content}</Row>
+              <Row style={{ marginBottom: 20 }}>{testimony.closing}</Row>
             </Col>
           </Container>
         </Row>
@@ -82,3 +58,19 @@ export const Testimony = React.forwardRef((props, ref) => (
     </Container>
   </div>
 ));
+
+Testimony.propTypes = {
+  testimony: PropTypes.shape({
+    hearingDate: PropTypes.string,
+    hearingTime: PropTypes.string,
+    hearingLocation: PropTypes.string,
+    committeeName: PropTypes.string,
+    department: PropTypes.string,
+    testifier: PropTypes.string,
+    introduction: PropTypes.string,
+    content: PropTypes.string,
+    closing: PropTypes.string,
+    measureTitle: PropTypes.string,
+    measureDescription: PropTypes.string,
+  }).isRequired,
+};

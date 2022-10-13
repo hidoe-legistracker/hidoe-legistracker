@@ -17,6 +17,64 @@ class BaseProfileCollection extends BaseCollection {
       lastName: String,
       role: String,
       userID: SimpleSchema.RegEx.Id,
+      employeeID: String,
+      newAccount: Boolean,
+      phone: {
+        type: String,
+        optional: true,
+      },
+      offices: {
+        type: Array,
+        optional: true,
+      },
+      'offices.$': String,
+      committees: {
+        type: Array,
+        optional: true,
+      },
+      'committees.$': {
+        type: new SimpleSchema({
+          label: String,
+          value: String,
+          group: String,
+        }),
+      },
+      // Array of folders
+      myFolders: {
+        type: Array,
+        defaultValue: [],
+      },
+      'myFolders.$': {
+        type: new SimpleSchema({
+          title: String,
+          position: Number,
+          listMeasures: {
+            type: Array,
+          },
+          'listMeasures.$': {
+            type: new SimpleSchema({
+              year: Number,
+              measureType: String,
+              measureNumber: Number,
+              measureId: String,
+              lastUpdated: { type: Date, optional: true },
+              code: { type: String, optional: true },
+              measurePdfUrl: { type: String, optional: true },
+              measureArchiveUrl: { type: String, optional: true },
+              measureTitle: { type: String, optional: true },
+              reportTitle: { type: String, optional: true },
+              bitAppropriation: { type: Number, optional: true },
+              description: { type: String, optional: true },
+              status: { type: String, optional: true },
+              introducer: { type: String, optional: true },
+              currentReferral: { type: String, optional: true },
+              companion: { type: String, optional: true },
+            }),
+            optional: true,
+          },
+        }),
+      },
+
     })));
   }
 
@@ -128,6 +186,20 @@ class BaseProfileCollection extends BaseCollection {
     const userID = profile.userID;
     if (!Users.isReferenced(userID)) {
       Meteor.users.remove({ _id: userID });
+      return super.removeIt(profileID);
+    }
+    throw new Meteor.Error(`User ${profile.email} owns Stuff.`);
+  }
+
+  /**
+   * Removes this profile, given its profile ID.
+   * @param profileID The ID for this profile object.
+   */
+  transferIt(profileID) {
+    const profile = this._collection.findOne({ _id: profileID });
+    const userID = profile.userID;
+    if (!Users.isReferenced(userID)) {
+      Users.updateRole(userID, profile.role === ROLE.USER ? ROLE.ADMIN : ROLE.USER);
       return super.removeIt(profileID);
     }
     throw new Meteor.Error(`User ${profile.email} owns Stuff.`);

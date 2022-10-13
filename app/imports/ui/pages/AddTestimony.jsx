@@ -2,8 +2,7 @@ import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import {
   AutoForm,
-  DateField,
-  ErrorsField,
+  DateField, ErrorsField,
   LongTextField,
   SelectField,
   SubmitField,
@@ -13,7 +12,8 @@ import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
-import { Testimony } from '../../api/testimony/TestimonyCollection';
+import PropTypes from 'prop-types';
+import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 
@@ -62,20 +62,24 @@ const formSchema = new SimpleSchema({
 const bridge = new SimpleSchema2Bridge(formSchema);
 
 /* Renders the AddTestimony page for adding a testimony. */
-const AddTestimony = () => {
+const AddTestimony = ({ measureNumber }) => {
 
-  // On submit, insert the data.
+
   const submit = (data, formRef) => {
-    const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
+    const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
     const owner = Meteor.user().username;
-    const collectionName = Testimony.getCollectionName();
-    const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
-    defineMethod.callPromise({ collectionName, definitionData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => {
-        swal('Success', 'Item added successfully', 'success');
-        formRef.reset();
-      });
+    const collectionName = Testimonies.getCollectionName();
+    if (parseInt(billNumber, 10) === parseInt(measureNumber.valueOf(), 10)) {
+      const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
+      defineMethod.callPromise({ collectionName, definitionData })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => {
+          swal('Success', `Testimony added to Bill #${billNumber} successfully`, 'success');
+          formRef.reset();
+        });
+    } else {
+      swal('Error', 'Bill number is not in database or does not match current bill number. Please enter another bill number.');
+    }
   };
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
@@ -104,7 +108,7 @@ const AddTestimony = () => {
                 </Row>
                 <Row>
                   <Col>
-                    <TextField name="billNumber" label="Bill / Resolution Number *" />
+                    <TextField name="billNumber" label="Bill / Resolution Number" />
                   </Col>
                   <Col>
                     <TextField name="billDraftNumber" label="Draft Number" />
