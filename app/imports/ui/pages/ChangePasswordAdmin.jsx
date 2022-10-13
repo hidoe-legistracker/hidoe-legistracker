@@ -85,7 +85,7 @@ const ChangePasswordUser = () => {
     return <Navigate to="/directory" />;
   }
   return (
-    <Container id={PAGE_IDS.CHANGE_PASSWORD} className="py-3">
+    <Container id={PAGE_IDS.CHANGE_PASSWORD_ADMIN} className="py-3">
       <Row className="justify-content-center">
         <Col xs={5}>
           <Col className="text-center">

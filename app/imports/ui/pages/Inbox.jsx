@@ -16,6 +16,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const Inbox = () => {
   const { thisUser, users, ready, emails, drafts, sent, measures } = useTracker(() => {
@@ -146,10 +147,11 @@ const Inbox = () => {
       <Tab.Container defaultActiveKey="inbox">
         <Row className="justify-content-center">
           <Col className="pt-5">
-            <Button size="md" variant="primary" onClick={handleShow}>
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={handleShow}>
               COMPOSE
             </Button>
             <Modal
+              id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
               show={show}
               onHide={handleClose}
               backdrop="static"
