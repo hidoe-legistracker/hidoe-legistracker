@@ -169,6 +169,7 @@ const Inbox = () => {
               onHide={() => { handleClose(); setMail(''); }}
               backdrop="static"
               keyboard={false}
+              dialogClassName="modal-90w"
             >
               <Modal.Header closeButton>
                 <Modal.Title>New Message</Modal.Title>
@@ -179,7 +180,7 @@ const Inbox = () => {
                     <Dropdown.Item onClick={() => { setMail(sampleMail[0]); updateEmail(sampleMail[0], 'body'); }}>Template 1</Dropdown.Item>
                     <Dropdown.Item onClick={() => { setMail(sampleMail[1]); updateEmail(sampleMail[1], 'body'); }}>Template 2</Dropdown.Item>
                   </DropdownButton>
-                  <Form.Group classname="offices">
+                  <Form.Group className="offices">
                     <Form.Label>Offices: </Form.Label>
                     <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
                   </Form.Group>

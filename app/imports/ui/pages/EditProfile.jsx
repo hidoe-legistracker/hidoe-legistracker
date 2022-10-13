@@ -66,11 +66,11 @@ const EditProfile = () => {
 
   let selectedCommittees = [];
   let selectedOffices = [];
-  let defaultSelectedOffices = [];
+  const defaultSelectedOffices = [];
   if (ready) {
     selectedCommittees = user.committees;
-    selectedOffices = user.offices;
-    user.offices.forEach((office) => {
+    selectedOffices = user.offices ? user.offices : [];
+    selectedOffices.forEach((office) => {
       defaultSelectedOffices.push({ label: office, value: office });
     });
   }
