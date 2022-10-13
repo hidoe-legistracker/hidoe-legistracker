@@ -18,6 +18,15 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
+const newEmail = {
+  subject: '',
+  recipients: [],
+  ccs: [],
+  bccs: [],
+  date: '',
+  body: '',
+};
+
 const Inbox = () => {
   const { thisUser, users, ready, emails, drafts, sent, measures } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
@@ -62,15 +71,16 @@ const Inbox = () => {
       users: formattedUsers,
     };
   }, []);
-
-  const newEmail = {
-    subject: '',
-    recipients: [],
-    ccs: [],
-    bccs: [],
-    date: '',
-    body: '',
-  };
+  const offices = [
+    { label: 'OCID', value: 'example-list1@mail.com' },
+    { label: 'OFO', value: 'example-list2@mail.com' },
+    { label: 'OFS', value: 'example-list3@mail.com' },
+    { label: 'OHE', value: 'example-list4@mail.com' },
+    { label: 'OITS', value: 'example-list5@mail.com' },
+    { label: 'OSIP', value: 'example-list6@mail.com' },
+    { label: 'OSSS', value: 'example-list7@mail.com' },
+    { label: 'OTM', value: 'example-list8@mail.com' },
+  ];
   const sampleMail = [
     'Sample 1',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
@@ -96,7 +106,6 @@ const Inbox = () => {
     const ccs = [];
     const bccs = [];
     setShow(false);
-
     if (subject === '' || newEmail.recipients.length === 0 || body === '') {
       return;
     }
@@ -157,7 +166,7 @@ const Inbox = () => {
             <Modal
               id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
               show={show}
-              onHide={handleClose}
+              onHide={() => { handleClose(); setMail(''); }}
               backdrop="static"
               keyboard={false}
             >
@@ -166,10 +175,14 @@ const Inbox = () => {
               </Modal.Header>
               <Modal.Body>
                 <Form>
-                  <DropdownButton drop="down" className="mb-2" title="Template Mails">
+                  <DropdownButton drop="down" title="Template Mails">
                     <Dropdown.Item onClick={() => { setMail(sampleMail[0]); updateEmail(sampleMail[0], 'body'); }}>Template 1</Dropdown.Item>
                     <Dropdown.Item onClick={() => { setMail(sampleMail[1]); updateEmail(sampleMail[1], 'body'); }}>Template 2</Dropdown.Item>
                   </DropdownButton>
+                  <Form.Group classname="offices">
+                    <Form.Label>Offices: </Form.Label>
+                    <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
+                  </Form.Group>
                   <Form.Group className="to">
                     <Form.Label>To: *</Form.Label>
                     <Select id="email-to" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
@@ -206,8 +219,8 @@ const Inbox = () => {
                 </Form>
               </Modal.Body>
               <Modal.Footer>
-                <Button type="button" onClick={() => submit('draft')} variant="success">Save Draft</Button>
-                <Button type="button" onClick={() => submit('send')} variant="primary" className="mx-3">Send</Button>
+                <Button type="button" onClick={() => { submit('draft'); setMail(''); }} variant="success">Save Draft</Button>
+                <Button type="button" onClick={() => { submit('send'); setMail(''); }} variant="primary" className="mx-3">Send</Button>
               </Modal.Footer>
             </Modal>
             <Nav variant="pills" className="flex-column mt-4">
