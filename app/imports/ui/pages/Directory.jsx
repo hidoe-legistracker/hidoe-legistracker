@@ -140,7 +140,7 @@ const Directory = () => {
                       <th scope="col">#</th>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
-                      <th scope="col">Offices</th>
+                      <th scope="col">Committees</th>
                       <th scope="col">Actions</th>
                       <th scope="col">Status</th>
                     </tr>

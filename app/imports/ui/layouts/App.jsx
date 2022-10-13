@@ -62,13 +62,13 @@ const App = () => {
           <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
           <Route path="/create-testimony/" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoring-report/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
-          <Route path="/edit-testimony/:_id" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
+          <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-          <Route path="/view-testimony/:_id" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
+          <Route path="/view-testimony/:measureID&:testimonyID" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/notauthorized" element={<NotAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

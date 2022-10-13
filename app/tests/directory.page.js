@@ -10,7 +10,7 @@ class DirectoryPage {
 
   /** Checks that this page is currently displayed. */
   async isDisplayed() {
-    const waitTime = 20;
+    const waitTime = 15;
     console.log(`Waiting ${waitTime} seconds before running DirectoryPage.isDisplayed().`);
     await t.wait(waitTime * 1000).expect(this.pageSelector.exists).ok();
   }
