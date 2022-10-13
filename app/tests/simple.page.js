@@ -17,6 +17,7 @@ class SimplePage {
 }
 
 export const myFoldersPage = new SimplePage(PAGE_IDS.MY_FOLDERS);
-export const inboxPage = new SimplePage(PAGE_IDS.INBOX);
-export const createEmailPage = new SimplePage(PAGE_IDS.CREATE_EMAIL);
+export const employeeListPage = new SimplePage(PAGE_IDS.MEMBERS);
+export const resetEmployeePasswordPage = new SimplePage(PAGE_IDS.CHANGE_PASSWORD_ADMIN);
+export const changePasswordPage = new SimplePage(PAGE_IDS.CHANGE_PASSWORD);
 export const signOutPage = new SimplePage(PAGE_IDS.SIGN_OUT);
