@@ -11,40 +11,86 @@ import {
   Button, Accordion, Badge, Modal,
 } from 'react-bootstrap';
 
+import { Meteor } from 'meteor/meteor';
+import Select from 'react-select';
+import swal from 'sweetalert';
 import { PAGE_IDS } from '../utilities/PageIDs';
-
-const people = [
-  {
-    name: 'John Doe',
-    age: 26,
-  },
-  {
-    name: 'Jason Bourne',
-    age: 32,
-  },
-  {
-    name: 'Steve Wang',
-    age: 19,
-  },
-];
-
-const [text, setText] = useState('');
-const [option, setOption] = useState(null);
-const onChange = (ev) => {
-  const val = ev.target.value;
-  setOption(val);
-
-  const person = people[val];
-  if (person) {
-    setText(`${person.name}is${person.age}`);
-  }
-};
+import { Emails } from '../../api/email/EmailCollection';
+import { defineMethod } from '../../api/base/BaseCollection.methods';
 
 /* A simple static component to render some text for the landing page. */
+const email = {
+  subject: '',
+  recipients: [],
+  ccs: '',
+  bccs: '',
+  date: '',
+  body: '',
+};
+
 const Landing = () => {
+  /* Example emails as recipient. */
+  let emailSample = [
+    {
+      label: 'example1@gmail.com',
+      value: 'example1@gmail.com',
+    },
+    {
+      label: 'example2@gmail.com',
+      value: 'example2@gmail.com',
+    },
+    {
+      label: 'john@gmail.com',
+      value: 'john@gmail.com',
+    },
+  ];
+  emailSample = emailSample.map(item => {
+    const { name: label, key: value, ...rest } = item;
+    return { label, value, ...rest };
+  });
+  /* Template mail, Modal */
+  const [mail, setMail] = useState('Click here');
   const [show, setShow] = useState(false);
-  const modalClose = () => setShow(false);
+  const modalClose = () => { setMail(''); setShow(false); };
   const modalShow = () => setShow(true);
+  const updateEmail = (value, property) => {
+    email[property] = value;
+  };
+  const getEmails = (a) => {
+    const mails = [];
+    a.forEach(function (b) {
+      mails.push(b.value);
+    });
+    updateEmail(mails, 'recipients');
+  };
+  // On submit, insert the data.
+  const submit = () => {
+    const { subject, body } = email;
+    const ccs = [];
+    const bccs = [];
+    // TODO: Change when create email page can accept dynamic emails
+    const recipients = [
+      { name: 'john foo', email: 'john@foo.com' },
+      { name: 'bob test', email: 'bob@test.com' },
+    ];
+
+    if (subject === '' || email.recipients === '' || email.ccs === '' || email.bccs === '' || body === '') {
+      return;
+    }
+    const senderEmail = Meteor.user().username;
+    const senderName = Meteor.user().firstName + Meteor.user().lastName; // TODO: Fetch profiles collection to get first and last name
+    const date = new Date(); // new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
+    const collectionName = Emails.getCollectionName();
+    const definitionData = { subject, senderName, senderEmail, recipients, ccs, bccs, date, body };
+    defineMethod.callPromise({ collectionName, definitionData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => {
+        swal('Success', 'Email Sent!', 'success');
+      });
+  };
+  /* Issues with getting multiple emails and updating email according to number of recipients */
+  // <Select options={emails} isMulti placeholder="Recipients">Emails</Select>
+  // <Form.Control type="body" as="textarea" rows={5} value={mail} onChange={(e) => { setMail(e.target.value); updateEmail(e, 'body'); }} />
   return (
     <Container id={PAGE_IDS.MONITORING_REPORT} className="py-3">
       <Row className="mb-5">
@@ -184,19 +230,30 @@ const Landing = () => {
               <Modal.Title>Email</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <DropdownButton drop="down" className="mb-2" title="Automatic">
-                <Dropdown.Item>Manual</Dropdown.Item>
-                <Dropdown.Item>Sample1</Dropdown.Item>
+              <DropdownButton drop="down" className="mb-2" title="Template Mails">
+                <Dropdown.Item onClick={() => { setMail('template1'); updateEmail('template1', 'body'); }}>Template 1</Dropdown.Item>
+                <Dropdown.Item onClick={() => { setMail('something something'); updateEmail('something something', 'body'); }}>Template 2</Dropdown.Item>
               </DropdownButton>
               <Form>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                   <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Recipients" autoFocus />
-                  <Form.Control type="subject" placeholder="Subject" autoFocus />
+                  <Select options={emailSample} isMulti placeholder="Recipients" onChange={(e) => { getEmails(e); }} />
                 </Form.Group>
-                <Form.Label>Email Body</Form.Label>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                  <Form.Control as="textarea" rows={3} value={text} />
+                <Form.Group className="cc">
+                  <Form.Label>Cc: </Form.Label>
+                  <Form.Control type="cc" placeholder="" onChange={(e) => updateEmail(e.target.value, 'ccs')} />
+                </Form.Group>
+                <Form.Group className="bcc">
+                  <Form.Label>Bcc: </Form.Label>
+                  <Form.Control type="bcc" placeholder="" onChange={(e) => updateEmail(e.target.value, 'bccs')} />
+                </Form.Group>
+                <Form.Group className="subject">
+                  <Form.Label>Subject: </Form.Label>
+                  <Form.Control type="subject" placeholder="" onChange={(e) => updateEmail(e.target.value, 'subject')} />
+                </Form.Group>
+                <Form.Group className="body">
+                  <Form.Label>Body: </Form.Label>
+                  <Form.Control type="body" as="textarea" rows={5} value={mail} onChange={(e) => { setMail(e.target.value); updateEmail(e.target.value, 'body'); }} />
                 </Form.Group>
               </Form>
             </Modal.Body>
@@ -204,7 +261,7 @@ const Landing = () => {
               <Button variant="secondary" onClick={modalClose}>
                 Close
               </Button>
-              <Button variant="primary" onClick={modalClose}>
+              <Button variant="primary" type="submit" onClick={() => { submit(); modalClose(); }}>
                 Submit
               </Button>
             </Modal.Footer>
