@@ -108,7 +108,7 @@ const ViewBill = () => {
     }
     const updateData = { id: bill._id, officeType: billOffices };
     updateMethod.callPromise({ collectionName, updateData })
-      .catch(error => swal('Error', error.message, 'error'))
+      .catch()
       .then();
   };
 
