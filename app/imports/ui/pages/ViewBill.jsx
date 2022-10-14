@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row, Button, ProgressBar, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus, ArrowLeftRight } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
@@ -98,13 +98,18 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
+  const [billOffices, setOffices] = useState('');
+
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    const updateData = { id: bill._id, officeType: office };
+    if (!billOffices.includes(office)) {
+      setOffices(`${billOffices} ${office} `);
+    }
+    const updateData = { id: bill._id, officeType: billOffices };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
-      .then(() => swal('Success', 'Measure assigned to office', 'success'));
+      .then();
   };
 
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];

@@ -210,7 +210,7 @@ const Inbox = () => {
                     <Form.Control type="subject" placeholder="" onChange={(e) => updateEmail(e.target.value, 'subject')} />
                   </Form.Group>
                   <Form.Group className="body">
-                    <Form.Label> </Form.Label>
+                    <Form.Label>Body: </Form.Label>
                     <Form.Control type="body" as="textarea" value={mail} rows={5} onChange={(e) => { setMail(e.target.value); updateEmail(e.target.value, 'body'); }} />
                   </Form.Group>
                   <Form.Group controlId="formFile" className="mb-3">
