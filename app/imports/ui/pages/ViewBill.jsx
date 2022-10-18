@@ -105,11 +105,11 @@ const ViewBill = () => {
     const collectionName = Measures.getCollectionName();
     if (!billOffices.includes(office)) {
       setOffices(`${billOffices} ${office} `);
+      const updateData = { id: bill._id, officeType: `${billOffices} ${office} ` };
+      updateMethod.callPromise({ collectionName, updateData })
+        .catch()
+        .then();
     }
-    const updateData = { id: bill._id, officeType: billOffices };
-    updateMethod.callPromise({ collectionName, updateData })
-      .catch()
-      .then();
   };
 
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
