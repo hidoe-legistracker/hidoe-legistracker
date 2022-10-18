@@ -113,31 +113,43 @@ const MyFolders = () => {
   const MyVerticallyCenteredModal = (props) => (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Modal heading
-        </Modal.Title>
+        { user.myFolders.map((folder) => (
+          <Modal.Title id="contained-modal-title-vcenter">{folder.title}</Modal.Title>
+        ))}
       </Modal.Header>
       <Modal.Body>
-        <Table>
-          <thead style={{ marginBottom: 10 }}>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Bill Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Offices</th>
-              <th scope="col">Type</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
+        <Tab.Content>
           { user.myFolders.map((folder, index) => (
-            <tbody>
-              { folder.listMeasures.map((meas) => <MeasureComponent measure={meas} />) }
-              <Button variant="danger" className="mt-5" onClick={() => removeFolder(index)}>
-                Remove Folder
-              </Button>
-            </tbody>
+            <Tab.Pane eventKey={index}>
+              <Col>
+                <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
+                  <Tab eventKey="all-bills" title={folder.title}>
+                    <Row>
+                      <Table>
+                        <thead style={{ marginBottom: 10 }}>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Bill Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Offices</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          { folder.listMeasures.map((meas) => <MeasureComponent measure={meas} />) }
+                          <Button variant="danger" className="mt-5" onClick={() => removeFolder(index)}>
+                            Remove Folder
+                          </Button>
+                        </tbody>
+                      </Table>
+                    </Row>
+                  </Tab>
+                </Tabs>
+              </Col>
+            </Tab.Pane>
           ))}
-        </Table>
+        </Tab.Content>
       </Modal.Body>
       <Modal.Footer>
         {/* eslint-disable-next-line react/prop-types,react/destructuring-assignment */}
@@ -167,7 +179,7 @@ const MyFolders = () => {
             { user.myFolders.map((folder, index) => (
               <Row gap={2}>
                 <Col>
-                  <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill onClick={() => setModalShow(false)}>
+                  <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill onClick={() => setModalShow(true)}>
                     <Card.Body eventKey={index}>
                       <Card.Title><Folder size={25} style={{ marginRight: '1em' }} />{folder.title}</Card.Title>
                     </Card.Body>
