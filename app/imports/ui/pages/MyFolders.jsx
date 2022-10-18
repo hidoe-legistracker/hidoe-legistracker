@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, ProgressBar, Row, Tab, Col, Nav, Table, Tabs } from 'react-bootstrap';
+import { Container, ProgressBar, Row, Tab, Col, Nav, Table, Tabs, Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -7,6 +7,8 @@ import swal from 'sweetalert';
 import Swal from 'sweetalert2';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Folder, FolderPlus } from 'react-bootstrap-icons';
+import Modal from 'react-bootstrap/Modal';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
@@ -108,12 +110,48 @@ const MyFolders = () => {
       .then(() => swal('Success', 'Folder deleted', 'success'));
   };
 
+  const MyVerticallyCenteredModal = (props) => (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Modal heading
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Table>
+          <thead style={{ marginBottom: 10 }}>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Bill Title</th>
+              <th scope="col">Description</th>
+              <th scope="col">Offices</th>
+              <th scope="col">Type</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          { user.myFolders.map((folder, index) => (
+            <tbody>
+              { folder.listMeasures.map((meas) => <MeasureComponent measure={meas} />) }
+              <Button variant="danger" className="mt-5" onClick={() => removeFolder(index)}>
+                Remove Folder
+              </Button>
+            </tbody>
+          ))}
+        </Table>
+      </Modal.Body>
+      <Modal.Footer>
+        {/* eslint-disable-next-line react/prop-types,react/destructuring-assignment */}
+        <Button onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  const [modalShow, setModalShow] = React.useState(false);
+
   return (
     ready ? (
       <Container id={PAGE_IDS.MY_FOLDERS}>
-        <Button className="mb-3" onClick={getTitle}>
-          Add Folder
-        </Button>
+        <Button className="mb-3" onClick={getTitle}><FolderPlus size={25} /></Button>
         <Tab.Container id="left-tabs-example" defaultActiveKey="first">
           <Row>
             <Col>
@@ -124,6 +162,19 @@ const MyFolders = () => {
                 ))}
               </Nav>
             </Col>
+          </Row>
+          <Row xs={1} md={4}>
+            { user.myFolders.map((folder, index) => (
+              <Row gap={2}>
+                <Col>
+                  <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill onClick={() => setModalShow(false)}>
+                    <Card.Body eventKey={index}>
+                      <Card.Title><Folder size={25} style={{ marginRight: '1em' }} /><NavLink eventKey={index} />{folder.title}</Card.Title>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            ))}
           </Row>
           <Col>
             <Tab.Content>
@@ -159,6 +210,11 @@ const MyFolders = () => {
               ))}
             </Tab.Content>
           </Col>
+
+          <MyVerticallyCenteredModal
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+          />
 
         </Tab.Container>
       </Container>
