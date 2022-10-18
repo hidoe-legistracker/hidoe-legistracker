@@ -169,7 +169,7 @@ const MyFolders = () => {
                 <Col>
                   <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill onClick={() => setModalShow(false)}>
                     <Card.Body eventKey={index}>
-                      <Card.Title><Folder size={25} style={{ marginRight: '1em' }} /><NavLink eventKey={index} />{folder.title}</Card.Title>
+                      <Card.Title><Folder size={25} style={{ marginRight: '1em' }} />{folder.title}</Card.Title>
                     </Card.Body>
                   </Card>
                 </Col>
