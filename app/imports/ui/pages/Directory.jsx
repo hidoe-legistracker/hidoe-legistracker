@@ -128,12 +128,13 @@ const Directory = () => {
   const getFilteredMeasures = () => {
     const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
     const endIndex = +startIndex + +itemsPerPage;
+    let ret;
     if (endIndex < numMeasures) {
-      filteredMeasures = filteredMeasures.slice(startIndex, endIndex);
+      ret = filteredMeasures.slice(startIndex, endIndex);
     } else {
-      filteredMeasures = filteredMeasures.slice(startIndex, numMeasures);
+      ret = filteredMeasures.slice(startIndex, numMeasures);
     }
-    return filteredMeasures;
+    return ret;
   };
 
   if (init && currentUser.newAccount) {
