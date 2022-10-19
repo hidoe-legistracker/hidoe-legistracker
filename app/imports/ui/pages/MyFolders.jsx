@@ -108,6 +108,8 @@ const MyFolders = () => {
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Folder deleted', 'success'));
+    // eslint-disable-next-line no-use-before-define
+    setModalShow(false);
   };
 
   // eslint-disable-next-line react/no-unstable-nested-components
@@ -151,8 +153,6 @@ const MyFolders = () => {
       </Modal.Footer>
     </Modal>
   );
-
-  const 
 
   const [modalShow, setModalShow] = React.useState(false);
 
