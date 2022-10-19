@@ -1,20 +1,44 @@
 import React, { useState } from 'react';
+import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
+import { useTracker } from 'meteor/react-meteor-data';
 import { Button, Form, Modal, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { Emails } from '../../api/email/EmailCollection';
+import { updateMethod } from '../../api/base/BaseCollection.methods';
 
 const InboxItem = ({ email }) => {
+  const username = Meteor.user() ? Meteor.user().username : '';
+
   const [show, setShow] = useState(false);
+  let emailRead = _.contains(email.isRead, username);
   const modalClose = () => setShow(false);
   const modalShow = () => setShow(true);
 
+  const { ready } = useTracker(() => {
+    const subscription = Emails.subscribeEmail();
+    const rdy = subscription.ready();
+    return {
+      ready: rdy,
+    };
+  }, []);
+
   const openEmail = (event) => {
+    if (username !== '' && !_.contains(email.isRead, username)) {
+      const collectionName = Emails.getCollectionName();
+      const newIsRead = email.isRead;
+      newIsRead.push(username);
+      const updateData = { id: email._id, isRead: newIsRead };
+      updateMethod.callPromise({ collectionName, updateData });
+      emailRead = false;
+    }
     if (event.target.type !== 'checkbox' && !show) {
       modalShow();
     }
   };
-  return (
-    <tr onClick={(event) => openEmail(event)}>
+  return ready ? (
+    <tr onClick={(event) => openEmail(event)} style={!emailRead ? { backgroundColor: 'lightgray' } : {}}>
       <td style={{ width: '1em' }}><Form.Check inline /></td>
       <td>{email.from}</td>
       <td>{email.subject}</td>
@@ -25,8 +49,8 @@ const InboxItem = ({ email }) => {
           <Modal.Title>{email.subject}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p><h6 style={{ display: 'inline' }}>From: </h6> {email.from}</p>
-          <p><h6 style={{ display: 'inline' }}>To: </h6> {email.to}</p>
+          <p><b style={{ display: 'inline' }}>From: </b> {email.from}</p>
+          <p><b style={{ display: 'inline' }}>To: </b> {email.to}</p>
           {email.cc !== '' ? <p><h6 style={{ display: 'inline' }}>cc: </h6> {email.cc}</p> : ''}
           <hr />
           <h6>Body:</h6>
@@ -42,7 +66,7 @@ const InboxItem = ({ email }) => {
         </Modal.Footer>
       </Modal>
     </tr>
-  );
+  ) : '';
 };
 
 // Require a document to be passed to this component.
@@ -58,6 +82,8 @@ InboxItem.propTypes = {
     hasBillReference: PropTypes.bool,
     billNumber: PropTypes.number,
     billID: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    isRead: PropTypes.array,
   }).isRequired,
 };
 

@@ -69,6 +69,9 @@ const Inbox = () => {
         emailData.push(data);
       }
     });
+    emailData.sort(function (a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
     return {
       ready: isReady,
       emails: emailData,
@@ -324,7 +327,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject) }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isRead: emailItem.isRead }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
