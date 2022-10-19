@@ -344,8 +344,8 @@ const MonitoringReport = () => {
           <Row>
             <Col>
               <ListGroup variant="flush">
-                <ListGroup.Item className="text-secondary">Created By: {`${Meteor.user().username}`}</ListGroup.Item>
-                <ListGroup.Item className="text-secondary">Created on:  {`${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`} {`${date.getHours()}:${date.getMinutes()}`}</ListGroup.Item>
+                <ListGroup.Item className="text-secondary">Last accessed by: {`${Meteor.user().username}`}</ListGroup.Item>
+                <ListGroup.Item className="text-secondary">Last accessed on:  {`${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`} {`${date.getHours()}:${date.getMinutes()}`}</ListGroup.Item>
               </ListGroup>
             </Col>
           </Row>
