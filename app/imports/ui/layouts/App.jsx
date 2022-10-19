@@ -31,7 +31,6 @@ import ForgotPassword from '../pages/ForgotPassword';
 import EditProfile from '../pages/EditProfile';
 import EditEmailDraft from '../pages/EditEmailDraft';
 import BillCalendar from '../components/Calendar';
-import Hearing from '../pages/HearingNotice';
 import HearingNotice from '../pages/HearingNotice';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
@@ -58,7 +57,7 @@ const App = () => {
           <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute><BillCalendar /></ProtectedRoute>} />
-          <Route path="/hearing-notice" element={<ProtectedRoute><HearingNotice /></ProtectedRoute>} />
+          <Route path="/hearing-notice/:_id" element={<ProtectedRoute><HearingNotice /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />

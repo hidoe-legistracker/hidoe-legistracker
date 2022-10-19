@@ -18,6 +18,7 @@ import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
+import HearingNotice from './HearingNotice';
 
 const billProgress = 60;
 
@@ -43,14 +44,6 @@ const MeasureComponent = ({ measure }) => (
 
 MeasureComponent.propTypes = {
   measure: PropTypes.shape().isRequired,
-};
-
-const HearingComponent = ({ hearing }) => (
-  <td>{`${hearing.notice}\n`}</td>
-);
-
-HearingComponent.propTypes = {
-  hearing: PropTypes.shape().isRequired,
 };
 
 /* Renders a table containing all of the Measure documents. */
@@ -200,7 +193,7 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              {hearings.map(hearing => <HearingComponent hearing={hearing} />)}
+              {hearings.map(hearing => <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/hearing-notice/${hearing._id}`} />)}
             </Tab>
           </Tabs>
         </Col>
