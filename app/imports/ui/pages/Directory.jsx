@@ -17,6 +17,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const billProgress = 60;
 
@@ -44,13 +45,21 @@ MeasureComponent.propTypes = {
   measure: PropTypes.shape().isRequired,
 };
 
+const HearingComponent = ({ hearing }) => (
+  <td>{`${hearing.notice}\n`}</td>
+);
+
+HearingComponent.propTypes = {
+  hearing: PropTypes.shape().isRequired,
+};
+
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
   const [search, setSearch] = useState('');
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
-  const { currentUser, ready, init, measure } = useTracker(() => {
+  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -63,10 +72,13 @@ const Directory = () => {
       rdy = subscription.ready();
       usr = AdminProfiles.findByEmail(username);
     }
+    const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
-    const isReady = subscription.ready();
+    const isReady = subscription.ready() && hearingSub.ready();
     const measureData = Measures.find({}, {}).fetch();
+    const hearingData = Hearings.find({}, {}).fetch();
     return {
+      hearings: hearingData,
       currentUser: usr,
       ready: isReady,
       init: rdy,
@@ -188,7 +200,7 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              ...
+              {hearings.map(hearing => <HearingComponent hearing={hearing} />)}
             </Tab>
           </Tabs>
         </Col>
