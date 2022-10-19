@@ -172,6 +172,11 @@ const Directory = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+  const handleSearch = (eventText) => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+    setSearch(eventText);
+  };
 
   const filter = (office) => {
     if (office === 'ALL BILLS') {
@@ -223,7 +228,7 @@ const Directory = () => {
               placeholder="Search"
               className="me-2"
               aria-label="Search"
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => handleSearch(event.target.value)}
             />
           </Form>
           <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>

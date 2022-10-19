@@ -100,6 +100,11 @@ const EmployeeList = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+  const handleSearch = (eventText) => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+    setSearch(eventText);
+  };
 
   return (ready ? (
     <Container id={PAGE_IDS.MEMBERS} className="py-3" style={{ marginTop: '50px' }}>
@@ -112,7 +117,7 @@ const EmployeeList = () => {
             <Form.Control
               placeholder="Search"
               aria-label="Search"
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => handleSearch(event.target.value)}
             />
           </InputGroup>
         </Col>
