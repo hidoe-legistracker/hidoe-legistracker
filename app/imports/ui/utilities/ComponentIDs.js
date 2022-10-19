@@ -8,6 +8,7 @@ export const COMPONENT_IDS = {
   NAVBAR_INBOX: 'navbar-inbox',
   NAVBAR_PROFILE: 'navbar-profile',
   NAVBAR_VIEW_BILL: 'navbar-view-bill',
+  NAVBAR_HEARING_NOTICE: 'navbar-hearing-notice',
   NAVBAR_COLLAPSE: 'navbar-collapse',
   NAVBAR_LOGIN_DROPDOWN: 'navbar-login-dropdown',
   NAVBAR_LOGIN_DROPDOWN_SIGN_IN: 'navbar-login-dropdown-sign-in',

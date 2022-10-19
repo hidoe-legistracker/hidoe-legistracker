@@ -13,6 +13,7 @@ export const PAGE_IDS = {
   MEMBERS: 'members',
   NOT_AUTHORIZED: 'not-authorized',
   MONITORING_REPORT: 'monitoring-report',
+  HEARING_NOTICE: 'hearing-notice',
   NOT_FOUND: 'not-found',
   PROFILE: 'profile',
   SIGN_IN: 'sign-in',
