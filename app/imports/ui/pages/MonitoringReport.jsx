@@ -5,7 +5,7 @@ import {
   ListGroup,
   Col,
   Form,
-  Button, Card, Breadcrumb,
+  Button, Card, Breadcrumb, Badge,
 } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import SimpleSchema from 'simpl-schema';
@@ -16,6 +16,9 @@ import { AutoForm, DateField, LongTextField, SelectField, SubmitField, TextField
 import PropTypes from 'prop-types';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useParams } from 'react-router';
+import _ from 'underscore/underscore-node';
+import Table from 'react-bootstrap/Table';
+import { Link } from 'react-router-dom';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -62,6 +65,10 @@ const formSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
+  office: {
+    type: String,
+    allowedValues: ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'],
+  },
 });
 
 const bridge = new SimpleSchema2Bridge(formSchema);
@@ -76,12 +83,13 @@ const CreateTestimony = ({ measureNumber }) => {
 
   // On submit, insert the data.
   const submit = (data, formRef) => {
-    const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
+    const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone, office } = data;
     const owner = Meteor.user().username;
     const testimonyProgress = [0];
     const collectionName = Testimonies.getCollectionName();
     if (parseInt(billNumber, 10) === parseInt(measureNumber.valueOf(), 10)) {
-      const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress };
+      const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier,
+        representing, contactEmail, contactPhone, testimonyProgress, office };
       defineMethod.callPromise({ collectionName, definitionData })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => {
@@ -207,7 +215,9 @@ const CreateTestimony = ({ measureNumber }) => {
                           <TextField name="contactEmail" label="Email" />
                         </Col>
                       </Row>
-
+                      <Row>
+                        <SelectField name="office" />
+                      </Row>
                       <Row>
                         <Col>
                           <SubmitField value="Submit Testimony" />
@@ -234,14 +244,17 @@ const MonitoringReport = () => {
 
   const { _id } = useParams();
 
-  const { measure, ready } = useTracker(() => {
+  const { measure, ready, testimonies } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
-    const rdy = measureSubscription.ready();
+    const testimonySubscription = Testimonies.subscribeTestimony();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready();
 
     const measureItem = Measures.findOne({ _id: _id }, {});
+    const testimonyCollection = Testimonies.find({}, {}).fetch();
 
     return {
       measure: measureItem,
+      testimonies: testimonyCollection,
       ready: rdy,
     };
   }, [_id]);
@@ -287,6 +300,47 @@ const MonitoringReport = () => {
 
             </Form>
           </Row>
+          <Container className="view-testimony-container">
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'All Testimonies'}</h3>
+            {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
+              <Table>
+                <thead>
+                  <tr>
+                    <th scope="col">Hearing Date</th>
+                    <th scope="col">Bill #</th>
+                    <th scope="col">Prepared By</th>
+                    <th scope="col">Office</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
+                    <>
+                      { testimony.testimonyProgress.length !== 6 ? (
+                        <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
+                          <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
+                          <td>{testimony.billNumber}</td>
+                          <td>{testimony.testifier}</td>
+                          <td>{testimony.office}</td>
+                          <td>
+                            {testimony.testimonyProgress.length === 6 ? <Badge bg="secondary">Completed</Badge> : ''}
+                            {testimony.testimonyProgress.length === 5 ? <Badge bg="primary">Finalizing Testimony</Badge> : ''}
+                            {testimony.testimonyProgress.length === 4 ? <Badge bg="warning">Waiting for Final Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 3 ? <Badge bg="success">Waiting for PIPE Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 2 ? <Badge bg="primary">Waiting for Office Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 1 ? <Badge bg="secondary">Testimony being written</Badge> : ''}
+                          </td>
+                        </Link>
+                      )
+
+                        : '' }
+                    </>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </Container>
           <Row>
             <Col>
               <ListGroup variant="flush">
