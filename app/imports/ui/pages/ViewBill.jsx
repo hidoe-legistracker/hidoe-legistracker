@@ -49,6 +49,27 @@ const ViewBill = () => {
     };
   }, [_id]);
 
+  let userList;
+  const isChecked = () => {
+    userList = measure.notifyUsers;
+    return userList.includes(currentUser);
+  };
+  const updateNotifyUsers = (checked) => {
+    userList = measure.notifyUsers;
+    if (checked && !userList.includes(currentUser)) {
+      userList.push(currentUser);
+    } else if (!checked && userList.includes(currentUser)) {
+      userList = userList.filter(u => u !== currentUser);
+    }
+    const collectionName = Measures.getCollectionName();
+    const updateData = { id: _id, notifyUsers: userList };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      // eslint-disable-next-line no-unused-expressions
+      .then(() => { checked ? swal('Success', 'You have been added to the notification list', 'success') : swal('Success', 'You have been removed from the notification list', 'success'); });
+    console.log(userList);
+  };
+
   const addFolder = (folderTitle) => {
     user.myFolders.push({
       title: folderTitle,
@@ -260,6 +281,8 @@ const ViewBill = () => {
             <Form.Check
               inline
               label="I want to receive hearing notifications for this bill"
+              defaultChecked={isChecked()}
+              onChange={(event) => updateNotifyUsers(event.target.checked)}
             />
           </Form>
         </Row>
