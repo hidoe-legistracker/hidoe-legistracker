@@ -189,6 +189,17 @@ const Directory = () => {
     }
   };
 
+  const filterOffices = (office) => {
+    if (office === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = _.where(measure, { officeType: office });
+      setDefaultBills(false);
+      setBills(filteredData);
+    }
+  };
+
   const committees = ['JDC', 'WAM', 'CPN', 'HTH', 'HRE', 'LCA', 'PSM', 'EEP', 'CPC', 'FIN', 'AEN', 'JHA', 'WAL', 'WTL', 'AGR', 'ECD', 'LAT',
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
@@ -206,7 +217,7 @@ const Directory = () => {
               <Accordion.Header>Offices</Accordion.Header>
               <Accordion.Body>
                 <ListGroup defaultActiveKey="#link1" variant="flush">
-                  {offices.map((o, key) => <ListGroup.Item action key={key}>{o}</ListGroup.Item>)}
+                  {offices.map((o, key) => <ListGroup.Item action key={key} onClick={() => filterOffices(o)}>{o}</ListGroup.Item>)}
                 </ListGroup>
               </Accordion.Body>
             </Accordion.Item>
