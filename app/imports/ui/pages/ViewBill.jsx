@@ -49,27 +49,6 @@ const ViewBill = () => {
     };
   }, [_id]);
 
-  let userList;
-  const isChecked = () => {
-    userList = measure.notifyUsers;
-    return userList.includes(currentUser);
-  };
-  const updateNotifyUsers = (checked) => {
-    userList = measure.notifyUsers;
-    if (checked && !userList.includes(currentUser)) {
-      userList.push(currentUser);
-    } else if (!checked && userList.includes(currentUser)) {
-      userList = userList.filter(u => u !== currentUser);
-    }
-    const collectionName = Measures.getCollectionName();
-    const updateData = { id: _id, notifyUsers: userList };
-    updateMethod.callPromise({ collectionName, updateData })
-      .catch(error => swal('Error', error.message, 'error'))
-      // eslint-disable-next-line no-unused-expressions
-      .then(() => { checked ? swal('Success', 'You have been added to the notification list', 'success') : swal('Success', 'You have been removed from the notification list', 'success'); });
-    console.log(userList);
-  };
-
   const addFolder = (folderTitle) => {
     user.myFolders.push({
       title: folderTitle,
@@ -136,6 +115,28 @@ const ViewBill = () => {
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 
   const bill = measure;
+
+  let userList;
+
+  const isChecked = () => {
+    userList = measure.emailList;
+    return userList.includes(currentUser);
+  };
+
+  const updateEmailList = (checked) => {
+    userList = measure.emailList;
+    if (checked && !userList.includes(currentUser)) {
+      userList.push(currentUser);
+    } else if (!checked && userList.includes(currentUser)) {
+      userList = userList.filter(u => u !== currentUser);
+    }
+    const collectionName = Measures.getCollectionName();
+    const updateData = { id: _id, emailList: userList };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      // eslint-disable-next-line no-unused-expressions
+      .then(() => { checked ? swal('Success', 'You have been added to the email list for this bill', 'success') : swal('Success', 'You have been removed from the email list for this bill', 'success'); });
+  };
 
   return ready ? (
     <div>
@@ -293,7 +294,7 @@ const ViewBill = () => {
               inline
               label="I want to receive hearing notifications for this bill"
               defaultChecked={isChecked()}
-              onChange={(event) => updateNotifyUsers(event.target.checked)}
+              onChange={(event) => updateEmailList(event.target.checked)}
             />
           </Form>
         </Row>

@@ -30,12 +30,12 @@ class MeasureCollection extends BaseCollection {
       introducer: { type: String, optional: true },
       currentReferral: { type: String, optional: true },
       companion: { type: String, optional: true },
-      notifyUsers: { type: Array, defaultValue: [] },
-      'notifyUsers.$': String,
+      emailList: { type: Array, defaultValue: [] },
+      'emailList.$': String,
     }));
   }
 
-  define({ year, measureType, measureNumber, officeType, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, notifyUsers }) {
+  define({ year, measureType, measureNumber, officeType, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList }) {
     // PRIMARY KEY (year, measureType, measureNumber) so they are unique
     if (this.isDefined({ year, measureType, measureNumber })) {
       return this.findDoc({ year, measureType, measureNumber })._id;
@@ -44,11 +44,11 @@ class MeasureCollection extends BaseCollection {
       throw new Meteor.Error(`${measureType} is an invalid Measure Type.`);
     }
     const docID = this._collection.insert({ year, measureType, measureNumber, officeType,
-      lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, notifyUsers });
+      lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList });
     return docID;
   }
 
-  update(docID, { lastUpdated, code, measurePdfUrl, officeType, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, notifyUsers }) {
+  update(docID, { lastUpdated, code, measurePdfUrl, officeType, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList }) {
     const updateData = {};
     if (lastUpdated) {
       updateData.lastUpdated = lastUpdated;
@@ -89,8 +89,8 @@ class MeasureCollection extends BaseCollection {
     if (companion) {
       updateData.companion = companion;
     }
-    if (notifyUsers) {
-      updateData.notifyUsers = notifyUsers;
+    if (emailList) {
+      updateData.emailList = emailList;
     }
     this._collection.update(docID, { $set: updateData });
   }
@@ -146,8 +146,8 @@ class MeasureCollection extends BaseCollection {
     const introducer = doc.introducer;
     const currentReferral = doc.currentReferral;
     const companion = doc.companion;
-    const notifyUsers = doc.notifyUsers;
-    return { year, measureType, officeType, measureNumber, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, notifyUsers };
+    const emailList = doc.emailList;
+    return { year, measureType, officeType, measureNumber, lastUpdated, code, measurePdfUrl, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList };
   }
 }
 
