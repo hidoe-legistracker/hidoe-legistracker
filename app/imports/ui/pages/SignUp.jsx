@@ -32,6 +32,8 @@ officeNames.forEach((name) => {
   offices.push({ label: name, value: name });
 });
 
+const positionNames = ['N/A','Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'];
+
 /**
  * SignUp component is similar to signin component, but we create a new user instead.
  */
@@ -58,6 +60,7 @@ const SignUp = () => {
       password: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_PASSWORD).value,
       employeeID: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID).value,
       role: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_ROLE).value,
+      position: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_POSITION).value,
       newAccount: true,
       offices: selectedOffices,
       committees: selectedCommittees,
@@ -83,6 +86,8 @@ const SignUp = () => {
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_PASSWORD).value = '';
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID).value = '';
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_ROLE).value = '';
+        document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_POSITION).value = '';
+
       });
   };
 
@@ -153,6 +158,17 @@ const SignUp = () => {
           <Form.Select id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} placeholder="Select Role" aria-label="Role" defaultValue="USER">
             <option>USER</option>
             <option>ADMIN</option>
+          </Form.Select>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={8}>
+          <Form.Label><b>User Position</b></Form.Label>
+          <Form.Select id={COMPONENT_IDS.SIGN_UP_FORM_POSITION} aria-label="Position Select">
+            <option disabled> -- select a position -- </option>
+            {positionNames.map((name) => (
+              <option value={name}>{name}</option>
+            ))}
           </Form.Select>
         </Col>
       </Row>

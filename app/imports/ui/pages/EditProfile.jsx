@@ -38,6 +38,8 @@ officeNames.forEach((name) => {
   offices.push({ label: name, value: name });
 });
 
+const positionNames = ['N/A', 'Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'];
+
 /* Renders the Profile page for viewing your profile. */
 const EditProfile = () => {
   const [newID, setNewID] = useState('');
@@ -87,13 +89,15 @@ const EditProfile = () => {
   const submit = () => {
     const role = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE) ? document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE).value : user.role;
     const phone = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_PHONE).value.toString();
-
+    const position = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION).value;
+    console.log(position);
     if (role !== user.role) {
       const definitionData = _.clone(user);
       definitionData.committees = selectedCommittees;
       definitionData.offices = selectedOffices;
       definitionData.phone = phone;
       definitionData.role = role;
+      definitionData.position = position;
 
       if (role === ROLE.USER) {
         const collectionName = UserProfiles.getCollectionName();
@@ -120,7 +124,7 @@ const EditProfile = () => {
       } else {
         collectionName = AdminProfiles.getCollectionName();
       }
-      const updateData = { id: user._id, committees: selectedCommittees, offices: selectedOffices, phone: phone, role: role };
+      const updateData = { id: user._id, committees: selectedCommittees, offices: selectedOffices, phone: phone, role: role, position: position };
       updateMethod.callPromise({ collectionName, updateData })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => swal('Success', 'Profile updated successfully', 'success'));
@@ -227,6 +231,17 @@ const EditProfile = () => {
               <option disabled>Select User Role</option>
               <option value={ROLE.USER}>{ROLE.USER}</option>
               <option value={ROLE.ADMIN}>{ROLE.ADMIN}</option>
+            </Form.Select>
+          </Col>
+        </Row>,
+        <Row className="mt-3">
+          <Col xs={3}>
+            <Form.Label><b>User Position</b></Form.Label>
+            <Form.Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION} aria-label="Position Select " defaultValue={user.position}>
+              <option disabled> -- select a position -- </option>
+              {positionNames.map((name) => (
+                <option value={name}>{name}</option>
+              ))}
             </Form.Select>
           </Col>
         </Row>,
