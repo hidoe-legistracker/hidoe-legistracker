@@ -33,17 +33,6 @@ class BaseProfileCollection extends BaseCollection {
         optional: true,
       },
       'offices.$': String,
-      committees: {
-        type: Array,
-        optional: true,
-      },
-      'committees.$': {
-        type: new SimpleSchema({
-          label: String,
-          value: String,
-          group: String,
-        }),
-      },
       // Array of folders
       myFolders: {
         type: Array,

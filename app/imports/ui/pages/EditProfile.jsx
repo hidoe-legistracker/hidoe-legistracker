@@ -11,26 +11,9 @@ import Select from 'react-select';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
 import { ROLE } from '../../api/role/Role';
 import { defineMethod, updateMethod, transferItMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
-
-const house = [];
-const senate = [];
-Object.values(houseCommittees).forEach(function (committee) {
-  house.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'HOUSE' });
-});
-Object.values(senateCommittees).forEach(function (committee) {
-  senate.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'SENATE' });
-});
-const committees = [{
-  label: 'House',
-  options: house,
-}, {
-  label: 'Senate',
-  options: senate,
-}];
 
 const officeNames = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 const offices = [];
@@ -66,19 +49,15 @@ const EditProfile = () => {
     };
   }, [_id]);
 
-  let selectedCommittees = [];
   let selectedOffices = [];
   const defaultSelectedOffices = [];
   if (ready) {
-    selectedCommittees = user.committees;
     selectedOffices = user.offices ? user.offices : [];
     selectedOffices.forEach((office) => {
       defaultSelectedOffices.push({ label: office, value: office });
     });
   }
-  const selectCommittees = e => {
-    selectedCommittees = e;
-  };
+
   const selectOffices = e => {
     selectedOffices = [];
     e.forEach((x) => {
@@ -90,10 +69,9 @@ const EditProfile = () => {
     const role = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE) ? document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE).value : user.role;
     const phone = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_PHONE).value.toString();
     const position = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION).value;
-    console.log(position);
+
     if (role !== user.role) {
       const definitionData = _.clone(user);
-      definitionData.committees = selectedCommittees;
       definitionData.offices = selectedOffices;
       definitionData.phone = phone;
       definitionData.role = role;
@@ -124,7 +102,7 @@ const EditProfile = () => {
       } else {
         collectionName = AdminProfiles.getCollectionName();
       }
-      const updateData = { id: user._id, committees: selectedCommittees, offices: selectedOffices, phone: phone, role: role, position: position };
+      const updateData = { id: user._id, offices: selectedOffices, phone: phone, role: role, position: position };
       updateMethod.callPromise({ collectionName, updateData })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => swal('Success', 'Profile updated successfully', 'success'));
@@ -191,11 +169,16 @@ const EditProfile = () => {
                 <Form.Label><b>Office(s): </b></Form.Label>
                 <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_OFFICES} options={offices} isMulti closeMenuOnSelect={false} onChange={selectOffices} defaultValue={defaultSelectedOffices} />
               </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Label><b>Committee(s): </b></Form.Label>
-                <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_COMMITTEES} options={committees} isMulti closeMenuOnSelect={false} onChange={selectCommittees} defaultValue={selectedCommittees} />
+              <Col xs={5}>
+                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? [
+                  <Form.Label><b>User Position</b></Form.Label>,
+                  <Form.Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION} aria-label="Position Select " defaultValue={user.position}>
+                    <option disabled> -- Select a position -- </option>
+                    {positionNames.map((name) => (
+                      <option value={name}>{name}</option>
+                    ))}
+                  </Form.Select>,
+                ] : <p><b>Position: </b><span id={COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION}>{user.position ? user.position : 'N/A'}</span></p>}
               </Col>
             </Row>
           </Row>
@@ -231,17 +214,6 @@ const EditProfile = () => {
               <option disabled>Select User Role</option>
               <option value={ROLE.USER}>{ROLE.USER}</option>
               <option value={ROLE.ADMIN}>{ROLE.ADMIN}</option>
-            </Form.Select>
-          </Col>
-        </Row>,
-        <Row className="mt-3">
-          <Col xs={3}>
-            <Form.Label><b>User Position</b></Form.Label>
-            <Form.Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION} aria-label="Position Select " defaultValue={user.position}>
-              <option disabled> -- select a position -- </option>
-              {positionNames.map((name) => (
-                <option value={name}>{name}</option>
-              ))}
             </Form.Select>
           </Col>
         </Row>,
