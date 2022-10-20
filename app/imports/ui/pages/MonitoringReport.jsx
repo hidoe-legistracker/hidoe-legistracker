@@ -301,7 +301,7 @@ const MonitoringReport = () => {
             </Form>
           </Row>
           <Container className="view-testimony-container">
-            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'All Testimonies'}</h3>
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Submitted Testimonies'}</h3>
             {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
               <Table>
                 <thead>

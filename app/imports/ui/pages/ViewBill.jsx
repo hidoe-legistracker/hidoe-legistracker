@@ -217,7 +217,7 @@ const ViewBill = () => {
           </Col>
         </Row>
         <Container className="view-testimony-container">
-          <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Completed Testimonies'}</h3>
+          <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Approved Testimonies'}</h3>
           {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
             <Table>
               <thead>
