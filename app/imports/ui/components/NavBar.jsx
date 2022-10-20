@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
 import { useTracker } from 'meteor/react-meteor-data';
 import { NavLink } from 'react-router-dom';
 import { Roles } from 'meteor/alanning:roles';
@@ -20,14 +21,32 @@ const NavBar = () => {
     const adminSubscription = AdminProfiles.subscribe();
     const subscription = Emails.subscribeEmail();
     const rdy = subscription.ready() && userSubscription.ready() && adminSubscription.ready();
-    const notifCount = Emails.find({ isRead: false }).fetch().length;
+    const emailData = Emails.find({ recipients: currUser, isDraft: false }, {}).fetch();
+    const ccData = Emails.find({ ccs: currUser, isDraft: false }, {}).fetch();
+    const bccData = Emails.find({ bccs: currUser, isDraft: false }, {}).fetch();
+    ccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
+    bccData.forEach(data => {
+      if (!_.contains(_.pluck(emailData, '_id'), data._id)) {
+        emailData.push(data);
+      }
+    });
+    const unread = [];
+    emailData.forEach(data => {
+      if (!_.contains(data.isRead, currUser)) {
+        unread.push(data);
+      }
+    });
 
     let usr = UserProfiles.findOne({ email: currUser }, {});
     if (usr === undefined) usr = AdminProfiles.findOne({ email: currUser }, {});
     return {
       currentUser: currUser,
       user: usr,
-      notificationCount: notifCount,
+      notificationCount: _.size(unread),
       ready: rdy,
     };
   }, []);

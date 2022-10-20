@@ -24,7 +24,8 @@ class EmailCollection extends BaseCollection {
       date: Date,
       attachment: { type: Object, optional: true },
       body: String,
-      isRead: { type: Boolean, defaultValue: false },
+      isRead: { type: Array, defaultValue: [] },
+      'isRead.$': String,
       isDraft: { type: Boolean, defaultValue: true },
     }));
   }
@@ -57,13 +58,13 @@ class EmailCollection extends BaseCollection {
     if (subject) {
       updateData.subject = subject;
     }
-    if (recipients.length > 0) {
+    if (recipients && recipients.length > 0) {
       updateData.recipients = recipients;
     }
-    if (ccs.length > 0) {
+    if (ccs && ccs.length > 0) {
       updateData.ccs = ccs;
     }
-    if (bccs.length > 0) {
+    if (bccs && bccs.length > 0) {
       updateData.bccs = bccs;
     }
     if (date) {

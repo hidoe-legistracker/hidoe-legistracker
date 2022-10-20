@@ -3,7 +3,15 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Button, Col, Container, DropdownButton, Dropdown, Form, Modal, Nav, Row, Tab, Table } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
-import { EnvelopeFill, PenFill, SendFill } from 'react-bootstrap-icons';
+import {
+  ChevronDoubleLeft,
+  ChevronDoubleRight,
+  ChevronLeft,
+  ChevronRight,
+  EnvelopeFill,
+  PenFill,
+  SendFill,
+} from 'react-bootstrap-icons';
 import swal from 'sweetalert';
 import Select from 'react-select';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -61,6 +69,9 @@ const Inbox = () => {
         emailData.push(data);
       }
     });
+    emailData.sort(function (a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
     return {
       ready: isReady,
       emails: emailData,
@@ -91,12 +102,83 @@ const Inbox = () => {
 
   const [show, setShow] = useState(false);
   const [mail, setMail] = useState('');
+  const [selectedTab, setSelectedTab] = useState('inbox');
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const updateEmail = (event, property) => {
     newEmail[property] = event;
+  };
+
+  let filteredEmails;
+  let numEmails;
+  let numPages;
+
+  if (ready) {
+    if (selectedTab === 'inbox') {
+      filteredEmails = emails;
+    } else if (selectedTab === 'drafts') {
+      filteredEmails = drafts;
+    } else {
+      filteredEmails = sent;
+    }
+    numEmails = _.size(filteredEmails);
+    numPages = parseInt(numEmails / itemsPerPage, 10);
+    if (numEmails % itemsPerPage !== 0) {
+      numPages++;
+    }
+  }
+
+  const getFilteredEmails = () => {
+    const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
+    const endIndex = +startIndex + +itemsPerPage;
+    let ret;
+    if (endIndex < numEmails) {
+      ret = filteredEmails.slice(startIndex, endIndex);
+    } else {
+      ret = filteredEmails.slice(startIndex, numEmails);
+    }
+    return ret;
+  };
+
+  // Pagination stuff
+  const getItemsPerPage = () => {
+    const selection = document.getElementById('pagination-items-per-page').value;
+    setItemsPerPage(selection);
+    setCurrentPage(1);
+    document.getElementById('pagination-select-page').value = 1;
+  };
+  const getItemsInPage = () => {
+    const selection = document.getElementById('pagination-select-page').value;
+    setCurrentPage(selection);
+  };
+  const goToFirstPage = () => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+  };
+  const goToPrevPage = () => {
+    if (currentPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentPage - 1;
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const goToLastPage = () => {
+    document.getElementById('pagination-select-page').value = numPages;
+    setCurrentPage(numPages);
+  };
+  const goToNextPage = () => {
+    if (currentPage !== numPages) {
+      document.getElementById('pagination-select-page').value = currentPage + 1;
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const handleSelectedTab = (tab) => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+    setSelectedTab(tab);
   };
 
   // On submit, insert the data.
@@ -225,9 +307,9 @@ const Inbox = () => {
               </Modal.Footer>
             </Modal>
             <Nav variant="pills" className="flex-column mt-4">
-              <Nav.Link eventKey="inbox"><EnvelopeFill size={20} /> Inbox</Nav.Link>
-              <Nav.Link eventKey="drafts"><PenFill size={20} /> Drafts</Nav.Link>
-              <Nav.Link eventKey="sent"><SendFill size={20} /> Sent</Nav.Link>
+              <Nav.Link eventKey="inbox" onClick={() => handleSelectedTab('inbox')}><EnvelopeFill size={20} /> Inbox</Nav.Link>
+              <Nav.Link eventKey="drafts" onClick={() => handleSelectedTab('drafts')}><PenFill size={20} /> Drafts</Nav.Link>
+              <Nav.Link eventKey="sent" onClick={() => handleSelectedTab('sent')}><SendFill size={20} /> Sent</Nav.Link>
             </Nav>
           </Col>
           <Col xs={10}>
@@ -245,7 +327,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {emails.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject) }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isRead: emailItem.isRead }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
@@ -260,7 +342,7 @@ const Inbox = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {drafts.map((emailItem, index) => <DraftItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <DraftItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
@@ -276,12 +358,35 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {sent.map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
             </Tab.Content>
           </Col>
+        </Row>
+        <Row className="d-flex flex-row-reverse">
+          <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToLastPage}>
+            <ChevronDoubleRight />
+          </Button>
+          <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToNextPage}>
+            <ChevronRight />
+          </Button>
+          <Form.Select id="pagination-select-page" style={{ width: '90px' }} onChange={getItemsInPage}>
+            {[...Array(numPages)].map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
+          </Form.Select>
+          <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToPrevPage}>
+            <ChevronLeft />
+          </Button>
+          <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToFirstPage}>
+            <ChevronDoubleLeft />
+          </Button>
+          <Form.Select id="pagination-items-per-page" style={{ width: '80px', marginRight: '3em' }} onChange={getItemsPerPage}>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </Form.Select>
+          <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
         </Row>
       </Tab.Container>
     </Container>
