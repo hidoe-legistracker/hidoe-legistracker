@@ -78,6 +78,11 @@ const Profile = () => {
                 <p><b>Committees(s): </b>{user.committees && user.committees.length > 0 ? _.pluck(user.committees, 'value').toString() : 'N/A'}</p>
               </Col>
             </Row>
+            <Row>
+              <Col>
+                <p><b>Position: </b>{user.position ? user.position : 'N/A'}</p>
+              </Col>
+            </Row>
           </Row>
           <Row>
             <Row>

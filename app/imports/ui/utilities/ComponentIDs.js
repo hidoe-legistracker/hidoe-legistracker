@@ -36,6 +36,7 @@ export const COMPONENT_IDS = {
   SIGN_UP_FORM_OFFICES: 'sign-up-form-offices',
   SIGN_UP_FORM_COMMITTEES: 'sign-up-form-committees',
   SIGN_UP_FORM_ROLE: 'sign-up-form-role',
+  SIGN_UP_FORM_POSITION: 'sign-up-form-position',
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
   SIGN_UP_FORM_CURRENT_PASSWORD: 'sign-up-form-current-password',
 
@@ -44,6 +45,7 @@ export const COMPONENT_IDS = {
   EDIT_PROFILE_FORM_COMMITTEES: 'edit-profile-form-committees',
   EDIT_PROFILE_FORM_PHONE: 'edit-profile-form-phone',
   EDIT_PROFILE_FORM_ROLE: 'edit-profile-form-role',
+  EDIT_PROFILE_FORM_POSITION: 'edit-profile-form-position',
 
   // CREATE MEASURE PAGE
   CREATE_MEASURE_FORM_YEAR: 'create-measure-form-year',

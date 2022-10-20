@@ -19,6 +19,11 @@ class BaseProfileCollection extends BaseCollection {
       userID: SimpleSchema.RegEx.Id,
       employeeID: String,
       newAccount: Boolean,
+      position: {
+        type: String,
+        allowedValues: ['N/A', 'Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'],
+        optional: true,
+      },
       phone: {
         type: String,
         optional: true,
