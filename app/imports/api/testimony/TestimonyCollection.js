@@ -7,6 +7,7 @@ import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
 export const departmentPositions = ['In Support', 'In Opposition', 'Comments'];
+export const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 export const testimonyPublications = {
   testimony: 'testimony',
   testimonyAdmin: 'testimonyAdmin', // not sure if we need this.
@@ -40,6 +41,7 @@ class TestimonyCollection extends BaseCollection {
         optional: true,
       },
       'testimonyProgress.$': Number,
+      office: { type: String, allowedValues: offices, optional: true },
     }));
   }
 
@@ -47,9 +49,9 @@ class TestimonyCollection extends BaseCollection {
    * Defines a new Testimony item.
    */
   define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress }) {
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
     const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-      content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress });
+      content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office });
     return docID;
   }
 
@@ -57,7 +59,7 @@ class TestimonyCollection extends BaseCollection {
    * Updates the given document.
    */
   update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress }) {
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
     const updateData = {};
     if (_.isString(owner)) {
       updateData.owner = owner;
@@ -109,6 +111,9 @@ class TestimonyCollection extends BaseCollection {
     }
     if (testimonyProgress) {
       updateData.testimonyProgress = testimonyProgress;
+    }
+    if (office) {
+      updateData.office = office;
     }
 
     this._collection.update(docID, { $set: updateData });
@@ -205,6 +210,7 @@ class TestimonyCollection extends BaseCollection {
     const contactEmail = doc.contactEmail;
     const contactPhone = doc.contactPhone;
     const testimonyProgress = doc.testimonyProgress;
+    const office = doc.office;
     return {
       owner,
       committeeChair,
@@ -223,6 +229,7 @@ class TestimonyCollection extends BaseCollection {
       contactEmail,
       contactPhone,
       testimonyProgress,
+      office,
     };
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Container, Row, Button, ProgressBar, Dropdown, Breadcrumb } from 'react-bootstrap';
+import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus, ArrowLeftRight } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -238,7 +238,7 @@ const ViewBill = () => {
           </Col>
         </Row>
         <Container className="view-testimony-container">
-          <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Testimonies'}</h3>
+          <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Approved Testimonies'}</h3>
           {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
             <Table>
               <thead>
@@ -246,22 +246,33 @@ const ViewBill = () => {
                   <th scope="col">Hearing Date</th>
                   <th scope="col">Bill #</th>
                   <th scope="col">Prepared By</th>
-                  <th scope="col">DOE Positon</th>
+                  <th scope="col">Office</th>
                   <th scope="col">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
-                  <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
-                    <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
-                    <td>{testimony.billNumber}</td>
-                    <td>{testimony.testifier}</td>
-                    <td>{testimony.deptPosition}</td>
-                    <td>
-                      { testimony.testimonyProgress.length === 6 ? 'Completed'
-                        : <ProgressBar now={testimony.testimonyProgress.length * 20} label={`${testimony.testimonyProgress.length * 20}`} visuallyHidden />}
-                    </td>
-                  </Link>
+                  // eslint-disable-next-line react/jsx-no-useless-fragment
+                  <>
+                    { testimony.testimonyProgress.length === 6 ? (
+                      <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
+                        <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
+                        <td>{testimony.billNumber}</td>
+                        <td>{testimony.testifier}</td>
+                        <td>{testimony.office}</td>
+                        <td>
+                          {testimony.testimonyProgress.length === 6 ? <Badge bg="secondary">Completed</Badge> : ''}
+                          {testimony.testimonyProgress.length === 5 ? <Badge bg="primary">Finalizing Testimony</Badge> : ''}
+                          {testimony.testimonyProgress.length === 4 ? <Badge bg="warning">Waiting for Final Approval</Badge> : ''}
+                          {testimony.testimonyProgress.length === 3 ? <Badge bg="success">Waiting for PIPE Approval</Badge> : ''}
+                          {testimony.testimonyProgress.length === 2 ? <Badge bg="primary">Waiting for Office Approval</Badge> : ''}
+                          {testimony.testimonyProgress.length === 1 ? <Badge bg="secondary">Testimony being written</Badge> : ''}
+                        </td>
+                      </Link>
+                    )
+
+                      : '' }
+                  </>
                 ))}
               </tbody>
             </Table>

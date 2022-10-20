@@ -36,9 +36,9 @@ const EditTestimony = () => {
 
   // On submit, insert the data.
   const submit = (data) => {
-    const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;
+    const { committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone, office } = data;
     const collectionName = Testimonies.getCollectionName();
-    const updateData = { id: testimonyID, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone };
+    const updateData = { id: testimonyID, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone, office };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Success', 'Testimony updated successfully', 'success'));
@@ -154,7 +154,9 @@ const EditTestimony = () => {
                       <TextField name="contactEmail" label="Email" />
                     </Col>
                   </Row>
-
+                  <Row>
+                    <SelectField name="office" />
+                  </Row>
                   <Row>
                     <SubmitField value="Update Testimony" />
                   </Row>
