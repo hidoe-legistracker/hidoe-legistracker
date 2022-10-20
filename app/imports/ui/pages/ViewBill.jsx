@@ -116,6 +116,28 @@ const ViewBill = () => {
 
   const bill = measure;
 
+  let userList;
+
+  const isChecked = () => {
+    userList = measure.emailList;
+    return userList.includes(currentUser);
+  };
+
+  const updateEmailList = (checked) => {
+    userList = measure.emailList;
+    if (checked && !userList.includes(currentUser)) {
+      userList.push(currentUser);
+    } else if (!checked && userList.includes(currentUser)) {
+      userList = userList.filter(u => u !== currentUser);
+    }
+    const collectionName = Measures.getCollectionName();
+    const updateData = { id: _id, emailList: userList };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      // eslint-disable-next-line no-unused-expressions
+      .then(() => { checked ? swal('Success', 'You have been added to the email list for this bill', 'success') : swal('Success', 'You have been removed from the email list for this bill', 'success'); });
+  };
+
   return ready ? (
     <div>
       <Container>
@@ -271,6 +293,8 @@ const ViewBill = () => {
             <Form.Check
               inline
               label="I want to receive hearing notifications for this bill"
+              defaultChecked={isChecked()}
+              onChange={(event) => updateEmailList(event.target.checked)}
             />
           </Form>
         </Row>
