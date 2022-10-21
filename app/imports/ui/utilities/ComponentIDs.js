@@ -35,7 +35,6 @@ export const COMPONENT_IDS = {
   SIGN_UP_FORM_PASSWORD: 'sign-up-form-password',
   SIGN_UP_FORM_EMPLOYEE_ID: 'sign-up-form-employee-id',
   SIGN_UP_FORM_OFFICES: 'sign-up-form-offices',
-  SIGN_UP_FORM_COMMITTEES: 'sign-up-form-committees',
   SIGN_UP_FORM_ROLE: 'sign-up-form-role',
   SIGN_UP_FORM_POSITION: 'sign-up-form-position',
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
@@ -43,7 +42,6 @@ export const COMPONENT_IDS = {
 
   // EDIT PROFILE PAGE
   EDIT_PROFILE_FORM_OFFICES: 'edit-profile-form-offices',
-  EDIT_PROFILE_FORM_COMMITTEES: 'edit-profile-form-committees',
   EDIT_PROFILE_FORM_PHONE: 'edit-profile-form-phone',
   EDIT_PROFILE_FORM_ROLE: 'edit-profile-form-role',
   EDIT_PROFILE_FORM_POSITION: 'edit-profile-form-position',

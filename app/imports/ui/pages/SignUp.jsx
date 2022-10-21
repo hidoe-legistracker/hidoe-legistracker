@@ -8,23 +8,6 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
-import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
-
-const house = [];
-const senate = [];
-Object.values(houseCommittees).forEach(function (committee) {
-  house.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'HOUSE' });
-});
-Object.values(senateCommittees).forEach(function (committee) {
-  senate.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'SENATE' });
-});
-const committees = [{
-  label: 'House',
-  options: house,
-}, {
-  label: 'Senate',
-  options: senate,
-}];
 
 const officeNames = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 const offices = [];
@@ -46,11 +29,6 @@ const SignUp = () => {
     });
   };
 
-  let selectedCommittees = [];
-  const selectCommittees = e => {
-    selectedCommittees = e;
-  };
-
   /* Handle SignUp submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = () => {
     const doc = {
@@ -63,7 +41,6 @@ const SignUp = () => {
       position: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_POSITION).value,
       newAccount: true,
       offices: selectedOffices,
-      committees: selectedCommittees,
     };
     if (doc.firstName === '' || doc.lastName === '' || doc.email === '' || doc.password === '' || doc.employeeID === '') {
       swal('Failed', 'Please fill all required fields', 'error');
@@ -144,12 +121,6 @@ const SignUp = () => {
         <Col sm={8}>
           <Form.Label><b>Offices</b></Form.Label>
           <Select id={COMPONENT_IDS.SIGN_UP_FORM_OFFICES} options={offices} isMulti closeMenuOnSelect={false} onChange={selectOffices} />
-        </Col>
-      </Row>
-      <Row className="py-2">
-        <Col sm={8}>
-          <Form.Label><b>Committees</b></Form.Label>
-          <Select id={COMPONENT_IDS.SIGN_UP_FORM_COMMITTEES} options={committees} isMulti closeMenuOnSelect={false} onChange={selectCommittees} />
         </Col>
       </Row>
       <Row className="py-2">

@@ -18,14 +18,14 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param role
    * @param newAccount
    */
-  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, offices, committees, position }) {
+  define({ userID, email, firstName, lastName, password, employeeID, newAccount, phone, offices, position }) {
     // if (Meteor.isServer) {
     const username = email;
     const user = this.findOne({ email, firstName, lastName });
     if (!user) {
       const role = ROLE.USER;
       const newUserID = userID !== undefined ? userID : Users.define({ username, role, password });
-      const profileID = this._collection.insert({ email, firstName, lastName, userID: newUserID, employeeID, role, newAccount, phone, offices, committees, position });
+      const profileID = this._collection.insert({ email, firstName, lastName, userID: newUserID, employeeID, role, newAccount, phone, offices, position });
       // this._collection.update(profileID, { $set: { userID } });
       return profileID;
     }
@@ -44,7 +44,7 @@ class UserProfileCollection extends BaseProfileCollection {
    * @param phone
    * @param role
    */
-  update(docID, { firstName, lastName, myFolders, phone, role, newAccount, offices, committees, position }) {
+  update(docID, { firstName, lastName, myFolders, phone, role, newAccount, offices, position }) {
     this.assertDefined(docID);
     const updateData = {};
     if (firstName) {
@@ -58,9 +58,6 @@ class UserProfileCollection extends BaseProfileCollection {
     }
     if (offices) {
       updateData.offices = offices;
-    }
-    if (committees) {
-      updateData.committees = committees;
     }
     if (phone) {
       updateData.phone = phone;
