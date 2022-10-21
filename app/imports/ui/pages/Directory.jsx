@@ -193,6 +193,22 @@ const Directory = () => {
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 
+  const filterOffices = (office) => {
+    if (office === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = [];
+      measure.forEach((item) => {
+        if (item.officeType && item.officeType.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
+      setDefaultBills(false);
+      setBills(filteredData);
+    }
+  };
+
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
@@ -206,7 +222,7 @@ const Directory = () => {
               <Accordion.Header>Offices</Accordion.Header>
               <Accordion.Body>
                 <ListGroup defaultActiveKey="#link1" variant="flush">
-                  {offices.map((o, key) => <ListGroup.Item action key={key}>{o}</ListGroup.Item>)}
+                  {offices.map((o, key) => <ListGroup.Item action key={key} onClick={() => filterOffices(o)}>{o}</ListGroup.Item>)}
                 </ListGroup>
               </Accordion.Body>
             </Accordion.Item>
