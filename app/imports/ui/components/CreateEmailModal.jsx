@@ -15,6 +15,7 @@ import { defineMethod, updateMethod } from '../../api/base/BaseCollection.method
 let newEmail = {
   subject: '',
   recipients: [],
+  offices: [],
   ccs: [],
   bccs: [],
   date: '',
@@ -129,6 +130,9 @@ const CreateEmailModal = ({ modal, emailItem }) => {
     newEmail.recipients.forEach(recipient => {
       recipients.push(recipient.value);
     });
+    newEmail.offices.forEach(office => {
+      recipients.push(office.value);
+    });
     newEmail.ccs.forEach(cc => {
       ccs.push(cc.value);
     });
@@ -204,7 +208,7 @@ const CreateEmailModal = ({ modal, emailItem }) => {
               options={offices}
               isMulti
               closeMenuOnSelect={false}
-              onChange={(e) => updateEmail(e, 'recipients')}
+              onChange={(e) => updateEmail(e, 'offices')}
             />
           </Form.Group>
           <Form.Group className="to">
