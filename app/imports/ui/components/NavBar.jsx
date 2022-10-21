@@ -66,7 +66,6 @@ const NavBar = () => {
             {currentUser ? ([
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MY_FOLDERS} as={NavLink} to="/MyFolders" key="my-folders">My Folders</Nav.Link>,
-              <Nav.Link id={COMPONENT_IDS.NAVBAR_HEARING_NOTICE} as={NavLink} to="/hearing-notice" key="hearing-notice">Hearing Notices</Nav.Link>,
             ]) : ''}
           </Nav>
           <Nav className="justify-content-end">
