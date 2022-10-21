@@ -28,6 +28,7 @@ const HearingNotice = ({ noticeTitle }) => {
   }, []);
 
   const filterHearings = _.where(hearings, { notice: noticeTitle });
+  const hearingData = _.find(filterHearings, function (h) { return h.notice === noticeTitle; });
 
   return ready ? (
     <div>
@@ -44,15 +45,15 @@ const HearingNotice = ({ noticeTitle }) => {
         <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Hearing Date & Time</Row>
-            <Row>{hearings.datetime}</Row>
+            <Row>{hearingData.datetime}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Hearing Location</Row>
-            <Row>{hearings.room}</Row>
+            <Row>{hearingData.room}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Hearing Type</Row>
-            <Row>{hearings.measureType}</Row>
+            <Row>{hearingData.measureType}</Row>
           </Col>
         </Row>
         <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
@@ -62,6 +63,16 @@ const HearingNotice = ({ noticeTitle }) => {
           </Col>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Committee(s)</Row>
+            <Row>{hearingData.committee}</Row>
+          </Col>
+        </Row>
+        <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
+          <Col>
+            <Row style={{ fontWeight: 'bold' }}>Notice URL</Row>
+            <Row>{}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Notice PDF URL</Row>
             <Row>{}</Row>
           </Col>
         </Row>
@@ -71,6 +82,7 @@ const HearingNotice = ({ noticeTitle }) => {
             <thead>
               <tr>
                 <th scope="col">#</th>
+                <th scope="col">Code</th>
                 <th scope="col">Title</th>
                 <th scope="col">Description</th>
               </tr>
@@ -81,7 +93,13 @@ const HearingNotice = ({ noticeTitle }) => {
                   <Link className="table-row" as={NavLink} exact to={`/view-bill/${m._id}`}>
                     <td>{`${m.measureNumber}`}</td>
                     {/* eslint-disable-next-line consistent-return */}
-                    <td>{_.find(measure, function (num) { if (m.measureNumber === num) { return num.measureTitle; } })}</td>
+                    <td>{
+                      m.code === undefined ? (
+                        '-'
+                      ) : `${m.code}`
+                    }
+                    </td>
+                    <td>{`${m.measureTitle?.substring(0, 50)}`}</td>
                     <td>
                       {
                         m.description === undefined ? (

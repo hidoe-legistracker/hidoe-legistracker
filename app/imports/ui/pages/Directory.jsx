@@ -82,6 +82,9 @@ const Directory = () => {
     };
   }, []);
 
+  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
+  console.log(getHearings);
+
   // Filter Measures
   let filteredMeasures;
   let numMeasures;
@@ -264,7 +267,11 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              {hearings.map(hearing => <Link as={NavLink} style={{ textDecoration: 'none', color: 'white' }} exact to={`/hearing-notice/${hearing._id}`} />)}
+              {getHearings.map(
+                h => (
+                  <HearingNotice noticeTitle={h} />
+                ),
+              )}
             </Tab>
           </Tabs>
         </Col>
