@@ -31,7 +31,8 @@ const HearingNotice = ({ noticeTitle }) => {
   const hearingData = _.find(filterHearings, function (h) { return h.notice === noticeTitle; });
 
   return ready ? (
-    <div>
+  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+    <a target="_blank">
       <Container>
         <Row>
           <Breadcrumb>
@@ -114,7 +115,7 @@ const HearingNotice = ({ noticeTitle }) => {
           </Table>
         </Container>
       </Container>
-    </div>
+    </a>
   ) : <LoadingSpinner message="Loading Hearing Notice" />;
 };
 
