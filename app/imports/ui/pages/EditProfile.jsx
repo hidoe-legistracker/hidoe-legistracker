@@ -15,7 +15,7 @@ import { ROLE } from '../../api/role/Role';
 import { defineMethod, updateMethod, transferItMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
-const officeNames = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
+const officeNames = ['N/A', 'OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 const offices = [];
 officeNames.forEach((name) => {
   offices.push({ label: name, value: name });
@@ -60,6 +60,7 @@ const EditProfile = () => {
 
   const selectOffices = e => {
     selectedOffices = [];
+    console.log(e);
     e.forEach((x) => {
       selectedOffices.push(x.value);
     });
@@ -69,6 +70,7 @@ const EditProfile = () => {
     const role = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE) ? document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_ROLE).value : user.role;
     const phone = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_PHONE).value.toString();
     const position = document.getElementById(COMPONENT_IDS.EDIT_PROFILE_FORM_POSITION).value;
+    console.log(selectedOffices);
 
     if (role !== user.role) {
       const definitionData = _.clone(user);
@@ -166,8 +168,15 @@ const EditProfile = () => {
             </Row>
             <Row>
               <Col>
-                <Form.Label><b>Office(s): </b></Form.Label>
-                <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_OFFICES} options={offices} isMulti closeMenuOnSelect={false} onChange={selectOffices} defaultValue={defaultSelectedOffices} />
+                {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? [
+                  <Form.Label><b>Office(s)</b></Form.Label>,
+                  <Select id={COMPONENT_IDS.EDIT_PROFILE_FORM_OFFICES} options={offices} isMulti closeMenuOnSelect={false} onChange={selectOffices} defaultValue={user.offices}>
+                    <option disabled> -- Select an office -- </option>
+                    {officeNames.map((name) => (
+                      <option value={name}>{name}</option>
+                    ))}
+                  </Select>,
+                ] : <p><b>Office(s): </b><span id={COMPONENT_IDS.EDIT_PROFILE_FORM_OFFICES}>{user.offices ? user.offices : 'N/A'}</span></p>}
               </Col>
               <Col xs={5}>
                 {Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? [
