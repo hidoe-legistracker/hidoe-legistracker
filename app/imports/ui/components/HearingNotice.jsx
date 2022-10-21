@@ -4,14 +4,16 @@ import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Link, NavLink } from 'react-router-dom';
 import _ from 'underscore';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';
 
-const HearingNotice = ({ noticeTitle }) => {
+const HearingNotice = () => {
 
+  const n = useParams();
+  // const noticeTitle = _.pluck(n, 'notice');
   const { ready, measure, hearings } = useTracker(() => {
     const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
@@ -25,14 +27,14 @@ const HearingNotice = ({ noticeTitle }) => {
       ready: isReady,
       measure: measureData,
     };
-  }, []);
+  }, [n]);
 
-  const filterHearings = _.where(hearings, { notice: noticeTitle });
-  const hearingData = _.find(filterHearings, function (h) { return h.notice === noticeTitle; });
+  const filterHearings = _.where(hearings, { notice: n.notice });
+  const getHearing = _.first(filterHearings);
 
   return ready ? (
   // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    <a target="_blank">
+    <div>
       <Container>
         <Row>
           <Breadcrumb>
@@ -46,35 +48,59 @@ const HearingNotice = ({ noticeTitle }) => {
         <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Hearing Date & Time</Row>
-            <Row>{hearingData.datetime}</Row>
+            <Row>{getHearing.datetime}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Hearing Location</Row>
-            <Row>{hearingData.room}</Row>
+            <Row>{getHearing.room}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Hearing Type</Row>
-            <Row>{hearingData.measureType}</Row>
+            <Row>{getHearing.measureType}</Row>
           </Col>
         </Row>
         <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Office(s)</Row>
-            <Row>{}</Row>
+            <Row>
+              {
+                getHearing.committee === undefined ? (
+                  '-'
+                ) : getHearing.noticeUrl
+              }
+            </Row>
           </Col>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Committee(s)</Row>
-            <Row>{hearingData.committee}</Row>
+            <Row>
+              {
+                getHearing.committee === undefined ? (
+                  '-'
+                ) : getHearing.committee
+              }
+            </Row>
           </Col>
         </Row>
         <Row style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 2 }}>
           <Col>
             <Row style={{ fontWeight: 'bold' }}>Notice URL</Row>
-            <Row>{}</Row>
+            <Row>
+              {
+                getHearing.noticeUrl === undefined ? (
+                  '-'
+                ) : getHearing.noticeUrl
+              }
+            </Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>Notice PDF URL</Row>
-            <Row>{}</Row>
+            <Row>
+              {
+                getHearing.noticePdfUrl === undefined ? (
+                  '-'
+                ) : getHearing.noticePdfUrl
+              }
+            </Row>
           </Col>
         </Row>
         <Container className="view-testimony-container">
@@ -85,6 +111,7 @@ const HearingNotice = ({ noticeTitle }) => {
                 <th scope="col">#</th>
                 <th scope="col">Code</th>
                 <th scope="col">Title</th>
+                <th scope="col">Offices</th>
                 <th scope="col">Description</th>
               </tr>
             </thead>
@@ -103,6 +130,13 @@ const HearingNotice = ({ noticeTitle }) => {
                     <td>{`${m.measureTitle?.substring(0, 50)}`}</td>
                     <td>
                       {
+                        m.officeType === undefined ? (
+                          '-'
+                        ) : `${m.officeType?.substring(0, 150)}...`
+                      }
+                    </td>
+                    <td>
+                      {
                         m.description === undefined ? (
                           '-'
                         ) : `${m.description?.substring(0, 150)}...`
@@ -115,12 +149,8 @@ const HearingNotice = ({ noticeTitle }) => {
           </Table>
         </Container>
       </Container>
-    </a>
+    </div>
   ) : <LoadingSpinner message="Loading Hearing Notice" />;
-};
-
-HearingNotice.propTypes = {
-  noticeTitle: PropTypes.string.isRequired,
 };
 
 export default HearingNotice;

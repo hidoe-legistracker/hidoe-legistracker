@@ -31,7 +31,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import EditProfile from '../pages/EditProfile';
 import EditEmailDraft from '../pages/EditEmailDraft';
 import BillCalendar from '../components/Calendar';
-import HearingNotice from '../pages/HearingNotice';
+import HearingNotice from '../components/HearingNotice';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -54,10 +54,10 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/hearing-notice/:notice" element={<ProtectedRoute><HearingNotice /></ProtectedRoute>} />
           <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute><BillCalendar /></ProtectedRoute>} />
-          <Route path="/hearing-notice/" element={<ProtectedRoute><HearingNotice /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />

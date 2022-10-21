@@ -19,7 +19,6 @@ import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
-import HearingNotice from './HearingNotice';
 
 const billProgress = 60;
 
@@ -83,7 +82,6 @@ const Directory = () => {
   }, []);
 
   const getHearings = _.uniq(_.pluck(hearings, 'notice'));
-  console.log(getHearings);
 
   // Filter Measures
   let filteredMeasures;
@@ -267,11 +265,17 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              {getHearings.map(
-                h => (
-                  <HearingNotice noticeTitle={h} />
-                ),
-              )}
+              <Table className="directory-table">
+                <tbody style={{ position: 'relative' }}>
+                  {getHearings.map(
+                    (hearing) => (
+                      <Link className="table-row" as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
+                        <th>{hearing}</th>
+                      </Link>
+                    ),
+                  )}
+                </tbody>
+              </Table>
             </Tab>
           </Tabs>
         </Col>
