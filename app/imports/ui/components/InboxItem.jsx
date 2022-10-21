@@ -51,9 +51,9 @@ const InboxItem = ({ email }) => {
         <Modal.Body>
           <p><b style={{ display: 'inline' }}>From: </b> {email.from}</p>
           <p><b style={{ display: 'inline' }}>To: </b> {email.to}</p>
-          {email.cc !== '' ? <p><h6 style={{ display: 'inline' }}>cc: </h6> {email.cc}</p> : ''}
+          {email.cc !== '' ? <p><b style={{ display: 'inline' }}>cc: </b> {email.cc}</p> : ''}
           <hr />
-          <h6>Body:</h6>
+          <b>Body:</b>
           <Card>
             <Card.Body style={{ minHeight: '55vh' }}>
               <p>{email.body}</p>
