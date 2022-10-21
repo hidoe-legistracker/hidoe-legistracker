@@ -8,10 +8,11 @@ import { Navigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import { Emails } from '../../api/email/EmailCollection';
 import { removeItMethod } from '../../api/base/BaseCollection.methods';
+import CreateEmailModal from './CreateEmailModal';
 
 const DraftItem = ({ email }) => {
-  const [emailID, setEmailID] = useState('');
   const [showDelete, setShowDelete] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const { ready } = useTracker(() => {
     const emailSubscription = Emails.subscribeEmail();
@@ -22,9 +23,9 @@ const DraftItem = ({ email }) => {
     };
   }, []);
 
-  const openEmail = (event, id) => {
+  const openEmail = (event) => {
     if (event.target.type !== 'checkbox' && event.target.tagName !== 'svg' && event.target.type !== 'button' && event.target.tagName !== 'path' && event.target.tagName !== 'DIV') {
-      setEmailID(id);
+      setShowEmailModal(true);
     }
   };
 
@@ -36,12 +37,12 @@ const DraftItem = ({ email }) => {
       .then(() => swal('Success', 'Item deleted successfully', 'success'));
   };
 
-  if (emailID !== '') {
-    return (<Navigate to={`/edit-draft/${emailID}`} />);
-  }
+  // if (emailID !== '') {
+  //   return (<Navigate to={`/edit-draft/${emailID}`} />);
+  // }
 
   return ready ? (
-    <tr onClick={(event) => openEmail(event, email._id)}>
+    <tr onClick={(event) => openEmail(event)}>
       <td style={{ width: '1em' }}><Form.Check /></td>
       <td>{email.subject}</td>
       <td className="d-flex flex-row-reverse">
@@ -57,6 +58,8 @@ const DraftItem = ({ email }) => {
           <Button variant="primary" className="btn btn-success" onClick={submitBtn}>Confirm</Button>
         </Modal.Footer>
       </Modal>
+
+      <CreateEmailModal emailItem={{ _id: email._id }} modal={{ show: showEmailModal, setShow: setShowEmailModal }} />
     </tr>
   ) : '';
 };

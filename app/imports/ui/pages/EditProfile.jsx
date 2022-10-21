@@ -60,6 +60,7 @@ const EditProfile = () => {
 
   const selectOffices = e => {
     selectedOffices = [];
+    console.log(e);
     e.forEach((x) => {
       selectedOffices.push(x.value);
     });

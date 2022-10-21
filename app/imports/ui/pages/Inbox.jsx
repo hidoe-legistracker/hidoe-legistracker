@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
-import { Button, Col, Container, DropdownButton, Dropdown, Form, Modal, Nav, Row, Tab, Table } from 'react-bootstrap';
+import { Button, Col, Container, Form, Nav, Row, Tab, Table } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
 import {
   ChevronDoubleLeft,
@@ -12,8 +12,6 @@ import {
   PenFill,
   SendFill,
 } from 'react-bootstrap-icons';
-import swal from 'sweetalert';
-import Select from 'react-select';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Emails } from '../../api/email/EmailCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
@@ -23,21 +21,11 @@ import DraftItem from '../components/DraftItem';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
-
-const newEmail = {
-  subject: '',
-  offices: [],
-  recipients: [],
-  ccs: [],
-  bccs: [],
-  date: '',
-  body: '',
-};
+import CreateEmailModal from '../components/CreateEmailModal';
 
 const Inbox = () => {
-  const { thisUser, users, ready, emails, drafts, sent, measures } = useTracker(() => {
+  const { ready, emails, drafts, sent, measures } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
@@ -79,40 +67,13 @@ const Inbox = () => {
       drafts: draftData,
       sent: sentData,
       measures: measureData,
-      thisUser: thisUsr,
-      users: formattedUsers,
     };
   }, []);
-  const offices = [
-    { label: 'OCID', value: 'example-list1@mail.com' },
-    { label: 'OFO', value: 'example-list2@mail.com' },
-    { label: 'OFS', value: 'example-list3@mail.com' },
-    { label: 'OHE', value: 'example-list4@mail.com' },
-    { label: 'OITS', value: 'example-list5@mail.com' },
-    { label: 'OSIP', value: 'example-list6@mail.com' },
-    { label: 'OSSS', value: 'example-list7@mail.com' },
-    { label: 'OTM', value: 'example-list8@mail.com' },
-  ];
-  const sampleMail = [
-    'Sample 1',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
-    'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' +
-    'Ut enim ad minim veniam, quis nostrud exercitation ullamco ' +
-    'laboris nisi ut aliquip ex ea commodo consequat.',
-  ];
 
   const [show, setShow] = useState(false);
-  const [mail, setMail] = useState('');
   const [selectedTab, setSelectedTab] = useState('inbox');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const updateEmail = (event, property) => {
-    newEmail[property] = event;
-  };
 
   let filteredEmails;
   let numEmails;
@@ -182,44 +143,6 @@ const Inbox = () => {
     setSelectedTab(tab);
   };
 
-  // On submit, insert the data.
-  const submit = (type) => {
-    const { subject, body } = newEmail;
-    const recipients = [];
-    const ccs = [];
-    const bccs = [];
-    setShow(false);
-    if (subject === '' || newEmail.recipients.length === 0 || body === '') {
-      return;
-    }
-    newEmail.recipients.forEach(recipient => {
-      recipients.push(recipient.value);
-    });
-    newEmail.offices.forEach(office => {
-      recipients.push(office.value);
-    });
-    newEmail.ccs.forEach(cc => {
-      ccs.push(cc.value);
-    });
-    newEmail.bccs.forEach(bcc => {
-      bccs.push(bcc.value);
-    });
-    const senderEmail = thisUser.email;
-    const senderName = `${thisUser.firstName} ${thisUser.lastName}`;
-    const date = new Date(); // new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
-    const collectionName = Emails.getCollectionName();
-    const definitionData = { subject, senderName, senderEmail, recipients, ccs, bccs, date, body, isDraft: type === 'draft' };
-    defineMethod.callPromise({ collectionName, definitionData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => {
-        if (type === 'draft') {
-          swal('Draft Saved', '', 'success');
-        } else {
-          swal('Success', 'Email Sent!', 'success');
-        }
-      });
-  };
-
   // Get bill number from subject field
   function getBillNumber(subjectField) {
     const string = String(subjectField.toLowerCase().match(/bill.*[0-9]+/));
@@ -244,70 +167,9 @@ const Inbox = () => {
       <Tab.Container defaultActiveKey="inbox">
         <Row className="justify-content-center">
           <Col className="pt-5">
-            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => { handleShow(); }}>
+            <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => setShow(true)}>
               COMPOSE
             </Button>
-            <Modal
-              id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
-              show={show}
-              onHide={() => { handleClose(); setMail(''); }}
-              backdrop="static"
-              keyboard={false}
-              dialogClassName="modal-90w"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>New Message</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                  <DropdownButton drop="down" title="Template Mails">
-                    <Dropdown.Item onClick={() => { setMail(sampleMail[0]); updateEmail(sampleMail[0], 'body'); }}>Template 1</Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setMail(sampleMail[1]); updateEmail(sampleMail[1], 'body'); }}>Template 2</Dropdown.Item>
-                  </DropdownButton>
-                  <Form.Group className="offices">
-                    <Form.Label>Offices: </Form.Label>
-                    <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'offices')} />
-                  </Form.Group>
-                  <Form.Group className="to">
-                    <Form.Label>To: *</Form.Label>
-                    <Select id="email-to" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
-                  </Form.Group>
-                  <Form.Group className="cc">
-                    <Form.Label>Cc: </Form.Label>
-                    <Select id="email-cc" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'ccs')} />
-                  </Form.Group>
-                  <Form.Group className="bcc">
-                    <Form.Label>Bcc: </Form.Label>
-                    <Select id="email-bcc" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'bccs')} />
-                  </Form.Group>
-                  <Form.Group className="from">
-                    <Form.Label>From: </Form.Label>
-                    <Form.Control plaintext readOnly defaultValue={`${thisUser.firstName} ${thisUser.lastName} (${thisUser.email})`} />
-                  </Form.Group>
-                </Form>
-                <Container>
-                  <hr />
-                </Container>
-                <Form>
-                  <Form.Group className="subject">
-                    <Form.Label>Subject: </Form.Label>
-                    <Form.Control type="subject" placeholder="Bill #---" onChange={(e) => updateEmail(e.target.value, 'subject')} />
-                  </Form.Group>
-                  <Form.Group className="body">
-                    <Form.Label>Body: </Form.Label>
-                    <Form.Control type="body" as="textarea" value={mail} rows={5} onChange={(e) => { setMail(e.target.value); updateEmail(e.target.value, 'body'); }} />
-                  </Form.Group>
-                  <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label />
-                    <Form.Control type="file" />
-                  </Form.Group>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button type="button" onClick={() => { submit('draft'); setMail(''); }} variant="success">Save Draft</Button>
-                <Button type="button" onClick={() => { submit('send'); setMail(''); }} variant="primary" className="mx-3">Send</Button>
-              </Modal.Footer>
-            </Modal>
             <Nav variant="pills" className="flex-column mt-4">
               <Nav.Link eventKey="inbox" onClick={() => handleSelectedTab('inbox')}><EnvelopeFill size={20} /> Inbox</Nav.Link>
               <Nav.Link eventKey="drafts" onClick={() => handleSelectedTab('drafts')}><PenFill size={20} /> Drafts</Nav.Link>
@@ -391,6 +253,8 @@ const Inbox = () => {
           <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
         </Row>
       </Tab.Container>
+
+      <CreateEmailModal modal={{ show: show, setShow: setShow }} />
     </Container>
   ) : <LoadingSpinner message="Loading Notifications" />);
 };
