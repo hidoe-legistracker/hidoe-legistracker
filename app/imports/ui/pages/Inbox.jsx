@@ -25,6 +25,7 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+import CreateEmailModal from "../components/CreateEmailModal";
 
 const newEmail = {
   subject: '',
@@ -245,67 +246,6 @@ const Inbox = () => {
             <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => { handleShow(); }}>
               COMPOSE
             </Button>
-            <Modal
-              id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
-              show={show}
-              onHide={() => { handleClose(); setMail(''); }}
-              backdrop="static"
-              keyboard={false}
-              dialogClassName="modal-90w"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>New Message</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                  <DropdownButton drop="down" title="Template Mails">
-                    <Dropdown.Item onClick={() => { setMail(sampleMail[0]); updateEmail(sampleMail[0], 'body'); }}>Template 1</Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setMail(sampleMail[1]); updateEmail(sampleMail[1], 'body'); }}>Template 2</Dropdown.Item>
-                  </DropdownButton>
-                  <Form.Group className="offices">
-                    <Form.Label>Offices: </Form.Label>
-                    <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
-                  </Form.Group>
-                  <Form.Group className="to">
-                    <Form.Label>To: *</Form.Label>
-                    <Select id="email-to" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
-                  </Form.Group>
-                  <Form.Group className="cc">
-                    <Form.Label>Cc: </Form.Label>
-                    <Select id="email-cc" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'ccs')} />
-                  </Form.Group>
-                  <Form.Group className="bcc">
-                    <Form.Label>Bcc: </Form.Label>
-                    <Select id="email-bcc" options={users} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'bccs')} />
-                  </Form.Group>
-                  <Form.Group className="from">
-                    <Form.Label>From: </Form.Label>
-                    <Form.Control plaintext readOnly defaultValue={`${thisUser.firstName} ${thisUser.lastName} (${thisUser.email})`} />
-                  </Form.Group>
-                </Form>
-                <Container>
-                  <hr />
-                </Container>
-                <Form>
-                  <Form.Group className="subject">
-                    <Form.Label>Subject: </Form.Label>
-                    <Form.Control type="subject" placeholder="" onChange={(e) => updateEmail(e.target.value, 'subject')} />
-                  </Form.Group>
-                  <Form.Group className="body">
-                    <Form.Label>Body: </Form.Label>
-                    <Form.Control type="body" as="textarea" value={mail} rows={5} onChange={(e) => { setMail(e.target.value); updateEmail(e.target.value, 'body'); }} />
-                  </Form.Group>
-                  <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Label />
-                    <Form.Control type="file" />
-                  </Form.Group>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button type="button" onClick={() => { submit('draft'); setMail(''); }} variant="success">Save Draft</Button>
-                <Button type="button" onClick={() => { submit('send'); setMail(''); }} variant="primary" className="mx-3">Send</Button>
-              </Modal.Footer>
-            </Modal>
             <Nav variant="pills" className="flex-column mt-4">
               <Nav.Link eventKey="inbox" onClick={() => handleSelectedTab('inbox')}><EnvelopeFill size={20} /> Inbox</Nav.Link>
               <Nav.Link eventKey="drafts" onClick={() => handleSelectedTab('drafts')}><PenFill size={20} /> Drafts</Nav.Link>
@@ -389,6 +329,8 @@ const Inbox = () => {
           <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
         </Row>
       </Tab.Container>
+
+      <CreateEmailModal modal={{ show: show, setShow: setShow }} />
     </Container>
   ) : <LoadingSpinner message="Loading Notifications" />);
 };
