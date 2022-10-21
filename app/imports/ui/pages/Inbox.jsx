@@ -28,6 +28,7 @@ import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const newEmail = {
   subject: '',
+  offices: [],
   recipients: [],
   ccs: [],
   bccs: [],
@@ -191,9 +192,11 @@ const Inbox = () => {
     if (subject === '' || newEmail.recipients.length === 0 || body === '') {
       return;
     }
-
     newEmail.recipients.forEach(recipient => {
       recipients.push(recipient.value);
+    });
+    newEmail.offices.forEach(office => {
+      recipients.push(office.value);
     });
     newEmail.ccs.forEach(cc => {
       ccs.push(cc.value);
@@ -201,7 +204,6 @@ const Inbox = () => {
     newEmail.bccs.forEach(bcc => {
       bccs.push(bcc.value);
     });
-
     const senderEmail = thisUser.email;
     const senderName = `${thisUser.firstName} ${thisUser.lastName}`;
     const date = new Date(); // new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
@@ -264,7 +266,7 @@ const Inbox = () => {
                   </DropdownButton>
                   <Form.Group className="offices">
                     <Form.Label>Offices: </Form.Label>
-                    <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'recipients')} />
+                    <Select id="email-to" options={offices} isMulti closeMenuOnSelect={false} onChange={(e) => updateEmail(e, 'offices')} />
                   </Form.Group>
                   <Form.Group className="to">
                     <Form.Label>To: *</Form.Label>
