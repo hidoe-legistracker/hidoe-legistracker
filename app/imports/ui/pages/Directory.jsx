@@ -269,8 +269,8 @@ const Directory = () => {
                 <tbody style={{ position: 'relative' }}>
                   {getHearings.map(
                     (hearing) => (
-                      <Link className="table-row" as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
-                        <th>{hearing}</th>
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
+                        {hearing}
                       </Link>
                     ),
                   )}
