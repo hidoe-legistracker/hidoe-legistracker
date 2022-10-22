@@ -144,23 +144,24 @@ const Inbox = () => {
   };
 
   // Get bill number from subject field
-  function getBillNumber(subjectField) {
-    const string = String(subjectField.toLowerCase().match(/bill.*[0-9]+/));
+  const getBillNumber = (subject) => {
+    const string = String(subject.toLowerCase().match(/bill.*[0-9]+/));
     return Number(string.match(/[0-9]+/));
-  }
+  };
   // Get bill number from subject field. Search measures for document with matching bill number. Return _id
-  function getBillID(subjectField) {
-    const billNumber = getBillNumber(subjectField);
+  const getBillID = (subject) => {
+    const billNumber = getBillNumber(subject);
     const index = measures.map(function (measure) { return measure.measureNumber; }).indexOf(billNumber);
     if (index !== -1) {
       return measures[index]._id;
     }
     return '';
-  }
+  };
   // Check if subject field contains the keyword 'bill' followed by a number
-  function checkEmailItem(subjectField) {
-    return !!subjectField.toLowerCase().match(/bill.*[0-9]+/);
-  }
+  const checkEmailItemBill = (subject) => !!subject.toLowerCase().match(/bill.*[0-9]+/);
+
+  const checkEmailItemNotice = (sender) => sender === '[NOTIFICATION]';
+  const getHearingNotice = (subject) => subject;
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
@@ -191,7 +192,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItem(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isRead: emailItem.isRead }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItemBill(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isNotification: checkEmailItemNotice(emailItem.senderEmail), hearingNotice: getHearingNotice(emailItem.subject), isRead: emailItem.isRead }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
