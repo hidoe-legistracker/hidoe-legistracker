@@ -17,20 +17,24 @@ import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { defineMethod, updateMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
+import { Emails } from '../../api/email/EmailCollection';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, hearings } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
+    const hearingSubscription = Hearings.subscribeHearings();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready() && hearingSubscription.ready();
 
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
+    const hearingCollection = Hearings.find({}, {}).fetch();
 
     const currUser = Meteor.user() ? Meteor.user().username : '';
 
@@ -46,6 +50,7 @@ const ViewBill = () => {
       measure: measureItem,
       ready: rdy,
       user: usr,
+      hearings: hearingCollection,
     };
   }, [_id]);
 
@@ -117,6 +122,26 @@ const ViewBill = () => {
   const bill = measure;
 
   let userList;
+  const filteredHearings = hearings.filter(hearing => hearing.measureNumber === measure.measureNumber
+    && hearing.measureType === measure.measureType);
+
+  const sendNotification = () => {
+    if (filteredHearings.length > 0) {
+      const notification = {
+        subject: filteredHearings[0].notice, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
+        senderEmail: '[NOTIFICATION]',
+        recipients: [currentUser],
+        ccs: [],
+        bccs: [],
+        date: new Date(),
+        body: `${measure.code} - ${measure.measureTitle} ${measure.description}`,
+        isDraft: false,
+      };
+      const collectionName = Emails.getCollectionName();
+      const definitionData = notification;
+      defineMethod.callPromise({ collectionName, definitionData });
+    }
+  };
 
   const isChecked = () => {
     userList = measure.emailList;
@@ -127,6 +152,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
+      sendNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }
