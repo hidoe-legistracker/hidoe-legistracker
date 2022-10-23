@@ -24,19 +24,21 @@ import { Hearings } from '../../api/hearing/HearingCollection';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user, hearings } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, hearings, emails } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const hearingSubscription = Hearings.subscribeHearings();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready() && hearingSubscription.ready();
+    const emailSubscription = Emails.subscribeEmail();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready() && hearingSubscription.ready() && emailSubscription.ready();
+
+    const currUser = Meteor.user() ? Meteor.user().username : '';
 
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
     const hearingCollection = Hearings.find({}, {}).fetch();
-
-    const currUser = Meteor.user() ? Meteor.user().username : '';
+    const emailCollection = Emails.find({ recipients: currUser }, {}).fetch();
 
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
@@ -51,6 +53,7 @@ const ViewBill = () => {
       ready: rdy,
       user: usr,
       hearings: hearingCollection,
+      emails: emailCollection,
     };
   }, [_id]);
 
@@ -128,7 +131,7 @@ const ViewBill = () => {
   const sendNotification = () => {
     if (filteredHearings.length > 0) {
       const notification = {
-        subject: filteredHearings[0].notice, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
+        subject: `Hearing Notice ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
         senderEmail: '[NOTIFICATION]',
         recipients: [currentUser],
         ccs: [],
@@ -137,9 +140,12 @@ const ViewBill = () => {
         body: `HEARING DATE/TIME: ${filteredHearings[0].datetime} \n HEARING LOCATION: ${filteredHearings[0].room} \n\n Please click on the 'Hearing Notice' button below to view the complete hearing notice.`,
         isDraft: false,
       };
-      const collectionName = Emails.getCollectionName();
-      const definitionData = notification;
-      defineMethod.callPromise({ collectionName, definitionData });
+      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject && email.body === notification.body);
+      if (duplicateEmails.length === 0) {
+        const collectionName = Emails.getCollectionName();
+        const definitionData = notification;
+        defineMethod.callPromise({ collectionName, definitionData });
+      }
     }
   };
 
