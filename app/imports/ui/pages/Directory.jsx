@@ -34,6 +34,7 @@ const MeasureComponent = ({ measure }) => (
         ) : `${measure.description?.substring(0, 150)}...`
       }
     </td>
+    <td>{measure.officeType}</td>
     <td>{measure.currentReferral}</td>
     <td>Testimony/Monitor</td>
     <td>
@@ -103,6 +104,9 @@ const Directory = () => {
         if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
         if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
@@ -112,11 +116,17 @@ const Directory = () => {
       filteredMeasures = bills.filter(post => {
         if (search === '') {
           return post;
-        } if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
+        }
+        if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
           return post;
-        } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+        }
+        if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
           return post;
-        } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+        }
+        if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
           return post;
         } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
           return post;
@@ -262,6 +272,7 @@ const Directory = () => {
                       <th scope="col">#</th>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
+                      <th scope="col">Offices</th>
                       <th scope="col">Committees</th>
                       <th scope="col">Actions</th>
                       <th scope="col">Status</th>
