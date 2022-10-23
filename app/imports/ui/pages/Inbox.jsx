@@ -145,22 +145,31 @@ const Inbox = () => {
 
   // Get bill number from subject field
   const getBillNumber = (subject) => {
-    const string = String(subject.toLowerCase().match(/bill.*[0-9]+/));
+    const string = String(subject.toLowerCase().match(/(bill|hb|sb|hr|sr|hcr|scr|gm).?[0-9]+/));
     return Number(string.match(/[0-9]+/));
   };
   // Get bill number from subject field. Search measures for document with matching bill number. Return _id
   const getBillID = (subject) => {
     const billNumber = getBillNumber(subject);
-    const index = measures.map(function (measure) { return measure.measureNumber; }).indexOf(billNumber);
-    if (index !== -1) {
-      return measures[index]._id;
+    if (subject.toLowerCase().match(/bill.?[0-9]+/)) {
+      const measureItems = measures.filter(measure => measure.measureNumber === billNumber);
+      if (measureItems.length > 0) {
+        return measures[0]._id;
+      }
+    } else if (subject.toLowerCase().match(/(hb|sb|hr|sr|hcr|scr|gm).?[0-9]+/)) {
+      const measureType = subject.toLowerCase().match(/hb|sb|hr|sr|hcr|scr|gm/)[0];
+      const measureItems = measures.filter(measure => measure.measureType === measureType && measure.measureNumber === billNumber);
+      if (measureItems.length > 0) {
+        return measureItems[0]._id;
+      }
     }
     return '';
   };
-  // Check if subject field contains the keyword 'bill' followed by a number
-  const checkEmailItemBill = (subject) => !!subject.match(/bill.*[0-9]+/i);
+  // Check if subject field contains the keyword 'bill' or a valid measureType followed by a number. i.e. 'bill 124' or 'hb124' will return true
+  const checkEmailItemBill = (subject) => !!subject.toLowerCase().match(/(bill|hb|sb|hr|sr|hcr|scr|gm).?[0-9]+/) && getBillID(subject) !== '';
 
   const checkEmailItemNotice = (sender) => sender === '[NOTIFICATION]';
+
   const getHearingNotice = (subject) => {
     const notice = subject.match(/Hearing Notice (HEARING_.*)/);
     if (notice !== null) {
