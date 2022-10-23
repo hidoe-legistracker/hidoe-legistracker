@@ -158,10 +158,16 @@ const Inbox = () => {
     return '';
   };
   // Check if subject field contains the keyword 'bill' followed by a number
-  const checkEmailItemBill = (subject) => !!subject.toLowerCase().match(/bill.*[0-9]+/);
+  const checkEmailItemBill = (subject) => !!subject.match(/bill.*[0-9]+/i);
 
   const checkEmailItemNotice = (sender) => sender === '[NOTIFICATION]';
-  const getHearingNotice = (subject) => subject;
+  const getHearingNotice = (subject) => {
+    const notice = subject.match(/Hearing Notice (HEARING_.*)/);
+    if (notice !== null) {
+      return notice[1];
+    }
+    return '';
+  };
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">

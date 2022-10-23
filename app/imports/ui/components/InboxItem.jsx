@@ -61,7 +61,8 @@ const InboxItem = ({ email }) => {
           </Card>
         </Modal.Body>
         <Modal.Footer>
-          {email.isNotification ? <NavLink to={`/hearing-notice/${email.hearingNotice}`} target="_blank"><Button>View Hearing Notice</Button></NavLink> : ''}
+          {email.isNotification ? <NavLink to={`/hearing-notice/${email.hearingNotice}`} target="_blank"><Button>Hearing Notice</Button></NavLink> : ''}
+
           {email.hasBillReference ? <NavLink to={`/view-bill/${email.billID}`} target="_blank"><Button>View Bill #{email.billNumber}</Button></NavLink> : ''}
           <Button variant="secondary" onClick={modalClose}>Close</Button>
         </Modal.Footer>

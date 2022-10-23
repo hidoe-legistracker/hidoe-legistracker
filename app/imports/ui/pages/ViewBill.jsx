@@ -134,7 +134,7 @@ const ViewBill = () => {
         ccs: [],
         bccs: [],
         date: new Date(),
-        body: `${measure.code} - ${measure.measureTitle} ${measure.description}`,
+        body: `HEARING DATE/TIME: ${filteredHearings[0].datetime} \n HEARING LOCATION: ${filteredHearings[0].room} \n\n Please click on the 'Hearing Notice' button below to view the complete hearing notice.`,
         isDraft: false,
       };
       const collectionName = Emails.getCollectionName();
