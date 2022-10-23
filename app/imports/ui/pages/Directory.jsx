@@ -19,6 +19,8 @@ import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
+import CreateHearingModal from '../components/CreateHearingModal';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const billProgress = 60;
 
@@ -48,6 +50,7 @@ MeasureComponent.propTypes = {
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
+  const [show, setShow] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -184,12 +187,17 @@ const Directory = () => {
     setSearch(eventText);
   };
 
-  const filter = (office) => {
-    if (office === 'ALL BILLS') {
+  const filter = (committee) => {
+    if (committee === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
     } else {
-      const filteredData = _.where(measure, { currentReferral: office });
+      const filteredData = [];
+      measure.forEach((m) => {
+        if (m.currentReferral && m.currentReferral.indexOf(committee) >= 0) {
+          filteredData.push(m);
+        }
+      });
       setDefaultBills(false);
       setBills(filteredData);
     }
@@ -283,6 +291,11 @@ const Directory = () => {
             <Tab eventKey="hearings" title="Hearings">
               <Table className="directory-table">
                 <tbody style={{ position: 'relative' }}>
+                  {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                    <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => setShow(true)}>
+                      Create Hearing Notice
+                    </Button>
+                  ) : ''}
                   {getHearings.map(
                     (hearing) => (
                       <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
@@ -291,6 +304,7 @@ const Directory = () => {
                     ),
                   )}
                 </tbody>
+                <CreateHearingModal modal={{ show: show, setShow: setShow }} />
               </Table>
             </Tab>
           </Tabs>
