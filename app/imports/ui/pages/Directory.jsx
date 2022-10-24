@@ -213,6 +213,15 @@ const Directory = () => {
     if (office === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
+    } else if (office === 'MY BILLS') {
+      const filteredData = [];
+      measure.forEach((item) => {
+        if (item.officeType && item.officeType.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
+      setDefaultBills(false);
+      setBills(filteredData);
     } else {
       const filteredData = [];
       measure.forEach((item) => {
@@ -232,6 +241,9 @@ const Directory = () => {
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
           <ListGroup style={{ marginBottom: 10 }}>
             <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ textAlign: 'center' }}>ALL BILLS</ListGroup.Item>
+          </ListGroup>
+          <ListGroup style={{ marginBottom: 10 }}>
+            <ListGroup.Item action onClick={() => filterOffices('MY BILLS')} style={{ textAlign: 'center' }}>MY BILLS</ListGroup.Item>
           </ListGroup>
           <Accordion defaultActiveKey="0">
             <Accordion.Item eventKey="0">
