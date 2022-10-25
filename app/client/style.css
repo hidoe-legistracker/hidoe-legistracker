@@ -33,10 +33,9 @@ body {
 
 .folder-section {
   align-content: center;
-  margin-right: 5px;
   display: block;
   overflow-y: auto;
-  height: 705px;
+  height: 100vh!important;
 }
 
 .bill-section {
@@ -58,6 +57,28 @@ body {
   font-weight: normal;
 }
 
+.react-calendar__tile--now {
+  background: #a3a3a3!important;
+  color: white!important;
+}
+
+.react-calendar {
+  width: 1500px!important;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #a3a3a3!important;
+  line-height: 1.125em;
+}
+
+.react-calendar__tile--active {
+  background: #006edc;
+  color: white;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: black!important;
+}
+
 .directory-table {
   --bs-table-color: var(--bs-body-color);
   --bs-table-bg: transparent;
@@ -72,8 +93,8 @@ body {
   width: 100%;
   margin-bottom: 1rem;
   display: block;
-  overflow-y: auto;
-  height: 600px;
+  overflow-y: auto!important;
+  height: 85vh!important;
   color: var(--bs-table-color);
   vertical-align: top;
   border-color: var(--bs-table-border-color);
@@ -88,6 +109,29 @@ body {
   padding: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.modal-90w {
+  align-content: center;
+  width: 80%!important;
+  max-width: none!important;
+}
+
+.calendar-button {
+  --bs-btn-color: #6c757d;
+  --bs-btn-border-color: none!important;
+  --bs-btn-hover-color: none!important;
+  --bs-btn-hover-bg: none!important;
+  --bs-btn-hover-border-color: none!important;
+  --bs-btn-focus-shadow-rgb: none!important;
+  --bs-btn-active-color: none!important;
+  --bs-btn-active-bg: none!important;
+  --bs-btn-active-border-color: none!important;
+  --bs-btn-active-shadow: none!important;
+  --bs-btn-disabled-color: #6c757d;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #6c757d;
+  --bs-gradient: none;
 }
 
 .view-testimony-container {

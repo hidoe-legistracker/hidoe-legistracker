@@ -4,6 +4,7 @@ import { UserProfiles } from '../user/UserProfileCollection';
 import { Emails } from '../email/EmailCollection';
 import { Measures } from '../measure/MeasureCollection';
 import { Testimonies } from '../testimony/TestimonyCollection';
+import { Hearings } from '../hearing/HearingCollection';
 
 class MATPClass {
   collections;
@@ -18,6 +19,7 @@ class MATPClass {
       AdminProfiles,
       UserProfiles,
       Emails,
+      Hearings,
       Measures,
       Testimonies,
     ];
@@ -28,6 +30,7 @@ class MATPClass {
       AdminProfiles,
       UserProfiles,
       Emails,
+      Hearings,
       Measures,
       Testimonies,
     ];

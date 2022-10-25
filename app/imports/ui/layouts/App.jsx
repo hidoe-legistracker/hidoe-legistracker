@@ -30,6 +30,8 @@ import EmployeeList from '../pages/EmployeeList';
 import ForgotPassword from '../pages/ForgotPassword';
 import EditProfile from '../pages/EditProfile';
 import EditEmailDraft from '../pages/EditEmailDraft';
+import BillCalendar from '../components/Calendar';
+import HearingNotice from '../components/HearingNotice';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -52,21 +54,23 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signout" element={<SignOut />} />
           <Route path="/profile/:_id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/hearing-notice/:notice" element={<ProtectedRoute><HearingNotice /></ProtectedRoute>} />
           <Route path="/edit-profile/:_id" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
+          <Route path="/calendar" element={<ProtectedRoute><BillCalendar /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
           <Route path="/create-email" element={<ProtectedRoute><CreateEmail /></ProtectedRoute>} />
           <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />
           <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
-          <Route path="/create-testimony" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
-          <Route path="/monitoringreport/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
-          <Route path="/edit-testimony/:_id" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
+          <Route path="/create-testimony/" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
+          <Route path="/monitoring-report/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
+          <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/inbox" element={<ProtectedRoute><Inbox /></ProtectedRoute>} />
-          <Route path="/view-testimony/:_id" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
+          <Route path="/view-testimony/:measureID&:testimonyID" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/notauthorized" element={<NotAuthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { Col, Container, Row, Table, InputGroup, Form } from 'react-bootstrap';
+import { Col, Container, Row, Table, InputGroup, Form, Button } from 'react-bootstrap';
 import { useTracker } from 'meteor/react-meteor-data';
+import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import EmployeeListItem from '../components/EmployeeListItem';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
@@ -26,6 +27,85 @@ const EmployeeList = () => {
     });
   }, []);
 
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  let filteredProfiles;
+  let numProfiles;
+  let numPages;
+
+  if (ready) {
+    filteredProfiles = profiles.filter(post => {
+      if (search === '') {
+        return post;
+      }
+      if (post.firstName.toLowerCase().includes(search.toLowerCase())) {
+        return post;
+      }
+      if (post.lastName.toLowerCase().includes(search.toLowerCase())) {
+        return post;
+      }
+      if (post.email.toLowerCase().includes(search.toLowerCase())) {
+        return post;
+      }
+      return undefined;
+    });
+    numProfiles = _.size(filteredProfiles);
+    numPages = parseInt(numProfiles / itemsPerPage, 10);
+    if (numProfiles % itemsPerPage !== 0) {
+      numPages++;
+    }
+  }
+
+  const getFilteredProfiles = () => {
+    const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
+    const endIndex = +startIndex + +itemsPerPage;
+    let ret;
+    if (endIndex < numProfiles) {
+      ret = filteredProfiles.slice(startIndex, endIndex);
+    } else {
+      ret = filteredProfiles.slice(startIndex, numProfiles);
+    }
+    return ret;
+  };
+
+  // Pagination stuff
+  const getItemsPerPage = () => {
+    const selection = document.getElementById('pagination-items-per-page').value;
+    setItemsPerPage(selection);
+    setCurrentPage(1);
+    document.getElementById('pagination-select-page').value = 1;
+  };
+  const getItemsInPage = () => {
+    const selection = document.getElementById('pagination-select-page').value;
+    setCurrentPage(selection);
+  };
+  const goToFirstPage = () => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+  };
+  const goToPrevPage = () => {
+    if (currentPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentPage - 1;
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const goToLastPage = () => {
+    document.getElementById('pagination-select-page').value = numPages;
+    setCurrentPage(numPages);
+  };
+  const goToNextPage = () => {
+    if (currentPage !== numPages) {
+      document.getElementById('pagination-select-page').value = currentPage + 1;
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const handleSearch = (eventText) => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+    setSearch(eventText);
+  };
+
   return (ready ? (
     <Container id={PAGE_IDS.MEMBERS} className="py-3" style={{ marginTop: '50px' }}>
       <Row>
@@ -37,7 +117,7 @@ const EmployeeList = () => {
             <Form.Control
               placeholder="Search"
               aria-label="Search"
-              onChange={event => setSearch(event.target.value)}
+              onChange={event => handleSearch(event.target.value)}
             />
           </InputGroup>
         </Col>
@@ -56,24 +136,33 @@ const EmployeeList = () => {
               </tr>
             </thead>
             <tbody>
-              {/* eslint-disable-next-line array-callback-return,consistent-return */}
-              {profiles.filter(post => {
-                if (search === '') {
-                  return post;
-                }
-                if (post.firstName.toLowerCase().includes(search.toLowerCase())) {
-                  return post;
-                }
-                if (post.lastName.toLowerCase().includes(search.toLowerCase())) {
-                  return post;
-                }
-                if (post.email.toLowerCase().includes(search.toLowerCase())) {
-                  return post;
-                }
-              }).map((profile, index) => <EmployeeListItem key={index} profile={{ _id: profile._id, name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
+              {getFilteredProfiles().map((profile, index) => <EmployeeListItem key={index} profile={{ _id: profile._id, name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
             </tbody>
           </Table>
         </Col>
+      </Row>
+      <Row className="d-flex flex-row-reverse">
+        <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToLastPage}>
+          <ChevronDoubleRight />
+        </Button>
+        <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToNextPage}>
+          <ChevronRight />
+        </Button>
+        <Form.Select id="pagination-select-page" style={{ width: '90px' }} onChange={getItemsInPage}>
+          {[...Array(numPages)].map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
+        </Form.Select>
+        <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToPrevPage}>
+          <ChevronLeft />
+        </Button>
+        <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToFirstPage}>
+          <ChevronDoubleLeft />
+        </Button>
+        <Form.Select id="pagination-items-per-page" style={{ width: '80px', marginRight: '3em' }} onChange={getItemsPerPage}>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </Form.Select>
+        <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
       </Row>
     </Container>
   ) : '');

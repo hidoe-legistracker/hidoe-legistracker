@@ -1,204 +1,143 @@
 import React from 'react';
-import {
-  Container,
-  Row,
-  ListGroup,
-  Col,
-  Form,
-  Alert,
-  DropdownButton,
-  Dropdown,
-  Button, Accordion, Badge,
-} from 'react-bootstrap';
-
-import { useParams } from 'react-router';
+import { Container, Row, ListGroup, Col, Form, Breadcrumb, Badge } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Roles } from 'meteor/alanning:roles';
-import { ROLE } from '../../api/role/Role';
+import { useParams } from 'react-router';
+import _ from 'underscore/underscore-node';
+import Table from 'react-bootstrap/Table';
+import { Link } from 'react-router-dom';
+import { Testimonies } from '../../api/testimony/TestimonyCollection';
+import { PAGE_IDS } from '../utilities/PageIDs';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { PAGE_IDS } from '../utilities/PageIDs';
-import { Measures } from '../../api/measure/MeasureCollection';
-import LoadingSpinner from '../components/LoadingSpinner';
+import CreateTestimonyModal from '../components/CreateTestimonyModal';
 
 const MonitoringReport = () => {
   const { _id } = useParams();
-  const newDate = new Date();
-  const date = newDate.getDate();
-  const month = newDate.getMonth() + 1;
-  const year = newDate.getFullYear();
 
-  const { measure, ready, currentUser } = useTracker(() => {
+  const { measure, ready, testimonies, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
+    const testimonySubscription = Testimonies.subscribeTestimony();
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
+
     const username = Meteor.user() ? Meteor.user().username : '';
-    let userReady;
-    let usr;
-    if (Roles.userIsInRole(Meteor.userId(), [ROLE.USER])) {
-      const subscription = UserProfiles.subscribe();
-      userReady = subscription.ready();
-      usr = UserProfiles.findByEmail(username);
-    } else {
-      const subscription = AdminProfiles.subscribe();
-      userReady = subscription.ready();
-      usr = AdminProfiles.findByEmail(username);
-    }
-    const rdy = measureSubscription.ready() && userReady;
 
     const measureItem = Measures.findOne({ _id: _id }, {});
+    const testimonyCollection = Testimonies.find({}, {}).fetch();
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
     return {
-      currentUser: usr,
       measure: measureItem,
+      testimonies: testimonyCollection,
+      user: usr,
       ready: rdy,
     };
   }, [_id]);
 
-  return (ready ? (
-    <Container id={PAGE_IDS.MONITORING_REPORT} className="py-3">
-      <Row className="mb-5">
-        <Col className="align-left">
-          <ListGroup horizontal="sm">
-            <ListGroup.Item><strong>Date: </strong> {`${month}/${date}/${year}`} </ListGroup.Item>
-            <ListGroup.Item><strong>Time: </strong> {`${newDate.getHours()}:${newDate.getMinutes()}`} </ListGroup.Item>
-            <ListGroup.Item><strong>Location: </strong> CR 229 </ListGroup.Item>
-            <ListGroup.Item><strong>Committee: </strong> {measure.currentReferral} </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col>
-          <Form>
-            <Form.Check
-              type="radio"
-              label="Written Only"
-              name="writeOptions"
-            />
-            <Form.Check
-              type="radio"
-              label="Written Comments"
-              name="writeOptions"
-            />
-          </Form>
-        </Col>
-      </Row>
-      <Row className="mb-5">
-        <Col className="align-center">
-          <ListGroup>
-            <ListGroup.Item><strong>Department: </strong>Education </ListGroup.Item>
-            <ListGroup.Item><strong>Testifier: </strong> Keith T. Hayashi Interim Superintendent of Education </ListGroup.Item>
-            <ListGroup.Item><strong>Title of Bill: </strong> {measure.measureTitle} </ListGroup.Item>
-            <ListGroup.Item><strong>Purpose of Bill: </strong> {measure.description} </ListGroup.Item>
-          </ListGroup>
-        </Col>
-      </Row>
-      <Row className="mb-5">
-        <Form>
-          <Form.Group className="mb-2">
-            <Form.Check
-              type="radio"
-              label="Support"
-              name="supportOptions"
-            />
-            <Form.Check
-              type="radio"
-              label="Oppose"
-              name="supportOptions"
-            />
-            <Form.Check
-              type="radio"
-              label="Comments"
-              name="supportOptions"
-            />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Control
-              as="textarea"
-              placeholder="Start Testimony Here"
-            />
-          </Form.Group>
-          <Form.Group className="mb-5">
-            <Form.Control type="file" className="mb-2" />
-            <Alert key="danger" variant="danger">
-              <u>Directions:</u> After completing testimony, identify who to route the testimony to in the field below, then click on <u>Route</u> button.
-            </Alert>
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Alert key="primary" variant="primary">
-              <u>Comments:</u> (Include date & initials)
-            </Alert>
-            <Form.Control as="textarea" />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <strong className="text-primary">Route Testimony to:</strong>
-            <DropdownButton drop="end" className="mb-2">
-              <Dropdown.Item>Name 1</Dropdown.Item>
-              <Dropdown.Item>Name 2</Dropdown.Item>
-              <Dropdown.Item>Name 3</Dropdown.Item>
-              <Dropdown.Item>Name 4</Dropdown.Item>
-            </DropdownButton>
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Button className="me-2">Route for Office Review</Button>
-            <Button variant="secondary">Route to PIPE</Button>
-          </Form.Group>
-          <Form.Group className="mb-5 text-secondary text-sm">
-            Status:
-            <Form.Check
-              type="radio"
-              label="Active"
-              name="StatusOptions"
-            />
-            <Form.Check
-              type="radio"
-              label="Inactive"
-              name="StatusOptions"
-            />
-            Action: Testimony<br />
-            Office: OCID, OITS, OTM, OFS, DEPUTY<br />
-            Assigned to: {measure.currentReferral}<br />
-            Action By: CN-Charles Souza/OU-OCID/O*HIDOE*CN-Raymond Fujino/OU-OCID/O*HIDOE<br />
-            Secretary: CN-Christol Allen/OU-OCID/O*HIDOE*CN-Saloua Adjir/OU-OCID/O*HIDOE<br />
-          </Form.Group>
-          <Form.Group>
-            <Accordion defaultActiveKey="0">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Review Section</Accordion.Header>
-                <Accordion.Body>
-                  <Form.Control className="mb-2" as="textarea" placeholder="Comments: This will show on disapproval email notice." />
-                  <Button className="me-2">Route to Final Approver</Button>
-                  <Button variant="danger">Send back to lead office for additional edits</Button>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>Approval Section</Accordion.Header>
-                <Accordion.Body className="text-danger">
-                  <u>Final Approval Directions</u><br />
-                  Review and Edit Testimony as necessary. To reroute back to person change name in <strong>Route testimony to: </strong> field and click on
-                  <strong> Save & Route... above.</strong><br />
-                  <strong>Final Approval Given</strong> for Supts office below.<br />
-                  <Badge bg="primary">Status: New</Badge>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </Form.Group>
-        </Form>
-      </Row>
-      <Row className="mb-5">
-        <Col>
-          <ListGroup variant="flush">
-            <ListGroup.Item className="text-secondary">Created by: Brandon Lee/OSIP/HIDOE </ListGroup.Item>
-            <ListGroup.Item className="text-secondary">Created on: 08/25/2022 1:48:59</ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col>
-          <ListGroup variant="flush">
-            <ListGroup.Item>Last Edited By: {currentUser.firstName} {currentUser.lastName}</ListGroup.Item>
-            <ListGroup.Item>Date: {`${month}/${date}/${year}`} {`${newDate.getHours()}:${newDate.getMinutes()}`}</ListGroup.Item>
-          </ListGroup>
-        </Col>
-      </Row>
-    </Container>
-  ) :
-    <LoadingSpinner message="Loading Monitoring Report" />
-  );
+  return ready ? (
+    <div>
+      <Container>
+        <Row>
+          <Breadcrumb>
+            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
+            <Breadcrumb.Item href={`/view-bill/${_id}`}>View Bill</Breadcrumb.Item>
+            <Breadcrumb.Item active>Monitoring Report</Breadcrumb.Item>
+          </Breadcrumb>
+        </Row>
+      </Container>
+      <Container id={PAGE_IDS.MONITORING_REPORT} className="view-bill-container" style={{ marginTop: 0 }}>
+        <Container style={{ padding: 20 }}>
+          <Row className="mb-5">
+            <Col className="align-left">
+              <ListGroup horizontal="sm">
+                <ListGroup.Item><strong>Bill #: </strong> {measure.measureNumber} </ListGroup.Item>
+                <ListGroup.Item><strong>Date: </strong> {`${measure.lastUpdated.getMonth() + 1}/${measure.lastUpdated.getDate()}/${measure.lastUpdated.getFullYear()}`} </ListGroup.Item>
+                <ListGroup.Item><strong>Time: </strong> {`${measure.lastUpdated.getHours()}:${measure.lastUpdated.getMinutes() < 10 ? `0${measure.lastUpdated.getMinutes()}` : measure.lastUpdated.getMinutes()}`} </ListGroup.Item>
+                <ListGroup.Item><strong>Location: </strong> CR 229 </ListGroup.Item>
+                <ListGroup.Item><strong>Committee: </strong> {measure.currentReferral} </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-5">
+            <Col className="align-center">
+              <ListGroup>
+                <ListGroup.Item><strong>Department: </strong>Education </ListGroup.Item>
+                <ListGroup.Item><strong>Title of Bill: </strong> {measure.measureTitle} </ListGroup.Item>
+                <ListGroup.Item><strong>Purpose of Bill: </strong> {measure.description} </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+          <Row className="mb-5">
+            <Form>
+              <Form.Group className="mb-2">
+                <CreateTestimonyModal testimonyDefaultData={{ measureNumber: measure.measureNumber }} />
+              </Form.Group>
+
+            </Form>
+          </Row>
+          <Container className="view-testimony-container">
+            {/* eslint-disable-next-line no-nested-ternary */}
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : user.offices.length !== 0 ?
+              (`Submitted testimonies for ${user.offices.map(office => (` ${office}`))}`) : 'Submitted Testimonies'}
+            </h3>
+            {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
+              <Table>
+                <thead>
+                  <tr>
+                    <th scope="col">Hearing Date</th>
+                    <th scope="col">Bill #</th>
+                    <th scope="col">Prepared By</th>
+                    <th scope="col">Office</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
+                    // eslint-disable-next-line react/jsx-no-useless-fragment
+                    <>
+                      { testimony.testimonyProgress.length !== 6 && testimony.office === user.offices.find(element => element === testimony.office) ? (
+                        <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
+                          <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
+                          <td>{testimony.billNumber}</td>
+                          <td>{testimony.testifier}</td>
+                          <td>{testimony.office}</td>
+                          <td>
+                            {testimony.testimonyProgress.length === 6 ? <Badge bg="secondary">Completed</Badge> : ''}
+                            {testimony.testimonyProgress.length === 5 ? <Badge bg="primary">Finalizing Testimony</Badge> : ''}
+                            {testimony.testimonyProgress.length === 4 ? <Badge bg="warning">Waiting for Final Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 3 ? <Badge bg="success">Waiting for PIPE Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 2 ? <Badge bg="primary">Waiting for Office Approval</Badge> : ''}
+                            {testimony.testimonyProgress.length === 1 ? <Badge bg="secondary">Testimony being written</Badge> : ''}
+                          </td>
+                        </Link>
+                      )
+
+                        : '' }
+                    </>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </Container>
+          <Row>
+            <Col>
+              <ListGroup variant="flush">
+                <ListGroup.Item className="text-secondary">Last accessed by: {`${Meteor.user().username}`}</ListGroup.Item>
+                {/* eslint-disable-next-line max-len */}
+                <ListGroup.Item className="text-secondary">Last updated on:  {`${measure.lastUpdated.getMonth() + 1}/${measure.lastUpdated.getDate()}/${measure.lastUpdated.getFullYear()}`} {`${measure.lastUpdated.getHours()}:${measure.lastUpdated.getMinutes() < 10 ? `0${measure.lastUpdated.getMinutes()}` : measure.lastUpdated.getMinutes()}`}</ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
+    </div>
+  ) : <LoadingSpinner />;
 };
 
 export default MonitoringReport;

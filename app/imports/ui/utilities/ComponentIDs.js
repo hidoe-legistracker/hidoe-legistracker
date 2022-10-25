@@ -3,10 +3,12 @@ export const COMPONENT_IDS = {
   NAVBAR_HOME: 'navbar-home',
   NAVBAR_DIRECTORY: 'navbar-directory',
   NAVBAR_ADD_MEASURE: 'navbar-add-measure',
+  NAVBAR_CALENDAR: 'navbar-calendar',
   NAVBAR_MY_FOLDERS: 'navbar-my-folders',
   NAVBAR_INBOX: 'navbar-inbox',
   NAVBAR_PROFILE: 'navbar-profile',
   NAVBAR_VIEW_BILL: 'navbar-view-bill',
+  NAVBAR_HEARING_NOTICE: 'navbar-hearing-notice',
   NAVBAR_COLLAPSE: 'navbar-collapse',
   NAVBAR_LOGIN_DROPDOWN: 'navbar-login-dropdown',
   NAVBAR_LOGIN_DROPDOWN_SIGN_IN: 'navbar-login-dropdown-sign-in',
@@ -33,16 +35,16 @@ export const COMPONENT_IDS = {
   SIGN_UP_FORM_PASSWORD: 'sign-up-form-password',
   SIGN_UP_FORM_EMPLOYEE_ID: 'sign-up-form-employee-id',
   SIGN_UP_FORM_OFFICES: 'sign-up-form-offices',
-  SIGN_UP_FORM_COMMITTEES: 'sign-up-form-committees',
   SIGN_UP_FORM_ROLE: 'sign-up-form-role',
+  SIGN_UP_FORM_POSITION: 'sign-up-form-position',
   SIGN_UP_FORM_SUBMIT: 'sign-up-form-submit',
   SIGN_UP_FORM_CURRENT_PASSWORD: 'sign-up-form-current-password',
 
   // EDIT PROFILE PAGE
   EDIT_PROFILE_FORM_OFFICES: 'edit-profile-form-offices',
-  EDIT_PROFILE_FORM_COMMITTEES: 'edit-profile-form-committees',
   EDIT_PROFILE_FORM_PHONE: 'edit-profile-form-phone',
   EDIT_PROFILE_FORM_ROLE: 'edit-profile-form-role',
+  EDIT_PROFILE_FORM_POSITION: 'edit-profile-form-position',
 
   // CREATE MEASURE PAGE
   CREATE_MEASURE_FORM_YEAR: 'create-measure-form-year',
@@ -55,4 +57,5 @@ export const COMPONENT_IDS = {
 
   // INBOX PAGE
   INBOX_CREATE_EMAIL_BUTTON: 'inbox-create-email-button',
+  INBOX_CREATE_EMAIL_MODAL: 'inbox-create-email-modal',
 };

@@ -8,29 +8,14 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
-import { houseCommittees, senateCommittees } from '../../api/legislature/committees';
-
-const house = [];
-const senate = [];
-Object.values(houseCommittees).forEach(function (committee) {
-  house.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'HOUSE' });
-});
-Object.values(senateCommittees).forEach(function (committee) {
-  senate.push({ label: `${committee.name}`, value: `${committee.key}`, group: 'SENATE' });
-});
-const committees = [{
-  label: 'House',
-  options: house,
-}, {
-  label: 'Senate',
-  options: senate,
-}];
 
 const officeNames = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 const offices = [];
 officeNames.forEach((name) => {
   offices.push({ label: name, value: name });
 });
+
+const positionNames = ['N/A','Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'];
 
 /**
  * SignUp component is similar to signin component, but we create a new user instead.
@@ -44,11 +29,6 @@ const SignUp = () => {
     });
   };
 
-  let selectedCommittees = [];
-  const selectCommittees = e => {
-    selectedCommittees = e;
-  };
-
   /* Handle SignUp submission. Create user account and a profile entry, then redirect to the home page. */
   const submit = () => {
     const doc = {
@@ -58,9 +38,9 @@ const SignUp = () => {
       password: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_PASSWORD).value,
       employeeID: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID).value,
       role: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_ROLE).value,
+      position: document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_POSITION).value,
       newAccount: true,
       offices: selectedOffices,
-      committees: selectedCommittees,
     };
     if (doc.firstName === '' || doc.lastName === '' || doc.email === '' || doc.password === '' || doc.employeeID === '') {
       swal('Failed', 'Please fill all required fields', 'error');
@@ -83,6 +63,8 @@ const SignUp = () => {
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_PASSWORD).value = '';
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_EMPLOYEE_ID).value = '';
         document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_ROLE).value = '';
+        document.getElementById(COMPONENT_IDS.SIGN_UP_FORM_POSITION).value = '';
+
       });
   };
 
@@ -143,12 +125,6 @@ const SignUp = () => {
       </Row>
       <Row className="py-2">
         <Col sm={8}>
-          <Form.Label><b>Committees</b></Form.Label>
-          <Select id={COMPONENT_IDS.SIGN_UP_FORM_COMMITTEES} options={committees} isMulti closeMenuOnSelect={false} onChange={selectCommittees} />
-        </Col>
-      </Row>
-      <Row className="py-2">
-        <Col sm={8}>
           <Form.Label><b>User Role <span className="text-danger">*</span></b></Form.Label>
           <Form.Select id={COMPONENT_IDS.SIGN_UP_FORM_ROLE} placeholder="Select Role" aria-label="Role" defaultValue="USER">
             <option>USER</option>
@@ -156,9 +132,20 @@ const SignUp = () => {
           </Form.Select>
         </Col>
       </Row>
+      <Row>
+        <Col sm={8}>
+          <Form.Label><b>User Position</b></Form.Label>
+          <Form.Select id={COMPONENT_IDS.SIGN_UP_FORM_POSITION} aria-label="Position Select">
+            <option disabled> -- select a position -- </option>
+            {positionNames.map((name) => (
+              <option value={name}>{name}</option>
+            ))}
+          </Form.Select>
+        </Col>
+      </Row>
       <Row className="py-4">
         <Col>
-          <Button onClick={submit}>Register User</Button>
+          <Button id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} onClick={submit}>Register User</Button>
         </Col>
       </Row>
     </Container>

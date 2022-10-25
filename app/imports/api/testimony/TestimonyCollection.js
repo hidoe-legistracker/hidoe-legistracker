@@ -7,6 +7,7 @@ import BaseCollection from '../base/BaseCollection';
 import { ROLE } from '../role/Role';
 
 export const departmentPositions = ['In Support', 'In Opposition', 'Comments'];
+export const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 export const testimonyPublications = {
   testimony: 'testimony',
   testimonyAdmin: 'testimonyAdmin', // not sure if we need this.
@@ -18,7 +19,7 @@ class TestimonyCollection extends BaseCollection {
       owner: String,
       committeeChair: String,
       committeeName: String,
-      billNumber: String,
+      billNumber: Number,
       billDraftNumber: { type: String, optional: true },
       title: { type: String, optional: true },
       hearingDate: { type: Date, optional: true },
@@ -35,21 +36,30 @@ class TestimonyCollection extends BaseCollection {
       representing: { type: String, optional: true },
       contactEmail: { type: String, optional: true },
       contactPhone: { type: String, optional: true },
+      testimonyProgress: {
+        type: Array,
+        optional: true,
+      },
+      'testimonyProgress.$': Number,
+      office: { type: String, allowedValues: offices, optional: true },
     }));
   }
 
   /**
    * Defines a new Testimony item.
    */
-  define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
-    const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone });
+  define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
+    const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
+      content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office });
     return docID;
   }
 
   /**
    * Updates the given document.
    */
-  update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone }) {
+  update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
     const updateData = {};
     if (_.isString(owner)) {
       updateData.owner = owner;
@@ -98,6 +108,12 @@ class TestimonyCollection extends BaseCollection {
     }
     if (_.isString(contactPhone)) {
       updateData.contactPhone = contactPhone;
+    }
+    if (testimonyProgress) {
+      updateData.testimonyProgress = testimonyProgress;
+    }
+    if (office) {
+      updateData.office = office;
     }
 
     this._collection.update(docID, { $set: updateData });
@@ -193,6 +209,8 @@ class TestimonyCollection extends BaseCollection {
     const representing = doc.representing;
     const contactEmail = doc.contactEmail;
     const contactPhone = doc.contactPhone;
+    const testimonyProgress = doc.testimonyProgress;
+    const office = doc.office;
     return {
       owner,
       committeeChair,
@@ -210,6 +228,8 @@ class TestimonyCollection extends BaseCollection {
       representing,
       contactEmail,
       contactPhone,
+      testimonyProgress,
+      office,
     };
   }
 }

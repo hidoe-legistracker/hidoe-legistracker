@@ -19,6 +19,11 @@ class BaseProfileCollection extends BaseCollection {
       userID: SimpleSchema.RegEx.Id,
       employeeID: String,
       newAccount: Boolean,
+      position: {
+        type: String,
+        allowedValues: ['N/A', 'Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'],
+        optional: true,
+      },
       phone: {
         type: String,
         optional: true,
@@ -28,17 +33,6 @@ class BaseProfileCollection extends BaseCollection {
         optional: true,
       },
       'offices.$': String,
-      committees: {
-        type: Array,
-        optional: true,
-      },
-      'committees.$': {
-        type: new SimpleSchema({
-          label: String,
-          value: String,
-          group: String,
-        }),
-      },
       // Array of folders
       myFolders: {
         type: Array,
