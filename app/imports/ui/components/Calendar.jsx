@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Container, Button, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { Calendar3, CardText } from 'react-bootstrap-icons';
+import { Calendar3 } from 'react-bootstrap-icons';
 import Card from 'react-bootstrap/Card';
 import _ from 'underscore';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -23,6 +23,7 @@ const BillCalendar = () => {
 
   const { hearings } = useTracker(() => {
     const hearingData = Hearings.find({}, {}).fetch();
+
     return {
       hearings: hearingData,
     };
@@ -50,17 +51,13 @@ const BillCalendar = () => {
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
               {getHearings.map(
-                (hearing) => (
+                (hearing, index) => (
                   <Card style={{ width: '18rem', margin: 5 }}>
-                    <Card.Body>
+                    <Card.Body eventKey={index}>
                       <Card.Title>{hearing}</Card.Title>
-                      <Card.Text>Hearing Date & Time:</Card.Text>
-                      <Card.Text>
-                        Hearing Location: <Row>{getHearings.datetime}</Row>
-                      </Card.Text>
-                      <Card.Text>
-                        Hearing Type:
-                      </Card.Text>
+                      <Card.Text>Date & Time:</Card.Text>
+                      <Card.Text>Location:</Card.Text>
+                      <Card.Text>Type:</Card.Text>
                     </Card.Body>
                   </Card>
                 ),
