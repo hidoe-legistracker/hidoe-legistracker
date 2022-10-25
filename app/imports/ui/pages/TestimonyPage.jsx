@@ -100,18 +100,22 @@ const TestimonyPage = () => {
             <Button onClick={handlePrint} variant="secondary" size="sm" className="bill-button-spacing">
               Print / Save
             </Button>
-            { testimony.testimonyProgress.length !== 6 ? (
-              <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="sm" className="bill-button-spacing">
-                Edit
-              </Button>
-            ) : ''}
             { testimony.testimonyProgress.length === 1 && user.position === 'Testimony Writer' ? (
-              <Button onClick={() => submit('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
-                Route for Office Review
-              </Button>
+              <ButtonGroup className="float-end">
+                <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
+                  Edit
+                </Button>
+                <Button onClick={() => submit('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
+                  Route for Office Review
+                </Button>
+              </ButtonGroup>
             ) : ''}
             { testimony.testimonyProgress.length === 2 && user.position === 'Office Approver' ? (
+
               <ButtonGroup className="float-end">
+                <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
+                  Edit
+                </Button>
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Testimony Writer
                 </Button>
@@ -122,6 +126,9 @@ const TestimonyPage = () => {
             ) : ''}
             { testimony.testimonyProgress.length === 3 && user.position === 'PIPE' ? (
               <ButtonGroup className="float-end">
+                <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
+                  Edit
+                </Button>
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Office for additional edits
                 </Button>
@@ -132,6 +139,9 @@ const TestimonyPage = () => {
             ) : ''}
             { testimony.testimonyProgress.length === 4 && user.position === 'Final Approver' ? (
               <ButtonGroup className="float-end">
+                <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
+                  Edit
+                </Button>
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to PIPE
                 </Button>
@@ -141,9 +151,14 @@ const TestimonyPage = () => {
               </ButtonGroup>
             ) : ''}
             { testimony.testimonyProgress.length === 5 && user.position === 'Office Secretary' ? (
-              <Button onClick={finalConfirmation} variant="primary" size="m" className="bill-button-spacing float-end">
-                Finalize Testimony
-              </Button>
+              <ButtonGroup className="float-end">
+                <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
+                  Edit
+                </Button>
+                <Button onClick={finalConfirmation} variant="primary" size="m" className="bill-button-spacing float-end">
+                  Finalize Testimony
+                </Button>
+              </ButtonGroup>
             ) : ''}
           </Col>
         </Row>

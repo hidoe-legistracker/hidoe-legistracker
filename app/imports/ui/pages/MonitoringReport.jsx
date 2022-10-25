@@ -82,7 +82,10 @@ const MonitoringReport = () => {
             </Form>
           </Row>
           <Container className="view-testimony-container">
-            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : `Submitted testimonies for ${user.offices.map(office => (` ${office}`))}` } </h3>
+            {/* eslint-disable-next-line no-nested-ternary */}
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : user.offices.length !== 0 ?
+              (`Submitted testimonies for ${user.offices.map(office => (` ${office}`))}`) : 'Submitted Testimonies'}
+            </h3>
             {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
               <Table>
                 <thead>
