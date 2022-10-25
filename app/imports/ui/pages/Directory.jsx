@@ -218,15 +218,19 @@ const Directory = () => {
       setDefaultBills(true);
       setBills(measure);
     } else if (office === 'MY BILLS') {
-      const filteredData = [];
+      // const filteredData = [];
       // const myOffices = currentUser.offices;
       // filteredData.push(myOffices);
       // console.log(myOffices);
-      currentUser.forEach((item) => {
-        if (item.offices && item.offices.indexOf(office) >= 0) {
-          filteredData.push(item);
-        }
-      });
+      // currentUser.forEach((item) => {
+      //   if (item.offices && item.offices.indexOf(office) >= 0) {
+      //     filteredData.push(item);
+      //   }
+      // });
+      // setDefaultBills(false);
+      // setBills(filteredData);
+      const filteredData = _.where(currentUser, { Offices: office });
+      console.log(currentUser.offices);
       setDefaultBills(false);
       setBills(filteredData);
     } else {
