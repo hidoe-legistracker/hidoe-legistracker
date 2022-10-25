@@ -24,6 +24,8 @@ import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Measures } from '../../api/measure/MeasureCollection';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 // Create a schema to specify the structure of the data to appear in the form.
 const formSchema = new SimpleSchema({
@@ -244,17 +246,27 @@ const MonitoringReport = () => {
 
   const { _id } = useParams();
 
-  const { measure, ready, testimonies } = useTracker(() => {
+  const { measure, ready, testimonies, user } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready();
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
+
+    const username = Meteor.user() ? Meteor.user().username : '';
 
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
 
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
+
     return {
       measure: measureItem,
       testimonies: testimonyCollection,
+      user: usr,
       ready: rdy,
     };
   }, [_id]);
@@ -301,7 +313,7 @@ const MonitoringReport = () => {
             </Form>
           </Row>
           <Container className="view-testimony-container">
-            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Submitted Testimonies'}</h3>
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : `Submitted testimonies for ${user.offices.map(office => (` ${office}`))}` } </h3>
             {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
               <Table>
                 <thead>
@@ -317,7 +329,7 @@ const MonitoringReport = () => {
                   {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
                     // eslint-disable-next-line react/jsx-no-useless-fragment
                     <>
-                      { testimony.testimonyProgress.length !== 6 ? (
+                      { testimony.testimonyProgress.length !== 6 && testimony.office === user.offices.find(element => element === testimony.office) ? (
                         <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
                           <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                           <td>{testimony.billNumber}</td>
