@@ -219,18 +219,26 @@ const Directory = () => {
       setBills(measure);
     } else if (office === 'MY BILLS') {
       const filteredData = [];
+      const officeCheck = [];
       // const myOffices = currentUser.offices;
       // filteredData.push(myOffices);
       // console.log(myOffices);
       currentUser.offices.forEach((item) => {
         if (item && item.indexOf(item) >= 0) {
-          filteredData.push(item);
+          officeCheck.push(item);
         }
       });
+      if (officeCheck === _.contains(measure.officeType)) {
+        console.log(_.contains(measure.officeType));
+        measure.forEach((item) => {
+          if (item.officeType && item.officeType.indexOf(office) >= 0) {
+            filteredData.push(item);
+          }
+        });
+      }
       setDefaultBills(false);
       setBills(filteredData);
-      // const filteredData = _.where(currentUser, { Offices: office });
-      console.log(currentUser.offices);
+      console.log(officeCheck);
       console.log(filteredData);
       // setDefaultBills(false);
       // setBills(filteredData);
