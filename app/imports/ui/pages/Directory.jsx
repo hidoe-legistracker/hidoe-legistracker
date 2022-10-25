@@ -55,7 +55,7 @@ const Directory = () => {
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
-  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
+  const { currentUser, ready, init, measure, hearings, user } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -72,6 +72,7 @@ const Directory = () => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready() && hearingSub.ready();
     const measureData = Measures.find({}, {}).fetch();
+    const thisUsr = UserProfiles.findOne({ email: username }, {});
     const hearingData = Hearings.find({}, {}).fetch();
     return {
       hearings: hearingData,
@@ -79,6 +80,7 @@ const Directory = () => {
       ready: isReady,
       init: rdy,
       measure: measureData,
+      user: thisUsr,
     };
   }, []);
 
@@ -215,11 +217,8 @@ const Directory = () => {
       setBills(measure);
     } else if (office === 'MY BILLS') {
       const filteredData = [];
-      measure.forEach((item) => {
-        if (item.officeType && item.officeType.indexOf(office) >= 0) {
-          filteredData.push(item);
-        }
-      });
+      const myOffices = user.offices;
+      filteredData.push(myOffices);
       setDefaultBills(false);
       setBills(filteredData);
     } else {
