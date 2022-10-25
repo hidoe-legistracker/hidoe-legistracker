@@ -12,6 +12,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import { Link, NavLink, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
+import { useParams } from 'react-router';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -55,7 +56,9 @@ const Directory = () => {
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
-  const { currentUser, ready, init, measure, hearings, user } = useTracker(() => {
+  const { _id } = useParams();
+
+  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -72,15 +75,14 @@ const Directory = () => {
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready() && hearingSub.ready();
     const measureData = Measures.find({}, {}).fetch();
-    const thisUsr = UserProfiles.findOne({ email: username }, {});
     const hearingData = Hearings.find({}, {}).fetch();
+    if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
       hearings: hearingData,
       currentUser: usr,
       ready: isReady,
       init: rdy,
       measure: measureData,
-      user: thisUsr,
     };
   }, []);
 
@@ -217,8 +219,14 @@ const Directory = () => {
       setBills(measure);
     } else if (office === 'MY BILLS') {
       const filteredData = [];
-      const myOffices = user.offices;
-      filteredData.push(myOffices);
+      // const myOffices = currentUser.offices;
+      // filteredData.push(myOffices);
+      // console.log(myOffices);
+      currentUser.forEach((item) => {
+        if (item.offices && item.offices.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
       setDefaultBills(false);
       setBills(filteredData);
     } else {
