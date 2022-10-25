@@ -19,6 +19,7 @@ class HearingCollection extends BaseCollection {
       measureNumber: Number,
       measureRelativeUrl: { type: String, optional: true },
       code: { type: String, optional: true },
+      officeType: { type: String, optional: true },
       committee: { type: String, optional: true },
       lastUpdated: { type: Date, optional: true },
       timestamp: { type: Date, optional: true },
@@ -31,7 +32,7 @@ class HearingCollection extends BaseCollection {
     }));
   }
 
-  define({ year, measureType, measureNumber, measureRelativeUrl, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl }) {
+  define({ year, measureType, measureNumber, measureRelativeUrl, officeType, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl }) {
     // UNIQUE (year, measureType, measureNumber, notice)
     if (this.isDefined({ year, measureType, measureNumber, notice })) {
       return this.findDoc({ year, measureType, measureNumber, notice })._id;
@@ -39,12 +40,12 @@ class HearingCollection extends BaseCollection {
     if (!isValidMeasureType(measureType)) {
       throw new Meteor.Error(`${measureType} is an invalid Measure Type.`);
     }
-    const docID = this._collection.insert({ year, measureType, measureNumber, measureRelativeUrl, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl });
+    const docID = this._collection.insert({ year, measureType, measureNumber, officeType, measureRelativeUrl, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl });
     return docID;
   }
 
   update(docID, {
-    year, measureType, measureNumber, measureRelativeUrl, code, committee, timestamp, datetime, description,
+    year, measureType, measureNumber, measureRelativeUrl, code, officeType, committee, timestamp, datetime, description,
     room, notice, noticeUrl, noticePdfUrl,
   }) {
     const updateData = {};
@@ -69,6 +70,9 @@ class HearingCollection extends BaseCollection {
     }
     if (committee) {
       updateData.committee = committee;
+    }
+    if (officeType) {
+      updateData.officeType = officeType;
     }
     updateData.lastUpdated = new Date();
     if (timestamp) {
@@ -150,6 +154,7 @@ class HearingCollection extends BaseCollection {
     const measureType = doc.measureType;
     const measureNumber = doc.measureNumber;
     const measureRelativeUrl = doc.measureRelativeUrl;
+    const officeType = doc.officeType;
     const code = doc.code;
     const committee = doc.committee;
     const lastUpdated = doc.lastUpdated;
@@ -160,7 +165,7 @@ class HearingCollection extends BaseCollection {
     const notice = doc.notice;
     const noticeUrl = doc.noticeUrl;
     const noticePdfUrl = doc.noticePdfUrl;
-    return { year, measureType, measureNumber, measureRelativeUrl, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl };
+    return { year, measureType, measureNumber, officeType, measureRelativeUrl, code, committee, lastUpdated, timestamp, datetime, description, room, notice, noticeUrl, noticePdfUrl };
   }
 }
 

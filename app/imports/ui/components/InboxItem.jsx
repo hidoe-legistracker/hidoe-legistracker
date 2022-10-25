@@ -51,9 +51,9 @@ const InboxItem = ({ email }) => {
         <Modal.Body>
           <p><b style={{ display: 'inline' }}>From: </b> {email.from}</p>
           <p><b style={{ display: 'inline' }}>To: </b> {email.to}</p>
-          {email.cc !== '' ? <p><h6 style={{ display: 'inline' }}>cc: </h6> {email.cc}</p> : ''}
+          {email.cc !== '' ? <p><b style={{ display: 'inline' }}>cc: </b> {email.cc}</p> : ''}
           <hr />
-          <h6>Body:</h6>
+          <b>Body:</b>
           <Card>
             <Card.Body style={{ minHeight: '55vh' }}>
               <p>{email.body}</p>
@@ -61,7 +61,9 @@ const InboxItem = ({ email }) => {
           </Card>
         </Modal.Body>
         <Modal.Footer>
-          {email.hasBillReference ? <NavLink to={`/view-bill/${email.billID}`}><Button>View Bill #{email.billNumber}</Button></NavLink> : ''}
+          {email.isNotification ? <NavLink to={`/hearing-notice/${email.hearingNotice}`} target="_blank"><Button>Hearing Notice</Button></NavLink> : ''}
+
+          {email.hasBillReference ? <NavLink to={`/view-bill/${email.billID}`} target="_blank"><Button>View Bill #{email.billNumber}</Button></NavLink> : ''}
           <Button variant="secondary" onClick={modalClose}>Close</Button>
         </Modal.Footer>
       </Modal>
@@ -82,6 +84,8 @@ InboxItem.propTypes = {
     hasBillReference: PropTypes.bool,
     billNumber: PropTypes.number,
     billID: PropTypes.string,
+    isNotification: PropTypes.bool,
+    hearingNotice: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     isRead: PropTypes.array,
   }).isRequired,

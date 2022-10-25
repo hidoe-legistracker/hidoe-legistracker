@@ -18,6 +18,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const billProgress = 60;
 
@@ -33,6 +34,7 @@ const MeasureComponent = ({ measure }) => (
         ) : `${measure.description?.substring(0, 150)}...`
       }
     </td>
+    <td>{measure.officeType}</td>
     <td>{measure.currentReferral}</td>
     <td>Testimony/Monitor</td>
     <td>
@@ -53,7 +55,7 @@ const Directory = () => {
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
-  const { currentUser, ready, init, measure } = useTracker(() => {
+  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -66,16 +68,21 @@ const Directory = () => {
       rdy = subscription.ready();
       usr = AdminProfiles.findByEmail(username);
     }
+    const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
-    const isReady = subscription.ready();
+    const isReady = subscription.ready() && hearingSub.ready();
     const measureData = Measures.find({}, {}).fetch();
+    const hearingData = Hearings.find({}, {}).fetch();
     return {
+      hearings: hearingData,
       currentUser: usr,
       ready: isReady,
       init: rdy,
       measure: measureData,
     };
   }, []);
+
+  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
 
   // Filter Measures
   let filteredMeasures;
@@ -97,6 +104,9 @@ const Directory = () => {
         if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
         if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
@@ -106,11 +116,17 @@ const Directory = () => {
       filteredMeasures = bills.filter(post => {
         if (search === '') {
           return post;
-        } if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
+        }
+        if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
           return post;
-        } if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+        }
+        if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
           return post;
-        } if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+        }
+        if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
           return post;
         } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
           return post;
@@ -193,6 +209,22 @@ const Directory = () => {
     'GVO', 'HHH', 'TRN', 'EET', 'HET', 'CMV', 'PSM', 'TRS', 'EDN', 'HWN', 'HMS', 'HOU', 'EDU', 'GVR', 'PDP', 'HSG'];
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
 
+  const filterOffices = (office) => {
+    if (office === 'ALL BILLS') {
+      setDefaultBills(true);
+      setBills(measure);
+    } else {
+      const filteredData = [];
+      measure.forEach((item) => {
+        if (item.officeType && item.officeType.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
+      setDefaultBills(false);
+      setBills(filteredData);
+    }
+  };
+
   return (ready ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
@@ -206,7 +238,7 @@ const Directory = () => {
               <Accordion.Header>Offices</Accordion.Header>
               <Accordion.Body>
                 <ListGroup defaultActiveKey="#link1" variant="flush">
-                  {offices.map((o, key) => <ListGroup.Item action key={key}>{o}</ListGroup.Item>)}
+                  {offices.map((o, key) => <ListGroup.Item action key={key} onClick={() => filterOffices(o)}>{o}</ListGroup.Item>)}
                 </ListGroup>
               </Accordion.Body>
             </Accordion.Item>
@@ -240,6 +272,7 @@ const Directory = () => {
                       <th scope="col">#</th>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
+                      <th scope="col">Offices</th>
                       <th scope="col">Committees</th>
                       <th scope="col">Actions</th>
                       <th scope="col">Status</th>
@@ -259,7 +292,17 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              ...
+              <Table className="directory-table">
+                <tbody style={{ position: 'relative' }}>
+                  {getHearings.map(
+                    (hearing) => (
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
+                        {hearing}
+                      </Link>
+                    ),
+                  )}
+                </tbody>
+              </Table>
             </Tab>
           </Tabs>
         </Col>
