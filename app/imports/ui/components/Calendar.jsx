@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Roles } from 'meteor/alanning:roles';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Container, Button, Row } from 'react-bootstrap';
@@ -7,13 +8,16 @@ import { Calendar3 } from 'react-bootstrap-icons';
 import Card from 'react-bootstrap/Card';
 import _ from 'underscore';
 import Table from 'react-bootstrap/Table';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, Navigate, NavLink } from 'react-router-dom';
 import Tab from 'react-bootstrap/Tab';
+import { useTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
+import LoadingSpinner from './LoadingSpinner';
 
 const BillCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -24,7 +28,7 @@ const BillCalendar = () => {
     setDate(date);
   };
 
-  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
+  const { currentUser, ready, init, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -53,7 +57,11 @@ const BillCalendar = () => {
 
   const getHearings = _.uniq(_.pluck(hearings, 'notice'));
 
-  return (
+  if (init && currentUser.newAccount) {
+    return (<Navigate to="/change-password-user" />);
+  }
+
+  return (ready ? (
     <>
       <Button variant="outline-secondary" onClick={() => setShow(true)} className="calendar-button">
         <Calendar3 size={25} />
@@ -131,8 +139,7 @@ const BillCalendar = () => {
         </Modal>
       </Container>
     </>
-
-  );
+  ) : <LoadingSpinner message="Loading Measures" />);
 };
 
 export default BillCalendar;
