@@ -218,21 +218,22 @@ const Directory = () => {
       setDefaultBills(true);
       setBills(measure);
     } else if (office === 'MY BILLS') {
-      // const filteredData = [];
+      const filteredData = [];
       // const myOffices = currentUser.offices;
       // filteredData.push(myOffices);
       // console.log(myOffices);
-      // currentUser.forEach((item) => {
-      //   if (item.offices && item.offices.indexOf(office) >= 0) {
-      //     filteredData.push(item);
-      //   }
-      // });
-      // setDefaultBills(false);
-      // setBills(filteredData);
-      const filteredData = _.where(currentUser, { Offices: office });
-      console.log(currentUser.offices);
+      currentUser.offices.forEach((item) => {
+        if (item && item.indexOf(item) >= 0) {
+          filteredData.push(item);
+        }
+      });
       setDefaultBills(false);
       setBills(filteredData);
+      // const filteredData = _.where(currentUser, { Offices: office });
+      console.log(currentUser.offices);
+      console.log(filteredData);
+      // setDefaultBills(false);
+      // setBills(filteredData);
     } else {
       const filteredData = [];
       measure.forEach((item) => {
