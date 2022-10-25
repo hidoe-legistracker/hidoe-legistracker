@@ -4,13 +4,15 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { useReactToPrint } from 'react-to-print';
 import { Breadcrumb, Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
-
+import { Meteor } from 'meteor/meteor';
 import { Testimony } from '../components/Testimony';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 const TestimonyPage = () => {
 
@@ -20,15 +22,24 @@ const TestimonyPage = () => {
   });
 
   const { measureID, testimonyID } = useParams();
-  const { measure, testimony, ready } = useTracker(() => {
+  const { measure, testimony, user, ready } = useTracker(() => {
     const testimonySubscription = Testimonies.subscribeTestimony();
     const measureSubscription = Measures.subscribeMeasures();
-    const rdy = testimonySubscription.ready() && measureSubscription.ready();
-    const testimonyDoc = Testimonies.findOne({ _id: testimonyID });
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready(); const testimonyDoc = Testimonies.findOne({ _id: testimonyID });
     const measureDoc = Measures.findOne({ _id: measureID });
+
+    const username = Meteor.user() ? Meteor.user().username : '';
+
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
     return {
       measure: measureDoc,
       testimony: testimonyDoc,
+      user: usr,
       ready: rdy,
     };
   }, [measureID, testimonyID]);
@@ -94,12 +105,12 @@ const TestimonyPage = () => {
                 Edit
               </Button>
             ) : ''}
-            { testimony.testimonyProgress.length === 1 ? (
+            { testimony.testimonyProgress.length === 1 && user.position === 'Testimony Writer' ? (
               <Button onClick={() => submit('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
                 Route for Office Review
               </Button>
             ) : ''}
-            { testimony.testimonyProgress.length === 2 ? (
+            { testimony.testimonyProgress.length === 2 && user.position === 'Office Approver' ? (
               <ButtonGroup className="float-end">
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Testimony Writer
@@ -109,7 +120,7 @@ const TestimonyPage = () => {
                 </Button>
               </ButtonGroup>
             ) : ''}
-            { testimony.testimonyProgress.length === 3 ? (
+            { testimony.testimonyProgress.length === 3 && user.position === 'PIPE' ? (
               <ButtonGroup className="float-end">
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Office for additional edits
@@ -119,7 +130,7 @@ const TestimonyPage = () => {
                 </Button>
               </ButtonGroup>
             ) : ''}
-            { testimony.testimonyProgress.length === 4 ? (
+            { testimony.testimonyProgress.length === 4 && user.position === 'Final Approver' ? (
               <ButtonGroup className="float-end">
                 <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to PIPE
@@ -129,7 +140,7 @@ const TestimonyPage = () => {
                 </Button>
               </ButtonGroup>
             ) : ''}
-            { testimony.testimonyProgress.length === 5 ? (
+            { testimony.testimonyProgress.length === 5 && user.position === 'Office Secretary' ? (
               <Button onClick={finalConfirmation} variant="primary" size="m" className="bill-button-spacing float-end">
                 Finalize Testimony
               </Button>
