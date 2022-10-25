@@ -65,6 +65,7 @@ const CreateEmailModal = ({ modal, emailItem }) => {
     const ret_email = {
       subject: '',
       recipients: [],
+      offices: [],
       ccs: [],
       bccs: [],
       date: '',
