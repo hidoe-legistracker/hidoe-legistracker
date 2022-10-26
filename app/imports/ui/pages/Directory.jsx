@@ -218,11 +218,8 @@ const Directory = () => {
       setDefaultBills(true);
       setBills(measure);
     } else if (office === 'MY BILLS') {
-      let filteredData = [];
+      const filteredData = [];
       const officeCheck = [];
-      // const myOffices = currentUser.offices;
-      // filteredData.push(myOffices);
-      // console.log(myOffices);
       currentUser.offices.forEach((item) => {
         if (item && item.indexOf(item) >= 0) {
           officeCheck.push(item);
@@ -234,17 +231,9 @@ const Directory = () => {
             filteredData.push(x);
           }
         });
-        console.log(filteredData);
-        // console.log(measure.officeType);
-        // console.log({ officeType: item });
       });
       setDefaultBills(false);
       setBills(filteredData);
-      console.log(measure);
-      // console.log(officeCheck);
-      // console.log(filteredData);
-      // setDefaultBills(false);
-      // setBills(filteredData);
     } else {
       const filteredData = [];
       measure.forEach((item) => {
