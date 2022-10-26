@@ -218,7 +218,7 @@ const Directory = () => {
       setDefaultBills(true);
       setBills(measure);
     } else if (office === 'MY BILLS') {
-      const filteredData = [];
+      let filteredData = [];
       const officeCheck = [];
       // const myOffices = currentUser.offices;
       // filteredData.push(myOffices);
@@ -228,18 +228,21 @@ const Directory = () => {
           officeCheck.push(item);
         }
       });
-      if (officeCheck === _.contains(measure.officeType)) {
-        console.log(_.contains(measure.officeType));
-        measure.forEach((item) => {
-          if (item.officeType && item.officeType.indexOf(office) >= 0) {
-            filteredData.push(item);
+      currentUser.offices.forEach((item) => {
+        measure.forEach(x => {
+          if (x.officeType && x.officeType.indexOf(item) >= 0) {
+            filteredData.push(x);
           }
         });
-      }
+        console.log(filteredData);
+        // console.log(measure.officeType);
+        // console.log({ officeType: item });
+      });
       setDefaultBills(false);
       setBills(filteredData);
-      console.log(officeCheck);
-      console.log(filteredData);
+      console.log(measure);
+      // console.log(officeCheck);
+      // console.log(filteredData);
       // setDefaultBills(false);
       // setBills(filteredData);
     } else {
