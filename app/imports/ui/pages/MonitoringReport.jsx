@@ -120,7 +120,7 @@ const MonitoringReport = () => {
           </Row>
           <Container className="view-testimony-container">
             {/* eslint-disable-next-line no-nested-ternary */}
-            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : user.offices.length !== 0 ?
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : user.offices !== undefined && user.offices.length !== 0 ?
               (`Submitted testimonies for ${user.offices.map(office => (` ${office}`))}`) : 'Submitted Testimonies'}
             </h3>
             {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
@@ -138,7 +138,7 @@ const MonitoringReport = () => {
                   {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
                     // eslint-disable-next-line react/jsx-no-useless-fragment
                     <>
-                      { testimony.testimonyProgress.length !== 6 && testimony.office === user.offices.find(element => element === testimony.office) ? (
+                      { testimony.testimonyProgress.length !== 6 && user.offices !== undefined && testimony.office === user.offices.find(element => element === testimony.office) ? (
                         <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
                           <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                           <td>{testimony.billNumber}</td>
