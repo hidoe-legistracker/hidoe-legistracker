@@ -86,7 +86,7 @@ const Directory = () => {
     };
   }, []);
 
-  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
+  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
 
   // Filter Measures
   let filteredMeasures;
@@ -316,12 +316,27 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              <Table className="directory-table">
+              <Table className="directory-table" striped>
+                <thead style={{ marginBottom: 10 }}>
+                  <tr>
+                    <th scope="col">Date/Time</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Notice</th>
+                  </tr>
+                </thead>
                 <tbody style={{ position: 'relative' }}>
                   {getHearings.map(
                     (hearing) => (
-                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
-                        {hearing}
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`}>
+                        <td>
+                          {hearing.datetime}
+                        </td>
+                        <td>
+                          {hearing.room}
+                        </td>
+                        <td>
+                          {hearing.notice}
+                        </td>
                       </Link>
                     ),
                   )}
