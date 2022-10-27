@@ -13,6 +13,7 @@ const EmployeeListItem = ({ profile }) => (
     </th>
     <td className="text-center align-middle" width={150}>{profile.name}</td>
     <td className="text-center align-middle">{profile.email}</td>
+    <td className="text-center align-middle">{profile.position}</td>
     <td className="text-center align-middle">{profile.employeeID}</td>
     <td className="text-center align-middle">
       <Button variant="info" href={`/profile/${profile._id}`}>View Profile</Button>
@@ -27,6 +28,7 @@ EmployeeListItem.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     employeeID: PropTypes.string,
+    position: PropTypes.string,
   }).isRequired,
 };
 
