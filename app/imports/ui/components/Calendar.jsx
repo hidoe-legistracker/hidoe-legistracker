@@ -4,14 +4,10 @@ import { Container, Button, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import { Calendar3 } from 'react-bootstrap-icons';
 import Card from 'react-bootstrap/Card';
-import _ from 'underscore';
-import { useTracker } from 'meteor/react-meteor-data';
-import { useParams } from 'react-router';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Hearings } from '../../api/hearing/HearingCollection';
 
 const BillCalendar = () => {
   const [show, setShow] = useState(false);
@@ -28,20 +24,12 @@ const BillCalendar = () => {
       start: '2022-10-22T13:00:00',
       end: '2022-10-22T18:00:00',
     },
-    { id: 3, title: 'event 3', start: '2022-10-25', end: '2022-10-26' },
+    { id: 3,
+      title: 'event 3',
+      start: '2022-10-25',
+      end: '2022-10-26',
+    },
   ];
-
-  const n = useParams();
-
-  const { hearings } = useTracker(() => {
-    const hearingData = Hearings.find({}, {}).fetch();
-
-    return {
-      hearings: hearingData,
-    };
-  }, [n]);
-
-  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
 
   return (
     <>
@@ -56,7 +44,7 @@ const BillCalendar = () => {
           dialogClassName="modal-90w"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Hearing Calendar</Modal.Title>
+            <Modal.Title>Bill Calendar</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{ alignContent: 'center' }}>
             <FullCalendar
@@ -83,24 +71,24 @@ const BillCalendar = () => {
             />
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
-              {getHearings.map(
-                (hearing, index) => (
+              {events.map(
+                (event) => (
                   <Card style={{ width: '18rem', margin: 5 }}>
-                    <Card.Body eventKey={index}>
-                      <Card.Title>{hearing}</Card.Title>
-                      <Card.Text>Date & Time:</Card.Text>
-                      <Card.Text>Location:</Card.Text>
-                      <Card.Text>Type:</Card.Text>
+                    <Card.Body>
+                      <Card.Title>{event.title}</Card.Title>
+                      <Card.Text>Date & Time: {event.start} - {event.end}</Card.Text>
+                      <Card.Text>Location: N/A</Card.Text>
+                      <Card.Text>Type: N/A</Card.Text>
                     </Card.Body>
                   </Card>
                 ),
               )}
             </Row>
-
           </Modal.Body>
         </Modal>
       </Container>
     </>
+
   );
 };
 
