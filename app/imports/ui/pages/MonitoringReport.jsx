@@ -10,26 +10,71 @@ import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Measures } from '../../api/measure/MeasureCollection';
+import { UserProfiles } from '../../api/user/UserProfileCollection';
+import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import CreateTestimonyModal from '../components/CreateTestimonyModal';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const MonitoringReport = () => {
   const { _id } = useParams();
 
-  const { measure, ready, testimonies } = useTracker(() => {
+  const { measure, ready, testimonies, user, hearings } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready();
+    const hearingSubscription = Hearings.subscribeHearings();
+    const userSubscription = UserProfiles.subscribe();
+    const adminSubscription = AdminProfiles.subscribe();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready() && hearingSubscription.ready();
+
+    const username = Meteor.user() ? Meteor.user().username : '';
 
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
-
-    console.log(measureItem);
+    const hearingCollection = Hearings.find({}, {}).fetch();
+    let usr = UserProfiles.findOne({ email: username });
+    if (usr === undefined) {
+      usr = AdminProfiles.findOne({ email: username });
+    }
     return {
       measure: measureItem,
       testimonies: testimonyCollection,
+      hearings: hearingCollection,
+      user: usr,
       ready: rdy,
     };
   }, [_id]);
+
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const formatDate = (dateString) => {
+    const date = dateString.replace(',', '').split(' ');
+    const month = months.indexOf(date[0]) + 1;
+    const day = date[1];
+    const year = date[2];
+    return `${month}/${day}/${year}`;
+  };
+  const getHearingDate = () => {
+    const filteredHearings = hearings.filter(hearing => hearing.measureType === measure.measureType && hearing.measureNumber === measure.measureNumber);
+    if (filteredHearings.length > 0) {
+      const date = filteredHearings[0].datetime.match(/\Bday, ((January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2}, [0-9]{4})/)[1];
+      return formatDate(date);
+    }
+    return '';
+  };
+  const getHearingTime = () => {
+    const filteredHearings = hearings.filter(hearing => hearing.measureType === measure.measureType && hearing.measureNumber === measure.measureNumber);
+    if (filteredHearings.length > 0) {
+      return filteredHearings[0].datetime.match(/[0-9]{1,2}:[0-9]{1,2} (am|pm)/)[0].replace(' ', '').toUpperCase();
+    }
+    return '';
+  };
+
+  const getHearingLocation = () => {
+    const filteredHearings = hearings.filter(hearing => hearing.measureType === measure.measureType && hearing.measureNumber === measure.measureNumber);
+    if (filteredHearings.length > 0) {
+      return filteredHearings[0].room;
+    }
+    return '';
+  };
 
   return ready ? (
     <div>
@@ -48,9 +93,9 @@ const MonitoringReport = () => {
             <Col className="align-left">
               <ListGroup horizontal="sm">
                 <ListGroup.Item><strong>Bill #: </strong> {measure.measureNumber} </ListGroup.Item>
-                <ListGroup.Item><strong>Date: </strong> {`${measure.lastUpdated.getMonth() + 1}/${measure.lastUpdated.getDate()}/${measure.lastUpdated.getFullYear()}`} </ListGroup.Item>
-                <ListGroup.Item><strong>Time: </strong> {`${measure.lastUpdated.getHours()}:${measure.lastUpdated.getMinutes() < 10 ? `0${measure.lastUpdated.getMinutes()}` : measure.lastUpdated.getMinutes()}`} </ListGroup.Item>
-                <ListGroup.Item><strong>Location: </strong> CR 229 </ListGroup.Item>
+                {getHearingDate() ? <ListGroup.Item><strong>Date: </strong> {getHearingDate()} </ListGroup.Item> : ''}
+                {getHearingTime() ? <ListGroup.Item><strong>Time: </strong> {getHearingTime()} </ListGroup.Item> : ''}
+                {getHearingLocation() ? <ListGroup.Item><strong>Location: </strong> {getHearingLocation()} </ListGroup.Item> : ''}
                 <ListGroup.Item><strong>Committee: </strong> {measure.currentReferral} </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -59,6 +104,7 @@ const MonitoringReport = () => {
             <Col className="align-center">
               <ListGroup>
                 <ListGroup.Item><strong>Department: </strong>Education </ListGroup.Item>
+                <ListGroup.Item><strong>Offices: </strong> {measure.officeType ? measure.officeType : 'N/A'} </ListGroup.Item>
                 <ListGroup.Item><strong>Title of Bill: </strong> {measure.measureTitle} </ListGroup.Item>
                 <ListGroup.Item><strong>Purpose of Bill: </strong> {measure.description} </ListGroup.Item>
               </ListGroup>
@@ -73,7 +119,10 @@ const MonitoringReport = () => {
             </Form>
           </Row>
           <Container className="view-testimony-container">
-            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : 'Submitted Testimonies'}</h3>
+            {/* eslint-disable-next-line no-nested-ternary */}
+            <h3>{_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? 'No testimonies available' : user.offices !== undefined && user.offices.length !== 0 ?
+              (`Submitted testimonies for ${user.offices.map(office => (` ${office}`))}`) : 'Submitted Testimonies'}
+            </h3>
             {_.where(testimonies, { billNumber: measure.measureNumber }).length === 0 ? '' : (
               <Table>
                 <thead>
@@ -89,7 +138,7 @@ const MonitoringReport = () => {
                   {_.where(testimonies, { billNumber: measure.measureNumber }).map(testimony => (
                     // eslint-disable-next-line react/jsx-no-useless-fragment
                     <>
-                      { testimony.testimonyProgress.length !== 6 ? (
+                      { testimony.testimonyProgress.length !== 6 && user.offices !== undefined && testimony.office === user.offices.find(element => element === testimony.office) ? (
                         <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
                           <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
                           <td>{testimony.billNumber}</td>
