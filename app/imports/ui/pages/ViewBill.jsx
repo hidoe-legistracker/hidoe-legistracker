@@ -17,7 +17,7 @@ import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { defineMethod, updateMethod } from '../../api/base/BaseCollection.methods';
+import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
 import { Emails } from '../../api/email/EmailCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
@@ -141,9 +141,12 @@ const ViewBill = () => {
         isDraft: false,
       };
       const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject && email.body === notification.body);
+      const collectionName = Emails.getCollectionName();
+      const definitionData = notification;
       if (duplicateEmails.length === 0) {
-        const collectionName = Emails.getCollectionName();
-        const definitionData = notification;
+        defineMethod.callPromise({ collectionName, definitionData });
+      } else if (duplicateEmails.length > 0) {
+        removeItMethod.callPromise({ collectionName, instance: duplicateEmails[0]._id });
         defineMethod.callPromise({ collectionName, definitionData });
       }
     }

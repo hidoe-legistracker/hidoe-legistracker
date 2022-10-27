@@ -191,7 +191,7 @@ const TestimonyPage = () => {
             hearingTime: (testimony.hearingDate ? testimony.hearingDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'),
             hearingLocation: (testimony.hearingLocation ? testimony.hearingLocation : '-'),
             committeeName: (testimony.committeeName ? testimony.committeeName : '-'),
-            department: '-',
+            department: 'Education',
             testifier: (testimony.testifier ? testimony.testifier : '-'),
             introduction: (testimony.introduction ? testimony.introduction : ''),
             content: (testimony.content ? testimony.content : ''),

@@ -12,6 +12,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import { Link, NavLink, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
+import { useParams } from 'react-router';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -55,6 +56,8 @@ const Directory = () => {
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
+  const { _id } = useParams();
+
   const { currentUser, ready, init, measure, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
@@ -73,6 +76,7 @@ const Directory = () => {
     const isReady = subscription.ready() && hearingSub.ready();
     const measureData = Measures.find({}, {}).fetch();
     const hearingData = Hearings.find({}, {}).fetch();
+    if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
       hearings: hearingData,
       currentUser: usr,
@@ -82,7 +86,7 @@ const Directory = () => {
     };
   }, []);
 
-  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
+  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
 
   // Filter Measures
   let filteredMeasures;
@@ -213,6 +217,23 @@ const Directory = () => {
     if (office === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
+    } else if (office === 'MY BILLS') {
+      const filteredData = [];
+      const officeCheck = [];
+      currentUser.offices.forEach((item) => {
+        if (item && item.indexOf(item) >= 0) {
+          officeCheck.push(item);
+        }
+      });
+      currentUser.offices.forEach((item) => {
+        measure.forEach(x => {
+          if (x.officeType && x.officeType.indexOf(item) >= 0) {
+            filteredData.push(x);
+          }
+        });
+      });
+      setDefaultBills(false);
+      setBills(filteredData);
     } else {
       const filteredData = [];
       measure.forEach((item) => {
@@ -232,6 +253,9 @@ const Directory = () => {
           <h6 align="center" style={{ marginBottom: 20 }}>Legislative Tracking System 2022</h6>
           <ListGroup style={{ marginBottom: 10 }}>
             <ListGroup.Item action onClick={() => filter('ALL BILLS')} style={{ textAlign: 'center' }}>ALL BILLS</ListGroup.Item>
+          </ListGroup>
+          <ListGroup style={{ marginBottom: 10 }}>
+            <ListGroup.Item action onClick={() => filterOffices('MY BILLS')} style={{ textAlign: 'center' }}>MY BILLS</ListGroup.Item>
           </ListGroup>
           <Accordion defaultActiveKey="0">
             <Accordion.Item eventKey="0">
@@ -292,12 +316,27 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              <Table className="directory-table">
+              <Table className="directory-table" striped>
+                <thead style={{ marginBottom: 10 }}>
+                  <tr>
+                    <th scope="col">Date/Time</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Notice</th>
+                  </tr>
+                </thead>
                 <tbody style={{ position: 'relative' }}>
                   {getHearings.map(
                     (hearing) => (
-                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
-                        {hearing}
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`}>
+                        <td>
+                          {hearing.datetime}
+                        </td>
+                        <td>
+                          {hearing.room}
+                        </td>
+                        <td>
+                          {hearing.notice}
+                        </td>
                       </Link>
                     ),
                   )}
