@@ -42,6 +42,20 @@ class TestimonyCollection extends BaseCollection {
       },
       'testimonyProgress.$': Number,
       office: { type: String, allowedValues: offices, optional: true },
+      reviewerComments: {
+        type: Array,
+        optional: true,
+      },
+      'reviewerComments.$': {
+        type: new SimpleSchema({
+          comment: String,
+          // commentDate: Date,
+          writer: String,
+          writerPosition: String,
+          submissionOption: { type: String, allowedValues: ['reject', 'approve'] },
+        }),
+        optional: true,
+      },
     }));
   }
 
@@ -49,9 +63,9 @@ class TestimonyCollection extends BaseCollection {
    * Defines a new Testimony item.
    */
   define({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office, reviewerComments }) {
     const docID = this._collection.insert({ owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-      content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office });
+      content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office, reviewerComments });
     return docID;
   }
 
@@ -59,7 +73,7 @@ class TestimonyCollection extends BaseCollection {
    * Updates the given document.
    */
   update(docID, { owner, committeeChair, committeeName, billNumber, billDraftNumber, title, hearingDate, hearingLocation, deptPosition, introduction,
-    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office }) {
+    content, closing, testifier, representing, contactEmail, contactPhone, testimonyProgress, office, reviewerComments }) {
     const updateData = {};
     if (_.isString(owner)) {
       updateData.owner = owner;
@@ -114,6 +128,9 @@ class TestimonyCollection extends BaseCollection {
     }
     if (office) {
       updateData.office = office;
+    }
+    if (reviewerComments) {
+      updateData.reviewerComments = reviewerComments;
     }
 
     this._collection.update(docID, { $set: updateData });

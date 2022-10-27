@@ -2,9 +2,10 @@ import React, { useRef } from 'react';
 import { useParams } from 'react-router';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useReactToPrint } from 'react-to-print';
-import { Breadcrumb, Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
+import { Badge, Breadcrumb, Button, ButtonGroup, Col, Container, Row, Toast } from 'react-bootstrap';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
+import Swal from 'sweetalert2';
 import { Testimony } from '../components/Testimony';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
@@ -44,18 +45,25 @@ const TestimonyPage = () => {
     };
   }, [measureID, testimonyID]);
 
-  const submit = (type) => {
+  const addComment = (type, value) => {
     if (type === 'approve') {
       testimony.testimonyProgress.push(0);
     }
     if (type === 'reject') {
       testimony.testimonyProgress.pop();
     }
+    testimony.reviewerComments.push({
+      comment: value,
+      writer: user.email,
+      writerPosition: user.position,
+      submissionOption: type,
+    });
     const testimonyProgress = testimony.testimonyProgress;
+    const reviewerComments = testimony.reviewerComments;
 
-    console.log(testimonyProgress);
+    // console.log(testimonyProgress);
     const collectionName = Testimonies.getCollectionName();
-    const updateData = { id: testimonyID, testimonyProgress };
+    const updateData = { id: testimonyID, testimonyProgress, reviewerComments };
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -68,6 +76,20 @@ const TestimonyPage = () => {
 
   };
 
+  const writeComment = (type) => {
+    Swal.fire({
+      title: 'Add a comment',
+      text: 'comment:',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonColor: 'green',
+    }).then((result) => {
+      if (result.value) {
+        addComment(type, result.value);
+      }
+    });
+  };
+
   const finalConfirmation = () => {
     swal({
       title: 'Are you sure?',
@@ -77,7 +99,7 @@ const TestimonyPage = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        submit('approve');
+        addComment('approve', 'Finalized');
       }
     });
 
@@ -105,7 +127,7 @@ const TestimonyPage = () => {
                 <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
                   Edit
                 </Button>
-                <Button onClick={() => submit('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
                   Route for Office Review
                 </Button>
               </ButtonGroup>
@@ -116,10 +138,10 @@ const TestimonyPage = () => {
                 <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
                   Edit
                 </Button>
-                <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Testimony Writer
                 </Button>
-                <Button onClick={() => submit('approve')} variant="success" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('approve')} variant="success" size="m" className="bill-button-spacing float-end">
                   Route to PIPE
                 </Button>
               </ButtonGroup>
@@ -129,10 +151,10 @@ const TestimonyPage = () => {
                 <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
                   Edit
                 </Button>
-                <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to Office for additional edits
                 </Button>
-                <Button onClick={() => submit('approve')} variant="warning" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('approve')} variant="warning" size="m" className="bill-button-spacing float-end">
                   Route to Final Approver
                 </Button>
               </ButtonGroup>
@@ -142,10 +164,10 @@ const TestimonyPage = () => {
                 <Button href={`/edit-testimony/${measureID}&${testimonyID}`} variant="secondary" size="m" className="bill-button-spacing">
                   Edit
                 </Button>
-                <Button onClick={() => submit('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('reject')} variant="danger" size="m" className="bill-button-spacing float-end">
                   Send back to PIPE
                 </Button>
-                <Button onClick={() => submit('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
+                <Button onClick={() => writeComment('approve')} variant="primary" size="m" className="bill-button-spacing float-end">
                   Approve and Send to Office Secretary
                 </Button>
               </ButtonGroup>
@@ -177,6 +199,27 @@ const TestimonyPage = () => {
             measureTitle: (testimony.billNumber ? measure.measureType.toUpperCase().concat(measure.measureNumber) : ''),
             measureDescription: (testimony.billNumber ? measure.description : '') }}
         />
+      </Container>
+      <Container>
+        {testimony.reviewerComments.map((obj) => (
+          <Toast className="mb-3">
+            {obj.submissionOption === 'approve' ? (
+              <Toast.Header>
+                <strong className="me-auto">{obj.writer}</strong>
+                <Badge bg="primary" className="me-auto">{obj.writerPosition}</Badge>
+                <Badge bg="success">Approved</Badge>
+              </Toast.Header>
+            ) : ''}
+            {obj.submissionOption === 'reject' ? (
+              <Toast.Header>
+                <strong className="me-auto">{obj.writer}</strong>
+                <Badge bg="primary" className="me-auto">{obj.writerPosition}</Badge>
+                <Badge bg="danger">Rejected</Badge>
+              </Toast.Header>
+            ) : ''}
+            <Toast.Body>{obj.comment}</Toast.Body>
+          </Toast>
+        ))}
       </Container>
     </div>
   ) : <LoadingSpinner message="Loading Testimony" />;

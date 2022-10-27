@@ -70,10 +70,11 @@ const CreateTestimonyModal = ({ testimonyDefaultData }) => {
     const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone, office } = data;
     const owner = Meteor.user().username;
     const testimonyProgress = [0];
+    const reviewerComments = [];
     const collectionName = Testimonies.getCollectionName();
     if (parseInt(billNumber, 10) === parseInt(testimonyDefaultData.measureNumber.valueOf(), 10)) {
       const definitionData = { owner, committeeChair, committeeName, billNumber, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier,
-        representing, contactEmail, contactPhone, testimonyProgress, office };
+        representing, contactEmail, contactPhone, testimonyProgress, office, reviewerComments };
       defineMethod.callPromise({ collectionName, definitionData })
         .catch(error => swal('Error', error.message, 'error'))
         .then(() => {
