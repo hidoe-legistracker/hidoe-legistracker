@@ -86,10 +86,7 @@ const Directory = () => {
     };
   }, []);
 
-  const n = useParams();
-  const filterHearings = _.where(hearings, { notice: n.notice });
-  const getHearingData = _.first(filterHearings);
-  const getHearings = _.uniq(_.pluck(hearings, 'notice'));
+  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
 
   // Filter Measures
   let filteredMeasures;
@@ -319,7 +316,7 @@ const Directory = () => {
               ...
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
-              <Table className="directory-table">
+              <Table className="directory-table" striped>
                 <thead style={{ marginBottom: 10 }}>
                   <tr>
                     <th scope="col">Date/Time</th>
@@ -328,19 +325,21 @@ const Directory = () => {
                   </tr>
                 </thead>
                 <tbody style={{ position: 'relative' }}>
-                  <tr>
-                    <td>{getHearingData.datetime}</td>
-                    <td>{getHearingData.room}</td>
-                    <td>
-                      {getHearings.map(
-                        (hearing) => (
-                          <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing}`}>
-                            {hearing}
-                          </Link>
-                        ),
-                      )}
-                    </td>
-                  </tr>
+                  {getHearings.map(
+                    (hearing) => (
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`}>
+                        <td>
+                          {hearing.datetime}
+                        </td>
+                        <td>
+                          {hearing.room}
+                        </td>
+                        <td>
+                          {hearing.notice}
+                        </td>
+                      </Link>
+                    ),
+                  )}
                 </tbody>
               </Table>
             </Tab>
