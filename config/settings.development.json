@@ -1,6 +1,12 @@
 {
   "defaultAccounts": [
     { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Admin", "lastName": "MATRP", "employeeID": 1, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "jane@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Jane", "lastName": "MATRP", "employeeID": 3, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "chris@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Chris", "lastName": "MATRP", "employeeID": 4, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "ethan@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "Ethan", "lastName": "MATRP", "employeeID": 5, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "james@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "James", "lastName": "MATRP", "employeeID": 6, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "martha@foo.com", "password": "changeme", "role": "USER", "firstName": "Martha", "lastName": "Doe", "employeeID": 7, "newAccount": false, "myFolders": [], "offices":  []},
+    { "email": "maddison@foo.com", "password": "changeme", "role": "USER", "firstName": "Maddison", "lastName": "Doe", "employeeID": 8, "newAccount": false, "myFolders": [], "offices":  []},
     { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false, "myFolders": [], "offices": [] }
   ],
   
