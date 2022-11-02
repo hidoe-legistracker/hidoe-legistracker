@@ -17,22 +17,28 @@ import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseCollection.methods';
 import { ROLE } from '../../api/role/Role';
+import { Emails } from '../../api/email/EmailCollection';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, hearings, emails } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
-    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready();
+    const hearingSubscription = Hearings.subscribeHearings();
+    const emailSubscription = Emails.subscribeEmail();
+    const rdy = measureSubscription.ready() && testimonySubscription.ready() && userSubscription.ready() && adminSubscription.ready() && hearingSubscription.ready() && emailSubscription.ready();
+
+    const currUser = Meteor.user() ? Meteor.user().username : '';
 
     const measureItem = Measures.findOne({ _id: _id }, {});
     const testimonyCollection = Testimonies.find({}, {}).fetch();
-
-    const currUser = Meteor.user() ? Meteor.user().username : '';
+    const hearingCollection = Hearings.find({}, {}).fetch();
+    const emailCollection = Emails.find({ recipients: currUser }, {}).fetch();
 
     const username = Meteor.user() ? Meteor.user().username : '';
     let usr = UserProfiles.findOne({ email: username });
@@ -46,6 +52,8 @@ const ViewBill = () => {
       measure: measureItem,
       ready: rdy,
       user: usr,
+      hearings: hearingCollection,
+      emails: emailCollection,
     };
   }, [_id]);
 
@@ -99,8 +107,21 @@ const ViewBill = () => {
   };
 
   const [billOffices, setOffices] = useState('');
+  const [billMainOffice, setMainOffice] = useState('');
 
   const assignOffice = (bill, office) => {
+    // eslint-disable-next-line no-param-reassign
+    const collectionName = Measures.getCollectionName();
+    if (!billMainOffice.includes(office)) {
+      setMainOffice(`${billMainOffice} ${office} `);
+      const updateData = { id: bill._id, mainOfficeType: `${billMainOffice} ${office} ` };
+      updateMethod.callPromise({ collectionName, updateData })
+        .catch()
+        .then();
+    }
+  };
+
+  const assignSupOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
     if (!billOffices.includes(office)) {
@@ -117,6 +138,32 @@ const ViewBill = () => {
   const bill = measure;
 
   let userList;
+  const filteredHearings = hearings.filter(hearing => hearing.measureNumber === measure.measureNumber
+    && hearing.measureType === measure.measureType);
+
+  const sendNotification = () => {
+    if (filteredHearings.length > 0) {
+      const notification = {
+        subject: `Hearing Notice ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
+        senderEmail: '[NOTIFICATION]',
+        recipients: [currentUser],
+        ccs: [],
+        bccs: [],
+        date: new Date(),
+        body: `HEARING DATE/TIME: ${filteredHearings[0].datetime} \n HEARING LOCATION: ${filteredHearings[0].room} \n\n Please click on the 'Hearing Notice' button below to view the complete hearing notice.`,
+        isDraft: false,
+      };
+      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject && email.body === notification.body);
+      const collectionName = Emails.getCollectionName();
+      const definitionData = notification;
+      if (duplicateEmails.length === 0) {
+        defineMethod.callPromise({ collectionName, definitionData });
+      } else if (duplicateEmails.length > 0) {
+        removeItMethod.callPromise({ collectionName, instance: duplicateEmails[0]._id });
+        defineMethod.callPromise({ collectionName, definitionData });
+      }
+    }
+  };
 
   const isChecked = () => {
     userList = measure.emailList;
@@ -127,6 +174,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
+      sendNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }
@@ -173,7 +221,18 @@ const ViewBill = () => {
                 <Dropdown className="float-end" style={{ marginRight: 5 }}>
                   <Dropdown.Toggle id="dropdown-basic">
                     <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                    Assign to Office
+                    Assign to Supporting Office(s)
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignSupOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : ''}
+              {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                <Dropdown className="float-end" style={{ marginRight: 5 }}>
+                  <Dropdown.Toggle id="dropdown-basic">
+                    <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                    Assign to Main Office
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
@@ -190,7 +249,11 @@ const ViewBill = () => {
             <Row>{measure.measureTitle}</Row>
           </Col>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Office</Row>
+            <Row style={{ fontWeight: 'bold' }}>Main Office</Row>
+            <Row>{measure.mainOfficeType}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Supporting Office(s)</Row>
             <Row>{measure.officeType}</Row>
           </Col>
           <Col className="view-bill-columns">

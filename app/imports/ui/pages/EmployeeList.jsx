@@ -131,12 +131,18 @@ const EmployeeList = () => {
                 <th>Profile</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Position</th>
                 <th>Employee ID</th>
                 <th>View Profile</th>
               </tr>
             </thead>
             <tbody>
-              {getFilteredProfiles().map((profile, index) => <EmployeeListItem key={index} profile={{ _id: profile._id, name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID }} />)}
+              {getFilteredProfiles().map((profile, index) => (
+                <EmployeeListItem
+                  key={index}
+                  profile={{ _id: profile._id, name: `${profile.firstName} ${profile.lastName}`, email: profile.email, employeeID: profile.employeeID, position: profile.position }}
+                />
+              ))}
             </tbody>
           </Table>
         </Col>

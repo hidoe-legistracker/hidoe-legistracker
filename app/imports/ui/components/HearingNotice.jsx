@@ -1,16 +1,19 @@
-import React from 'react';
-import { Col, Container, Row, Breadcrumb } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Col, Container, Row, Breadcrumb, Button, Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Link, NavLink } from 'react-router-dom';
 import _ from 'underscore';
 import { useParams } from 'react-router';
+import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from './LoadingSpinner';
 
 const HearingNotice = () => {
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const n = useParams();
   // const noticeTitle = _.pluck(n, 'notice');
@@ -31,6 +34,59 @@ const HearingNotice = () => {
 
   const filterHearings = _.where(hearings, { notice: n.notice });
   const getHearing = _.first(filterHearings);
+  const filteredHearings = [];
+  filterHearings.forEach(h => (
+    _.where(measure, { measureNumber: h.measureNumber }).forEach(m => {
+      filteredHearings.push(m);
+    })));
+  const numHearings = _.size(filteredHearings);
+  let numPages = parseInt(numHearings / itemsPerPage, 10);
+  if (numHearings % itemsPerPage !== 0) {
+    numPages++;
+  }
+
+  // Pagination stuff
+  const getItemsPerPage = () => {
+    const selection = document.getElementById('pagination-items-per-page').value;
+    setItemsPerPage(selection);
+    setCurrentPage(1);
+    document.getElementById('pagination-select-page').value = 1;
+  };
+  const getItemsInPage = () => {
+    const selection = document.getElementById('pagination-select-page').value;
+    setCurrentPage(selection);
+  };
+  const goToFirstPage = () => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+  };
+  const goToPrevPage = () => {
+    if (currentPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentPage - 1;
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const goToLastPage = () => {
+    document.getElementById('pagination-select-page').value = numPages;
+    setCurrentPage(numPages);
+  };
+  const goToNextPage = () => {
+    if (currentPage !== numPages) {
+      document.getElementById('pagination-select-page').value = currentPage + 1;
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const getFilteredHearings = () => {
+    const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
+    const endIndex = +startIndex + +itemsPerPage;
+    let ret;
+    if (endIndex < numHearings) {
+      ret = filteredHearings.slice(startIndex, endIndex);
+    } else {
+      ret = filteredHearings.slice(startIndex, numHearings);
+    }
+    return ret;
+  };
 
   return ready ? (
   // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -116,37 +172,58 @@ const HearingNotice = () => {
               </tr>
             </thead>
             <tbody>
-              {filterHearings.map((h) => (
-                _.where(measure, { measureNumber: h.measureNumber }).map((m) => (
-                  <Link className="table-row" as={NavLink} exact to={`/view-bill/${m._id}`}>
-                    <td>{`${m.measureNumber}`}</td>
-                    {/* eslint-disable-next-line consistent-return */}
-                    <td>{
-                      m.code === undefined ? (
+              {getFilteredHearings().map(m => (
+                <Link className="table-row" as={NavLink} exact to={`/view-bill/${m._id}`}>
+                  <td>{`${m.measureNumber}`}</td>
+                  {/* eslint-disable-next-line consistent-return */}
+                  <td>{
+                    m.code === undefined ? (
+                      '-'
+                    ) : `${m.code}`
+                  }
+                  </td>
+                  <td>{`${m.measureTitle?.substring(0, 50)}`}</td>
+                  <td>
+                    {
+                      m.officeType === undefined ? (
                         '-'
-                      ) : `${m.code}`
+                      ) : `${m.officeType?.substring(0, 150)}...`
                     }
-                    </td>
-                    <td>{`${m.measureTitle?.substring(0, 50)}`}</td>
-                    <td>
-                      {
-                        m.officeType === undefined ? (
-                          '-'
-                        ) : `${m.officeType?.substring(0, 150)}...`
-                      }
-                    </td>
-                    <td>
-                      {
-                        m.description === undefined ? (
-                          '-'
-                        ) : `${m.description?.substring(0, 150)}...`
-                      }
-                    </td>
-                  </Link>
-                ))
+                  </td>
+                  <td>
+                    {
+                      m.description === undefined ? (
+                        '-'
+                      ) : `${m.description?.substring(0, 150)}...`
+                    }
+                  </td>
+                </Link>
               ))}
             </tbody>
           </Table>
+          <Row className="d-flex flex-row-reverse">
+            <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToLastPage}>
+              <ChevronDoubleRight />
+            </Button>
+            <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToNextPage}>
+              <ChevronRight />
+            </Button>
+            <Form.Select id="pagination-select-page" style={{ width: '90px' }} onChange={getItemsInPage}>
+              {[...Array(numPages)].map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
+            </Form.Select>
+            <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToPrevPage}>
+              <ChevronLeft />
+            </Button>
+            <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToFirstPage}>
+              <ChevronDoubleLeft />
+            </Button>
+            <Form.Select id="pagination-items-per-page" style={{ width: '80px', marginRight: '3em' }} onChange={getItemsPerPage}>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </Form.Select>
+            <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
+          </Row>
         </Container>
       </Container>
     </div>

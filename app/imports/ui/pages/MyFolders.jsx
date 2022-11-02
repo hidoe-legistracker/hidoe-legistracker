@@ -165,10 +165,10 @@ const MyFolders = () => {
             { user.myFolders.map((folder, index) => (
               <Row gap={2}>
                 <Col>
-                  <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill onClick={() => setModalShow(true)}>
-                    <Card.Body eventKey={index}>
+                  <Card style={{ width: '18rem' }} defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
+                    <Card.Body>
                       <Card.Title><Folder size={25} style={{ marginRight: '1em' }} />
-                        <Nav.Link eventKey={index}>{folder.title}</Nav.Link>
+                        <Nav.Link onClick={() => setModalShow(true)} eventKey={index}>{folder.title}</Nav.Link>
                       </Card.Title>
                     </Card.Body>
                   </Card>
