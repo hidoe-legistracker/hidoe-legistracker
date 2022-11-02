@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb } from 'react-bootstrap';
-import { FileEarmarkText, BookmarkPlus, ArrowLeftRight } from 'react-bootstrap-icons';
+import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
@@ -186,6 +186,14 @@ const ViewBill = () => {
       .then(() => { checked ? swal('Success', 'You have been added to the email list for this bill', 'success') : swal('Success', 'You have been removed from the email list for this bill', 'success'); });
   };
 
+  const dead = () => {
+    const collectionName = Measures.getCollectionName();
+    const updateData = { id: _id, active: false };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Bill is now dead', '', 'success'));
+  };
+
   return ready ? (
     <div>
       <Container>
@@ -197,7 +205,7 @@ const ViewBill = () => {
         </Row>
       </Container>
       <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container" style={{ marginTop: 0 }}>
-        <Container>
+        <Container className="mb-5">
           <Row>
             <Col>
               <Button variant="secondary">
@@ -206,6 +214,13 @@ const ViewBill = () => {
                   Monitoring Report
                 </Link>
               </Button>
+              {' '}
+              {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                <Button variant="danger" onClick={dead} disabled={!measure.active}>
+                  <ExclamationTriangle style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                  {measure.active ? 'Mark as Dead' : 'Bill is Dead'}
+                </Button>
+              ) : ''}
               <Dropdown className="float-end">
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />

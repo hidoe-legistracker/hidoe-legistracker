@@ -33,6 +33,7 @@ class MeasureCollection extends BaseCollection {
       companion: { type: String, optional: true },
       emailList: { type: Array, defaultValue: [] },
       'emailList.$': String,
+      active: { type: Boolean, defaultValue: true },
     }));
   }
 
@@ -49,7 +50,7 @@ class MeasureCollection extends BaseCollection {
     return docID;
   }
 
-  update(docID, { lastUpdated, code, measurePdfUrl, officeType, mainOfficeType, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList }) {
+  update(docID, { lastUpdated, code, measurePdfUrl, officeType, mainOfficeType, measureArchiveUrl, measureTitle, reportTitle, bitAppropriation, description, status, introducer, currentReferral, companion, emailList, active }) {
     const updateData = {};
     if (lastUpdated) {
       updateData.lastUpdated = lastUpdated;
@@ -95,6 +96,9 @@ class MeasureCollection extends BaseCollection {
     }
     if (emailList) {
       updateData.emailList = emailList;
+    }
+    if (active !== undefined) {
+      updateData.active = active;
     }
     this._collection.update(docID, { $set: updateData });
   }
