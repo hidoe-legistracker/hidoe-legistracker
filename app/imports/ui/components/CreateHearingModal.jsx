@@ -2,25 +2,32 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Button, Container, Form, Modal, Row, Col } from 'react-bootstrap';
+import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import swal from 'sweetalert';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { Emails } from '../../api/email/EmailCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
+import { Hearings } from '../../api/hearing/HearingCollection';
+import { Measures } from '../../api/measure/MeasureCollection';
 
-let newEmail = {
-  subject: '',
+const newHearing = {
+  year: '',
+  measureType: '',
+  measureNumber: '',
+  measureRelativeUrl: '',
+  code: '',
+  officeType: '',
   recipients: [],
-  offices: [],
-  committees: [],
-  ccs: [],
-  bccs: [],
-  date: '',
-  body: '',
+  committee: '',
+  datetime: '',
+  description: '',
+  room: '',
+  notice: '',
+  noticeUrl: '',
+  noticePdfUrl: '',
 };
 
 const offices = [
@@ -32,6 +39,16 @@ const offices = [
   { label: 'OSIP' },
   { label: 'OSSS' },
   { label: 'OTM' },
+];
+
+const types = [
+  { label: 'hb' },
+  { label: 'sb' },
+  { label: 'hr' },
+  { label: 'sr' },
+  { label: 'hcr' },
+  { label: 'scr' },
+  { label: 'gm' },
 ];
 
 const committees = [
@@ -70,13 +87,13 @@ const committees = [
   { label: 'HSG' },
 ];
 
-const CreateHearingModal = ({ modal, emailItem }) => {
-  const { thisUser, users, draftEmail, defaultUsers, defaultCcs, defaultBccs, ready } = useTracker(() => {
+const CreateHearingModal = ({ modal }) => {
+  const { thisUser, users, defaultUsers, ready, bills } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
-    const emailSubscription = Emails.subscribeEmail();
-    const isReady = userSubscription.ready() && adminSubscription.ready() && emailSubscription.ready();
+    const measureSubscription = Measures.subscribeMeasuresAdmin();
+    const isReady = userSubscription.ready() && adminSubscription.ready() && measureSubscription.ready();
 
     const usrs = _.sortBy(UserProfiles.find({}, { }).fetch().concat(AdminProfiles.find({}, {}).fetch()), (obj) => obj.lastName);
     const formattedUsers = [];
@@ -84,105 +101,57 @@ const CreateHearingModal = ({ modal, emailItem }) => {
     let thisUsr = UserProfiles.findOne({ email: username }, {});
     if (thisUsr === undefined) thisUsr = AdminProfiles.findOne({ email: username }, {});
 
-    const findEmail = emailItem !== undefined ? Emails.findOne({ _id: emailItem._id }, {}) : undefined;
-
-    let valid = true;
-    if (findEmail === undefined || findEmail.senderEmail !== username) {
-      valid = false;
-    }
-
-    const ret_email = {
-      subject: '',
-      recipients: [],
-      ccs: [],
-      bccs: [],
-      date: '',
-      body: '',
-    };
-
     const defaultUsrs = [];
-    const defaultCcss = [];
-    const defaultBccss = [];
 
     usrs.forEach(user => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-
-      if (valid) {
-        if (findEmail.recipients.indexOf(user.email) >= 0) {
-          defaultUsrs.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-          ret_email.recipients.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-        }
-        if (findEmail.ccs.indexOf(user.email) >= 0) {
-          defaultCcss.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-          ret_email.ccs.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-        }
-        if (findEmail.bccs.indexOf(user.email) >= 0) {
-          defaultBccss.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-          ret_email.bccs.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
-        }
-        ret_email.subject = findEmail.subject;
-        ret_email.body = findEmail.body;
-
-        newEmail = ret_email;
-      }
     });
+
+    const measures = Measures.find({}, {}).fetch();
 
     return {
       ready: isReady,
       thisUser: thisUsr,
       users: formattedUsers,
-      draftEmail: findEmail,
       defaultUsers: defaultUsrs,
-      defaultCcs: defaultCcss,
-      defaultBccs: defaultBccss,
+      bills: measures,
     };
   }, []);
+  console.log(thisUser);
 
-  const updateEmail = (event, property) => {
-    newEmail[property] = event;
+  const updateHearing = (event, property) => {
+    newHearing[property] = event;
   };
 
-  const setMail = (str) => {
-    document.getElementById('email-body').value = str;
-  };
-
-  const submit = (type) => {
-    const { subject, body } = newEmail;
+  const submit = () => {
     const recipients = [];
-    const ccs = [];
-    const bccs = [];
     modal.setShow(false);
-    if (subject === '' || newEmail.recipients.length === 0 || body === '') {
-      return;
-    }
 
-    newEmail.recipients.forEach(recipient => {
+    newHearing.recipients.forEach(recipient => {
       recipients.push(recipient.value);
     });
-    newEmail.offices.forEach(office => {
-      recipients.push(office.value);
-    });
-    newEmail.ccs.forEach(cc => {
-      ccs.push(cc.value);
-    });
-    newEmail.bccs.forEach(bcc => {
-      bccs.push(bcc.value);
-    });
+    const currentDate = new Date();
 
-    const senderEmail = thisUser.email;
-    const senderName = `${thisUser.firstName} ${thisUser.lastName}`;
-    const date = new Date(); // new Date(new Date().toLocaleDateString()).toISOString().substring(0, 10);
-    const collectionName = Emails.getCollectionName();
-
-    const definitionData = { subject, senderName, senderEmail, recipients, ccs, bccs, date, body, isDraft: type === 'draft' };
+    const collectionName = Hearings.getCollectionName();
+    const definitionData = {
+      year: currentDate.getFullYear(),
+      measureType: newHearing.measureType,
+      measureNumber: newHearing.measureNumber,
+      measureRelativeUrl: newHearing.measureRelativeUrl,
+      code: newHearing.code,
+      officeType: newHearing.type,
+      committee: newHearing.committee,
+      datetime: newHearing.datetime,
+      description: newHearing.description,
+      room: newHearing.room,
+      notice: newHearing.notice,
+      noticeUrl: newHearing.noticeUrl,
+      noticePdfUrl: newHearing.noticePdfUrl,
+    };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
-        if (type === 'draft') {
-          swal('Draft Saved', '', 'success');
-        } else {
-          swal('Success', 'Email Sent!', 'success');
-        }
+        swal('Success', 'Email Sent!', 'success');
       });
   };
 
@@ -192,7 +161,6 @@ const CreateHearingModal = ({ modal, emailItem }) => {
       show={modal.show}
       onHide={() => {
         modal.setShow(false);
-        setMail('');
       }}
       backdrop="static"
       keyboard={false}
@@ -210,7 +178,7 @@ const CreateHearingModal = ({ modal, emailItem }) => {
                 <Form.Control
                   type="subject"
                   placeholder="ie. Thursday, February 10, 2022 2:00 pm"
-                  onChange={(e) => updateEmail(e.target.value, 'subject')}
+                  onChange={(e) => updateHearing(e.target.value, 'datetime')}
                 />
               </Form.Group>
             </Col>
@@ -220,7 +188,7 @@ const CreateHearingModal = ({ modal, emailItem }) => {
                 <Form.Control
                   type="subject"
                   placeholder=""
-                  onChange={(e) => updateEmail(e.target.value, 'subject')}
+                  onChange={(e) => updateHearing(e.target.value, 'room')}
                 />
               </Form.Group>
             </Col>
@@ -234,7 +202,7 @@ const CreateHearingModal = ({ modal, emailItem }) => {
                   options={offices}
                   isMulti
                   closeMenuOnSelect={false}
-                  onChange={(e) => updateEmail(e, 'offices')}
+                  onChange={(e) => updateHearing(e, 'offices')}
                 />
               </Form.Group>
             </Col>
@@ -246,12 +214,11 @@ const CreateHearingModal = ({ modal, emailItem }) => {
                   options={committees}
                   isMulti
                   closeMenuOnSelect={false}
-                  onChange={(e) => updateEmail(e, 'offices')}
+                  onChange={(e) => updateHearing(e, 'committee')}
                 />
               </Form.Group>
             </Col>
           </Row>
-
           <Form.Group className="to">
             <Form.Label>To: *</Form.Label>
             <Select
@@ -259,58 +226,58 @@ const CreateHearingModal = ({ modal, emailItem }) => {
               options={users}
               isMulti
               closeMenuOnSelect={false}
-              onChange={(e) => updateEmail(e, 'recipients')}
+              onChange={(e) => newHearing(e, 'recipients')}
               defaultValue={defaultUsers}
             />
           </Form.Group>
-          <Form.Group className="cc">
-            <Form.Label>Cc: </Form.Label>
+          <Form.Group>
+            <Form.Label>Hearing Type</Form.Label>
             <Select
-              id="email-cc"
-              options={users}
-              isMulti
+              id="hearing-type"
+              options={types}
               closeMenuOnSelect={false}
-              onChange={(e) => updateEmail(e, 'ccs')}
-              defaultValue={defaultCcs}
-            />
-          </Form.Group>
-          <Form.Group className="bcc">
-            <Form.Label>Bcc: </Form.Label>
-            <Select
-              id="email-bcc"
-              options={users}
-              isMulti
-              closeMenuOnSelect={false}
-              onChange={(e) => updateEmail(e, 'bccs')}
-              defaultValue={defaultBccs}
+              onChange={(e) => newHearing(e, 'measureType')}
+              defaultValue={defaultUsers}
             />
           </Form.Group>
         </Form>
-        <Container>
-          <hr />
-        </Container>
         <Form>
           <Form.Group className="subject">
-            <Form.Label>Subject: </Form.Label>
-            <Form.Control
-              type="subject"
-              placeholder=""
-              onChange={(e) => updateEmail(e.target.value, 'subject')}
-              defaultValue={draftEmail ? draftEmail.subject : ''}
-            />
+            <Row>
+              <Col>
+                <Form.Label>Notice URL</Form.Label>
+                <Form.Control
+                  type="notice-url"
+                  placeholder=""
+                  onChange={(e) => updateHearing(e.target.value, 'noticeUrl')}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Notice PDF URL</Form.Label>
+                <Form.Control
+                  type="notice-pdf-url"
+                  placeholder=""
+                  onChange={(e) => updateHearing(e.target.value, 'noticePdfUrl')}
+                />
+              </Col>
+            </Row>
           </Form.Group>
           <Form.Group className="body">
-            <Form.Label>Body: </Form.Label>
+            <Form.Label>Add Bills</Form.Label>
+            <Select
+              id="add-bills"
+              isMulti
+              options={bills}
+              closeMenuOnSelect={false}
+              onChange={(e) => updateHearing(e, 'measureNumber')}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Notice Label</Form.Label>
             <Form.Control
-              id="email-body"
-              type="body"
-              as="textarea"
-              rows={5}
-              onChange={(e) => {
-                setMail(e.target.value);
-                updateEmail(e.target.value, 'body');
-              }}
-              defaultValue={draftEmail ? draftEmail.body : ''}
+              type="notice-label"
+              placeholder="ie. HEARING_AEN_FIN_11_01_2022 (HEARING_COMMITTEES_MONTH_DAY_YEAR)"
+              onChange={(e) => updateHearing(e.target.value, 'notice')}
             />
           </Form.Group>
         </Form>
@@ -318,12 +285,9 @@ const CreateHearingModal = ({ modal, emailItem }) => {
       <Modal.Footer>
         <Button
           type="button"
-          onClick={() => {
-            submit('send');
-            setMail('');
-          }}
           variant="primary"
           className="mx-3"
+          onClick={() => submit()}
         >Submit Hearing Notice
         </Button>
       </Modal.Footer>
@@ -337,13 +301,6 @@ CreateHearingModal.propTypes = {
     show: PropTypes.bool,
     setShow: PropTypes.func,
   }).isRequired,
-  emailItem: PropTypes.shape({
-    _id: PropTypes.string,
-  }),
-};
-
-CreateHearingModal.defaultProps = {
-  emailItem: undefined,
 };
 
 export default CreateHearingModal;
