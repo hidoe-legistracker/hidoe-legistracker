@@ -106,9 +106,21 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
-  const [billOffices, setOffices] = useState('');
+  const [billOffices, setOffices, setMainOffice] = useState('');
 
   const assignOffice = (bill, office) => {
+    // eslint-disable-next-line no-param-reassign
+    const collectionName = Measures.getCollectionName();
+    if (!billOffices.includes(office)) {
+      setMainOffice(`${billOffices} ${office} `);
+      const updateData = { id: bill._id, mainOfficeType: `${billOffices} ${office} ` };
+      updateMethod.callPromise({ collectionName, updateData })
+        .catch()
+        .then();
+    }
+  };
+
+  const assignSupOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
     if (!billOffices.includes(office)) {
@@ -215,6 +227,17 @@ const ViewBill = () => {
                   </Dropdown.Menu>
                 </Dropdown>
               ) : ''}
+              {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                <Dropdown className="float-end" style={{ marginRight: 5 }}>
+                  <Dropdown.Toggle id="dropdown-basic">
+                    <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                    Assign to Supporting Office(s)
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignSupOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : ''}
             </Col>
           </Row>
         </Container>
@@ -225,7 +248,11 @@ const ViewBill = () => {
             <Row>{measure.measureTitle}</Row>
           </Col>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Office</Row>
+            <Row style={{ fontWeight: 'bold' }}>Main Office</Row>
+            <Row>{measure.mainOfficeType}</Row>
+          </Col>
+          <Col className="view-bill-columns">
+            <Row style={{ fontWeight: 'bold' }}>Supporting Office(s)</Row>
             <Row>{measure.officeType}</Row>
           </Col>
           <Col className="view-bill-columns">
