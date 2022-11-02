@@ -33,8 +33,6 @@ import EditProfile from '../pages/EditProfile';
 import EditEmailDraft from '../pages/EditEmailDraft';
 import BillCalendar from '../components/Calendar';
 import HearingNotice from '../components/HearingNotice';
-import { UserProfiles } from '../../api/user/UserProfileCollection';
-import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
@@ -74,7 +72,7 @@ const App = () => {
           <Route path="/monitoring-report/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
-          <Route path="/secretary" element={<SecretaryProtectedRoute><Secretary /></SecretaryProtectedRoute>} />
+          <Route path="/secretary" element={<ProtectedRoute><Secretary /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
@@ -114,29 +112,6 @@ const AdminProtectedRoute = ({ children }) => {
   return (isLogged && isAdmin) ? children : <Navigate to="/notauthorized" />;
 };
 
-const SecretaryProtectedRoute = ({ children }) => {
-
-  const { user } = useTracker(() => {
-
-    const currUser = Meteor.user() ? Meteor.user().username : '';
-    const userSubscription = UserProfiles.subscribe();
-    const rdy = userSubscription.ready();
-    let usr = UserProfiles.findOne({ email: currUser }, {});
-    if (usr === undefined) usr = AdminProfiles.findOne({ email: currUser }, {});
-
-    return {
-      user: usr,
-      ready: rdy,
-    };
-  }, []);
-
-  const isLogged = Meteor.userId() !== null;
-  if (!isLogged) {
-    return <Navigate to="/signin" />;
-  }
-  return (user.position === 'OfficeSecretary') ? children : <Navigate to="/secretary" />;
-};
-
 // Require a component and location to be passed to each ProtectedRoute.
 ProtectedRoute.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -155,12 +130,5 @@ AdminProtectedRoute.defaultProps = {
   children: <Landing />,
 };
 
-SecretaryProtectedRoute.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-};
-
-SecretaryProtectedRoute.defaultProps = {
-  children: <Landing />,
-};
 
 export default App;
