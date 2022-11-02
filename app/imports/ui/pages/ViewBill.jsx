@@ -106,14 +106,15 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
-  const [billOffices, setOffices, setMainOffice] = useState('');
+  const [billOffices, setOffices] = useState('');
+  const [billMainOffice, setMainOffice] = useState('');
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    if (!billOffices.includes(office)) {
-      setMainOffice(`${billOffices} ${office} `);
-      const updateData = { id: bill._id, mainOfficeType: `${billOffices} ${office} ` };
+    if (!billMainOffice.includes(office)) {
+      setMainOffice(`${billMainOffice} ${office} `);
+      const updateData = { id: bill._id, mainOfficeType: `${billMainOffice} ${office} ` };
       updateMethod.callPromise({ collectionName, updateData })
         .catch()
         .then();
