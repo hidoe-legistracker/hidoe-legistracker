@@ -221,10 +221,10 @@ const ViewBill = () => {
                 <Dropdown className="float-end" style={{ marginRight: 5 }}>
                   <Dropdown.Toggle id="dropdown-basic">
                     <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                    Assign to Office
+                    Assign to Supporting Office(s)
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
+                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignSupOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
                   </Dropdown.Menu>
                 </Dropdown>
               ) : ''}
@@ -232,10 +232,10 @@ const ViewBill = () => {
                 <Dropdown className="float-end" style={{ marginRight: 5 }}>
                   <Dropdown.Toggle id="dropdown-basic">
                     <ArrowLeftRight style={{ marginRight: '0.5em', marginTop: '-5px' }} />
-                    Assign to Supporting Office(s)
+                    Assign to Main Office
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignSupOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
+                    {offices.map((officeName) => <Dropdown.Item onClick={() => assignOffice(bill, officeName)}> { officeName } </Dropdown.Item>)}
                   </Dropdown.Menu>
                 </Dropdown>
               ) : ''}
