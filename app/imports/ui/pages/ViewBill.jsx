@@ -107,18 +107,14 @@ const ViewBill = () => {
   };
 
   const [billOffices, setOffices] = useState('');
-  const [billMainOffice, setMainOffice] = useState('');
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    if (!billMainOffice.includes(office)) {
-      setMainOffice(`${billMainOffice} ${office} `);
-      const updateData = { id: bill._id, mainOfficeType: `${billMainOffice} ${office} ` };
-      updateMethod.callPromise({ collectionName, updateData })
-        .catch()
-        .then();
-    }
+    const updateData = { id: bill._id, mainOfficeType: office };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch()
+      .then();
   };
 
   const assignSupOffice = (bill, office) => {

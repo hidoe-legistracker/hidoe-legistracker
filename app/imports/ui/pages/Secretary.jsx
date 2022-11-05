@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, Tab, ListGroup, ProgressBar } from 'react-bootstrap';
+import { Col, Container, Row, Tab, ProgressBar, Nav, Tabs, Table } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Link, NavLink } from 'react-router-dom';
@@ -13,11 +13,11 @@ import { Measures } from '../../api/measure/MeasureCollection';
 const billProgress = 60;
 
 const MeasureComponent = ({ measure }) => (
-  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure.measureId}`}>
+  <Link className="table-row" as={NavLink} exact to={`/view-bill/${measure._id}`}>
     <th scope="row">{measure.measureNumber}</th>
     <td>{measure.measureTitle}</td>
     <td>{measure.description}</td>
-    <td>{measure.currentReferral}</td>
+    <td>{measure.mainOfficeType}</td>
     <td>{measure.measureType}</td>
     <td>
       <ProgressBar now={billProgress} label={`${billProgress}`} visuallyHidden />
@@ -52,34 +52,55 @@ const Secretary = () => {
     };
   });
 
-  // {measures.filter(measure => measure.)}
-
   // eslint-disable-next-line no-nested-ternary
   return (ready ? (user.position === 'Office Secretary' ? (
     <Container id={PAGE_IDS.SECRETARY} className="py-3">
-      <Row>
-        {user.offices.map(office => (
+      <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+        <Row>
           <Col sm={4}>
-            <ListGroup>
-              <ListGroup.Item action href="#key">
-                {office}
-              </ListGroup.Item>
-            </ListGroup>
+            <Nav variant="pills" className="flex-column">
+              {user.offices.map((office, index) => (
+                <Nav.Item><Nav.Link eventKey={index}>{office}</Nav.Link>
+                </Nav.Item>
+              ))}
+            </Nav>
           </Col>
-        ))}
-        {user.offices.map(office => (
-          <Col sm={8}>
+          <Col>
             <Tab.Content>
-              {_.where(measures, { measureNumber: 124 }).map(meas => (
-                <Tab.Pane eventKey="#key">
-                  <MeasureComponent measure={meas} />
+              { user.offices.map((office, index) => (
+                <Tab.Pane eventKey={index}>
+                  <Col>
+                    <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
+                      <Tab eventKey="all-bills" title={office}>
+                        <Row>
+                          <Table>
+                            <thead style={{ marginBottom: 10 }}>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Bill Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Main Office</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              { _.where(measures, { mainOfficeType: office }).map((meas) => <MeasureComponent measure={meas} />) }
+                            </tbody>
+                          </Table>
+                        </Row>
+                      </Tab>
+                    </Tabs>
+                  </Col>
                 </Tab.Pane>
               ))}
             </Tab.Content>
           </Col>
-        ))}
-      </Row>
+        </Row>
+
+      </Tab.Container>
     </Container>
+
   ) : 'Must be a Secretary ') : <h1>Must be a Secretary</h1>);
 };
 

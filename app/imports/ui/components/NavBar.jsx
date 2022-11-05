@@ -67,7 +67,7 @@ const NavBar = () => {
               <Nav.Link id={COMPONENT_IDS.NAVBAR_DIRECTORY} as={NavLink} to="/directory" key="directory">Directory</Nav.Link>,
               <Nav.Link id={COMPONENT_IDS.NAVBAR_MY_FOLDERS} as={NavLink} to="/MyFolders" key="my-folders">My Folders</Nav.Link>,
             ]) : ''}
-            { user.position === 'Office Secretary' ?
+            { currentUser && user.position === 'Office Secretary' ?
               <Nav.Link id={COMPONENT_IDS.NAVBAR_SECRETARY} as={NavLink} to="/secretary" key="secretary">Secretary Duties</Nav.Link>
               : ''}
           </Nav>
