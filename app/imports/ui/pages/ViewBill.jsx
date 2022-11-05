@@ -293,7 +293,9 @@ const ViewBill = () => {
         </Row>
         <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
+            <Row style={{ fontWeight: 'bold' }}>
+              Archive URL
+            </Row>
             <Row>{measure.measureArchiveUrl}</Row>
           </Col>
           <Col className="view-bill-columns">
