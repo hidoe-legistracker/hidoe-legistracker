@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Row, ListGroup, Col, Form, Breadcrumb, Badge } from 'react-bootstrap';
+import { Container, Row, ListGroup, Col, Form, Breadcrumb, Badge, Alert } from 'react-bootstrap';
+import { ArrowRight } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useParams } from 'react-router';
@@ -162,6 +163,20 @@ const MonitoringReport = () => {
               </Table>
             )}
           </Container>
+          <Row>
+            <Col>
+              <Alert variant="light">
+                <Alert.Heading>Legend</Alert.Heading>
+                <p> <Badge bg="secondary">Testimony being written</Badge><ArrowRight className="ms-2 me-2" />
+                  <Badge bg="primary">Waiting for Office Approval</Badge><ArrowRight className="ms-2 me-2" />
+                  <Badge bg="success">Waiting for PIPE Approval</Badge><ArrowRight className="ms-2 me-2" />
+                  <Badge bg="warning">Waiting for Final Approval</Badge><ArrowRight className="ms-2 me-2" />
+                  <Badge bg="primary">Finalizing Testimony</Badge><ArrowRight className="ms-2 me-2" />
+                  <Badge bg="secondary">Completed</Badge>
+                </p>
+              </Alert>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <ListGroup variant="flush">
