@@ -296,7 +296,7 @@ const ViewBill = () => {
             <Row style={{ fontWeight: 'bold' }}>
               Archive URL
             </Row>
-            <Row>{measure.measureArchiveUrl}</Row>
+            <Row a href="/">{measure.measureArchiveUrl}</Row>
           </Col>
           <Col className="view-bill-columns">
             <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
