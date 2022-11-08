@@ -232,8 +232,14 @@ const Directory = () => {
           }
         });
       });
+      const noDup = [];
+      filteredData.forEach(element => {
+        if (!noDup.includes(element)) {
+          noDup.push(element);
+        }
+      });
       setDefaultBills(false);
-      setBills(filteredData);
+      setBills(noDup);
     } else {
       const filteredData = [];
       measure.forEach((item) => {
