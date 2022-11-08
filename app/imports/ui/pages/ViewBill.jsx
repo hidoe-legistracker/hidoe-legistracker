@@ -106,6 +106,10 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
+  const sendAssignedOfficeNotification = (bill, office) => {
+    console.log(`${bill.measureType.toUpperCase()}${bill.measureNumber} assigned to ${office}`);
+  };
+
   const [billOffices, setOffices] = useState('');
 
   const assignOffice = (bill, office) => {
@@ -115,6 +119,7 @@ const ViewBill = () => {
     updateMethod.callPromise({ collectionName, updateData })
       .catch()
       .then();
+    sendAssignedOfficeNotification(bill, office);
   };
 
   const assignSupOffice = (bill, office) => {
@@ -127,6 +132,7 @@ const ViewBill = () => {
         .catch()
         .then();
     }
+    sendAssignedOfficeNotification(bill, office);
   };
 
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
@@ -137,7 +143,7 @@ const ViewBill = () => {
   const filteredHearings = hearings.filter(hearing => hearing.measureNumber === measure.measureNumber
     && hearing.measureType === measure.measureType);
 
-  const sendNotification = () => {
+  const sendHearingNotification = () => {
     if (filteredHearings.length > 0) {
       const notification = {
         subject: `Hearing Notice ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
@@ -146,10 +152,10 @@ const ViewBill = () => {
         ccs: [],
         bccs: [],
         date: new Date(),
-        body: `HEARING DATE/TIME: ${filteredHearings[0].datetime} \n HEARING LOCATION: ${filteredHearings[0].room} \n\n Please click on the 'Hearing Notice' button below to view the complete hearing notice.`,
+        body: "Please click on the 'Hearing Notice' button below to view the complete hearing notice.",
         isDraft: false,
       };
-      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject && email.body === notification.body);
+      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject);
       const collectionName = Emails.getCollectionName();
       const definitionData = notification;
       if (duplicateEmails.length === 0) {
@@ -170,7 +176,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
-      sendNotification();
+      sendHearingNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }
