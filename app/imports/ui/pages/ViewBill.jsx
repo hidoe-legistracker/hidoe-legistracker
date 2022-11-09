@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb } from 'react-bootstrap';
+import {Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal} from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -21,6 +21,8 @@ import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseC
 import { ROLE } from '../../api/role/Role';
 import { Emails } from '../../api/email/EmailCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
+import {COMPONENT_IDS} from "../utilities/ComponentIDs";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const ViewBill = () => {
   const { _id } = useParams();
@@ -107,6 +109,7 @@ const ViewBill = () => {
   };
 
   const [billOffices, setOffices] = useState('');
+  const [showDead, setShowDead] = useState(false);
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
@@ -188,6 +191,7 @@ const ViewBill = () => {
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Bill is now dead', '', 'success'));
+    setShowDead(false);
   };
 
   return ready ? (
@@ -212,7 +216,7 @@ const ViewBill = () => {
               </Button>
               {' '}
               {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
-                <Button variant="danger" onClick={dead} disabled={!measure.active}>
+                <Button variant="danger" onClick={() => setShowDead(true)} disabled={!measure.active}>
                   <ExclamationTriangle style={{ marginRight: '0.5em', marginTop: '-5px' }} />
                   {measure.active ? 'Mark as Dead' : 'Bill is Dead'}
                 </Button>
@@ -385,6 +389,16 @@ const ViewBill = () => {
           </Form>
         </Row>
       </Container>
+
+      <Modal show={showDead} onHide={() => setShowDead(false)} centered="true">
+        <Modal.Body className="text-center p-5">
+          <h2>Are you sure you want to mark this bill as dead?</h2>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDead(false)}>Cancel</Button>
+          <Button variant="danger" className="btn btn-success" onClick={dead}>Mark as Dead</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   ) : <LoadingSpinner message="Loading Bill Data" />;
 };
