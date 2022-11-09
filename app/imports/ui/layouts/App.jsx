@@ -9,6 +9,7 @@ import Landing from '../pages/Landing';
 import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
+import Secretary from '../pages/Secretary';
 import Inbox from '../pages/Inbox';
 import CreateEmail from '../pages/CreateEmail';
 import NotFound from '../pages/NotFound';
@@ -35,9 +36,14 @@ import HearingNotice from '../components/HearingNotice';
 
 /** Top-level layout component for this application. Called in imports/startup/client/startup.jsx. */
 const App = () => {
-  const { currentUser } = useTracker(() => ({
-    currentUser: Meteor.user() ? Meteor.user().username : '',
-  }), []);
+  const { currentUser } = useTracker(() => {
+
+    const currUser = Meteor.user() ? Meteor.user().username : '';
+
+    return {
+      currentUser: currUser,
+    };
+  }, []);
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">
@@ -66,6 +72,7 @@ const App = () => {
           <Route path="/monitoring-report/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
+          <Route path="/secretary" element={<ProtectedRoute><Secretary /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
@@ -122,5 +129,6 @@ AdminProtectedRoute.propTypes = {
 AdminProtectedRoute.defaultProps = {
   children: <Landing />,
 };
+
 
 export default App;

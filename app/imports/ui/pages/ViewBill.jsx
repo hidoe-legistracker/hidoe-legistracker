@@ -107,18 +107,14 @@ const ViewBill = () => {
   };
 
   const [billOffices, setOffices] = useState('');
-  const [billMainOffice, setMainOffice] = useState('');
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    if (!billMainOffice.includes(office)) {
-      setMainOffice(`${billMainOffice} ${office} `);
-      const updateData = { id: bill._id, mainOfficeType: `${billMainOffice} ${office} ` };
-      updateMethod.callPromise({ collectionName, updateData })
-        .catch()
-        .then();
-    }
+    const updateData = { id: bill._id, mainOfficeType: office };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch()
+      .then();
   };
 
   const assignSupOffice = (bill, office) => {
@@ -308,12 +304,24 @@ const ViewBill = () => {
         </Row>
         <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
-            <Row>{measure.measureArchiveUrl}</Row>
+            <Row style={{ fontWeight: 'bold' }}>
+              Archive URL
+            </Row>
+            <Row>
+              <a href={`${measure.measureArchiveUrl}`} target="_blank" rel="noreferrer noopener">
+                {measure.measureArchiveUrl}
+              </a>
+            </Row>
           </Col>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
-            <Row>{measure.measurePdfUrl}</Row>
+            <Row style={{ fontWeight: 'bold' }}>
+              PDF URL
+            </Row>
+            <Row>
+              <a href={`${measure.measurePdfUrl}`} target="_blank" rel="noreferrer noopener">
+                {measure.measurePdfUrl}
+              </a>
+            </Row>
           </Col>
         </Row>
         <Container className="view-testimony-container">

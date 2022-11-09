@@ -5,6 +5,7 @@ export const COMPONENT_IDS = {
   NAVBAR_ADD_MEASURE: 'navbar-add-measure',
   NAVBAR_CALENDAR: 'navbar-calendar',
   NAVBAR_MY_FOLDERS: 'navbar-my-folders',
+  NAVBAR_SECRETARY: 'navbar-secretary',
   NAVBAR_INBOX: 'navbar-inbox',
   NAVBAR_PROFILE: 'navbar-profile',
   NAVBAR_VIEW_BILL: 'navbar-view-bill',
