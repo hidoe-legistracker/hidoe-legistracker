@@ -12,7 +12,6 @@ import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
-import PropTypes from 'prop-types';
 import { Testimonies } from '../../api/testimony/TestimonyCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -63,7 +62,6 @@ const bridge = new SimpleSchema2Bridge(formSchema);
 
 /* Renders the AddTestimony page for adding a testimony. */
 const AddTestimony = ({ measureNumber }) => {
-
 
   const submit = (data, formRef) => {
     const { committeeChair, billNumber, committeeName, billDraftNumber, hearingDate, hearingLocation, deptPosition, introduction, content, closing, testifier, representing, contactEmail, contactPhone } = data;

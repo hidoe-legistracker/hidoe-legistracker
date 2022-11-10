@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { Button, Col, Container, Form, Nav, Row, Tab, Table } from 'react-bootstrap';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { useTracker } from 'meteor/react-meteor-data';
 import {
   ChevronDoubleLeft,
@@ -11,6 +13,7 @@ import {
   EnvelopeFill,
   PenFill,
   SendFill,
+  Trash3Fill,
 } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { Emails } from '../../api/email/EmailCollection';
@@ -190,6 +193,7 @@ const Inbox = () => {
               <Nav.Link eventKey="inbox" onClick={() => handleSelectedTab('inbox')}><EnvelopeFill size={20} /> Inbox</Nav.Link>
               <Nav.Link eventKey="drafts" onClick={() => handleSelectedTab('drafts')}><PenFill size={20} /> Drafts</Nav.Link>
               <Nav.Link eventKey="sent" onClick={() => handleSelectedTab('sent')}><SendFill size={20} /> Sent</Nav.Link>
+              <Nav.Link eventKey="deleted" onClick={() => handleSelectedTab('deleted')}><Trash3Fill size={20} /> Deleted</Nav.Link>
             </Nav>
           </Col>
           <Col xs={10}>
@@ -199,7 +203,17 @@ const Inbox = () => {
                 <Table hover>
                   <thead>
                     <tr>
-                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">
+                        <Dropdown as={ButtonGroup}>
+                          <Button variant="secondary" size="sm"><Form.Check inline /></Button>
+                          <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Mark As Read</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Delete</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Forward</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </th>
                       <th scope="col">Sender</th>
                       <th scope="col">Subject</th>
                       <th scope="col" className="d-flex flex-row-reverse">Date</th>
@@ -240,6 +254,19 @@ const Inbox = () => {
                     {/* eslint-disable-next-line max-len */}
                     {getFilteredEmails().map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
                   </tbody>
+                </Table>
+              </Tab.Pane>
+              <Tab.Pane eventKey="deleted">
+                <h1 className="text-center montserrat">DELETED</h1>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">Subject</th>
+                      <th scope="col" className="d-flex flex-row-reverse">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody />
                 </Table>
               </Tab.Pane>
             </Tab.Content>
