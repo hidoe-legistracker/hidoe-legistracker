@@ -21,8 +21,8 @@ import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseC
 import { ROLE } from '../../api/role/Role';
 import { Emails } from '../../api/email/EmailCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
-import {COMPONENT_IDS} from "../utilities/ComponentIDs";
-import ConfirmationModal from "../components/ConfirmationModal";
+// import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+// import ConfirmationModal from "../components/ConfirmationModal";
 
 const ViewBill = () => {
   const { _id } = useParams();

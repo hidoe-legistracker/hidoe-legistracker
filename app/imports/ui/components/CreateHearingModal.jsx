@@ -125,10 +125,12 @@ const CreateHearingModal = ({ modal }) => {
     });
 
     const collectionName = Hearings.getCollectionName();
+    const date = new Date();
     const definitionData = {
-      measureType, measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl, officeType: newOfficeType, committee: newCommittee,
+      year: date.getFullYear(), measureType, measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
+      committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
+      noticeUrl, noticePdfUrl,
     };
-    console.log(definitionData);
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -138,7 +140,7 @@ const CreateHearingModal = ({ modal }) => {
 
   return ready ? (
     <Modal
-      id={COMPONENT_IDS.INBOX_CREATE_EMAIL_MODAL}
+      id={COMPONENT_IDS.CREATE_HEARING_MODAL}
       show={modal.show}
       onHide={() => {
         modal.setShow(false);
@@ -155,7 +157,7 @@ const CreateHearingModal = ({ modal }) => {
           <Row>
             <Col>
               <Form.Group>
-                <Form.Label>Date & Time </Form.Label>
+                <Form.Label>Date & Time</Form.Label>
                 <Form.Control
                   placeholder="ie. Thursday, February 10, 2022 2:00 pm"
                   onChange={(e) => updateHearing(e.target.value, 'datetime')}
@@ -164,7 +166,7 @@ const CreateHearingModal = ({ modal }) => {
             </Col>
             <Col>
               <Form.Group>
-                <Form.Label>Location </Form.Label>
+                <Form.Label>Location</Form.Label>
                 <Form.Control
                   placeholder=""
                   onChange={(e) => updateHearing(e.target.value, 'room')}
@@ -175,7 +177,7 @@ const CreateHearingModal = ({ modal }) => {
           <Row>
             <Col>
               <Form.Group className="offices">
-                <Form.Label>Offices: </Form.Label>
+                <Form.Label>Offices:</Form.Label>
                 <Select
                   id="offices"
                   options={offices}
@@ -187,7 +189,7 @@ const CreateHearingModal = ({ modal }) => {
             </Col>
             <Col>
               <Form.Group className="committees">
-                <Form.Label>Committees: </Form.Label>
+                <Form.Label>Committees:</Form.Label>
                 <Select
                   id="committees"
                   options={committees}
