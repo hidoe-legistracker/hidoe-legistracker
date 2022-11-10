@@ -28,14 +28,14 @@ const testimonyWriter = () => {
   });
 
   // eslint-disable-next-line no-nested-ternary
-  return (ready ? (user.position === 'Testimony Writer' ? (
+  return (ready ? (user.position === 'Testimony Writer' ? (user.assignedTestimony !== undefined ? (
     <Container id={PAGE_IDS.TESTIMONY_WRITER} className="py-3">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row>
           <Col sm={4}>
             <Nav variant="pills" className="flex-column">
               {user.assignedTestimony.map((testimony, index) => (
-                <Nav.Item><Nav.Link eventKey={index}>Assigned by {testimony.assignerFirst} {testimony.assignerLast} ({testimony.assigner})</Nav.Link>
+                <Nav.Item><Nav.Link eventKey={index}>Assigned by {testimony.office} Secretary {testimony.assignerFirst} {testimony.assignerLast} ({testimony.assigner})</Nav.Link>
                 </Nav.Item>
               ))}
             </Nav>
@@ -84,6 +84,6 @@ const testimonyWriter = () => {
       </Tab.Container>
     </Container>
 
-  ) : <h1>Must be a Testimony Writer</h1>) : <LoadingSpinner message="Loading Measures" />);
+  ) : <h1>No testimonies assigned</h1>) : <h1>Must be a Testimony Writer</h1>) : <LoadingSpinner message="Loading Measures" />);
 };
 export default testimonyWriter;
