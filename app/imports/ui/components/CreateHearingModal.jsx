@@ -5,6 +5,7 @@ import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import swal from 'sweetalert';
+import { DashCircle, PlusCircle } from 'react-bootstrap-icons';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
@@ -230,21 +231,20 @@ const CreateHearingModal = ({ modal }) => {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="body">
+          <div style={{ borderColor: 'black', borderWidth: '1' }}>
+            <h4 style={{ textAlign: 'center' }}>Add Bills to Hearing</h4>
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label>Bill Number</Form.Label>
                   <Form.Control
                     type="notice-bill-number"
-                    placeholder=""
+                    placeholder="Enter a valid bill number (ie. 234)"
                     onChange={(e) => updateHearing(e, 'measureNumber')}
                   />
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label>Bill Type</Form.Label>
                   <Select
                     id="notice-bill-type"
                     options={types}
@@ -252,17 +252,32 @@ const CreateHearingModal = ({ modal }) => {
                   />
                 </Form.Group>
               </Col>
+              <Col xs={2}>
+                <Row>
+                  <Col>
+                    <Button variant="outline-secondary" className="calendar-button">
+                      <DashCircle size={25} />
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button variant="outline-secondary" className="calendar-button">
+                      <PlusCircle size={25} />
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
             </Row>
             <Row>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   id="notice-description"
+                  placeholder="Enter a description for the hearing notice"
                   onChange={(e) => updateHearing(e, 'description')}
                 />
               </Form.Group>
             </Row>
-          </Form.Group>
+          </div>
           <Row>
             <Col>
               <Form.Group>
@@ -285,7 +300,6 @@ const CreateHearingModal = ({ modal }) => {
               </Form.Group>
             </Col>
           </Row>
-
         </Form>
       </Modal.Body>
       <Modal.Footer>
