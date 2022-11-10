@@ -128,6 +128,7 @@ const CreateHearingModal = ({ modal }) => {
     const definitionData = {
       measureType, measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl, officeType: newOfficeType, committee: newCommittee,
     };
+    console.log(definitionData);
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
@@ -153,20 +154,18 @@ const CreateHearingModal = ({ modal }) => {
         <Form>
           <Row>
             <Col>
-              <Form.Group className="subject">
+              <Form.Group>
                 <Form.Label>Date & Time </Form.Label>
                 <Form.Control
-                  type="subject"
                   placeholder="ie. Thursday, February 10, 2022 2:00 pm"
                   onChange={(e) => updateHearing(e.target.value, 'datetime')}
                 />
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group className="subject">
+              <Form.Group>
                 <Form.Label>Location </Form.Label>
                 <Form.Control
-                  type="subject"
                   placeholder=""
                   onChange={(e) => updateHearing(e.target.value, 'room')}
                 />
@@ -216,7 +215,6 @@ const CreateHearingModal = ({ modal }) => {
               <Col>
                 <Form.Label>Notice URL</Form.Label>
                 <Form.Control
-                  type="notice-url"
                   placeholder=""
                   onChange={(e) => updateHearing(e.target.value, 'noticeUrl')}
                 />
@@ -224,9 +222,8 @@ const CreateHearingModal = ({ modal }) => {
               <Col>
                 <Form.Label>Notice PDF URL</Form.Label>
                 <Form.Control
-                  type="notice-pdf-url"
                   placeholder=""
-                  onChange={(e) => updateHearing(e, 'noticePdfUrl')}
+                  onChange={(e) => updateHearing(e.target.value, 'noticePdfUrl')}
                 />
               </Col>
             </Row>
@@ -236,15 +233,16 @@ const CreateHearingModal = ({ modal }) => {
             <Row>
               <Col>
                 <Form.Group>
+                  <h6>Bill Number</h6>
                   <Form.Control
-                    type="notice-bill-number"
                     placeholder="Enter a valid bill number (ie. 234)"
-                    onChange={(e) => updateHearing(e, 'measureNumber')}
+                    onChange={(e) => updateHearing(e.target.value, 'measureNumber')}
                   />
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
+                  <h6>Bill Type</h6>
                   <Select
                     id="notice-bill-type"
                     options={types}
@@ -254,6 +252,7 @@ const CreateHearingModal = ({ modal }) => {
               </Col>
               <Col xs={2}>
                 <Row>
+                  <h6>Add or Remove Bills</h6>
                   <Col>
                     <Button variant="outline-secondary" className="calendar-button">
                       <DashCircle size={25} />
@@ -273,7 +272,7 @@ const CreateHearingModal = ({ modal }) => {
                 <Form.Control
                   id="notice-description"
                   placeholder="Enter a description for the hearing notice"
-                  onChange={(e) => updateHearing(e, 'description')}
+                  onChange={(e) => updateHearing(e.target.value, 'description')}
                 />
               </Form.Group>
             </Row>
