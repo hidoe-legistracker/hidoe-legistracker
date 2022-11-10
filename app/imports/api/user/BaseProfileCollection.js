@@ -35,7 +35,13 @@ class BaseProfileCollection extends BaseCollection {
       'assignedTestimony.$': {
         type: new SimpleSchema({
           measureID: String,
+          measureNumber: Number,
+          measureTitle: String,
+          measureDescription: String,
+          measureType: String,
           assigner: String,
+          assignerFirst: String,
+          assignerLast: String,
           office: String,
           comment: String,
         }),

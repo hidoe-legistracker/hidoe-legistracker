@@ -8,6 +8,7 @@ import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import SecretaryMeasureComponent from '../components/SecretaryMeasureComponent';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Secretary = () => {
 
@@ -79,6 +80,6 @@ const Secretary = () => {
       </Tab.Container>
     </Container>
 
-  ) : 'Must be a Secretary ') : <h1>Must be a Secretary</h1>);
+  ) : <h1>Must be a Secretary</h1>) : <LoadingSpinner message="Loading Measures" />);
 };
 export default Secretary;

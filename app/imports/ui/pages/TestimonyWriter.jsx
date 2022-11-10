@@ -1,24 +1,21 @@
 import React from 'react';
-import { Col, Container, Row, Tab, Nav, Tabs, Table } from 'react-bootstrap';
+import { Col, Container, Row, Tab, Nav, Tabs, Table, Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import _ from 'underscore/underscore-node';
+import { Link, NavLink } from 'react-router-dom';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { Measures } from '../../api/measure/MeasureCollection';
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const testimonyWriter = () => {
 
-  const { user, ready, measures } = useTracker(() => {
+  const { user, ready } = useTracker(() => {
     const currUser = Meteor.user() ? Meteor.user().username : '';
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
-    const measureSubscription = Measures.subscribeMeasures();
-    const rdy = userSubscription.ready() && adminSubscription.ready() && measureSubscription.ready();
+    const rdy = userSubscription.ready() && adminSubscription.ready();
 
-    const measureData = Measures.find({}, {}).fetch();
     let usr = UserProfiles.findOne({ email: currUser });
     if (usr === undefined) {
       usr = AdminProfiles.findOne({ email: currUser });
@@ -27,30 +24,29 @@ const testimonyWriter = () => {
     return {
       user: usr,
       ready: rdy,
-      measures: measureData,
     };
   });
 
   // eslint-disable-next-line no-nested-ternary
   return (ready ? (user.position === 'Testimony Writer' ? (
-    <Container id={PAGE_IDS.SECRETARY} className="py-3">
+    <Container id={PAGE_IDS.TESTIMONY_WRITER} className="py-3">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row>
           <Col sm={4}>
             <Nav variant="pills" className="flex-column">
-              {user.offices.map((office, index) => (
-                <Nav.Item><Nav.Link eventKey={index}>{office}</Nav.Link>
+              {user.assignedTestimony.map((testimony, index) => (
+                <Nav.Item><Nav.Link eventKey={index}>Assigned by {testimony.assignerFirst} {testimony.assignerLast} ({testimony.assigner})</Nav.Link>
                 </Nav.Item>
               ))}
             </Nav>
           </Col>
           <Col>
             <Tab.Content>
-              { user.offices.map((office, index) => (
+              { user.assignedTestimony.map((testimony, index) => (
                 <Tab.Pane eventKey={index}>
                   <Col>
                     <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
-                      <Tab eventKey="all-bills" title={office}>
+                      <Tab eventKey="all-bills" title={testimony.office}>
                         <Row>
                           <Table>
                             <thead style={{ marginBottom: 10 }}>
@@ -60,10 +56,20 @@ const testimonyWriter = () => {
                                 <th scope="col">Description</th>
                                 <th scope="col">Main Office</th>
                                 <th scope="col">Type</th>
-                                <th scope="col">Assign Writer</th>
+                                <th scope="col">Monitoring Report</th>
                               </tr>
                             </thead>
                             <tbody>
+                              <tr>
+                                <Link className="d-lg-table-cell link-dark" as={NavLink} exact to={`/view-bill/${testimony.measureID}`}>{testimony.measureNumber}</Link>
+                                <Link className="d-table-cell link-dark" as={NavLink} exact to={`/view-bill/${testimony.measureID}`}>{testimony.measureTitle}</Link>
+                                <Link className="d-table-cell link-dark" as={NavLink} exact to={`/view-bill/${testimony.measureID}`}>{testimony.measureDescription}</Link>
+                                <Link className="d-table-cell link-dark" as={NavLink} exact to={`/view-bill/${testimony.measureID}`}>{testimony.office}</Link>
+                                <Link className="d-table-cell link-dark" as={NavLink} exact to={`/view-bill/${testimony.measureID}`}>{testimony.measureType}</Link>
+                                <td>
+                                  <Button className="secondary link" as={NavLink} exact to={`/monitoring-report/${testimony.measureID}`}>Monitoring Report</Button>
+                                </td>
+                              </tr>
                             </tbody>
                           </Table>
                         </Row>
