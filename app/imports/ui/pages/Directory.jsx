@@ -523,8 +523,8 @@ const Directory = () => {
                 </thead>
                 <tbody style={{ position: 'relative' }}>
                   {getFilteredHearings().map(
-                    (hearing) => (
-                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`}>
+                    (hearing, key) => (
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
                         <td>
                           {hearing.datetime}
                         </td>
