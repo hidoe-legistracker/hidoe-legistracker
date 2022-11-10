@@ -204,8 +204,8 @@ const Inbox = () => {
                   <thead>
                     <tr>
                       <th scope="col">
-                        <Dropdown as={ButtonGroup}>
-                          <Button variant="secondary" size="sm"><Form.Check inline /></Button>
+                        <Dropdown as={ButtonGroup} size="sm">
+                          <Button variant="secondary"><Form.Check inline /></Button>
                           <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
                           <Dropdown.Menu>
                             <Dropdown.Item href="#/action-1">Mark As Read</Dropdown.Item>
@@ -230,7 +230,17 @@ const Inbox = () => {
                 <Table hover>
                   <thead>
                     <tr>
-                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">
+                        <Dropdown as={ButtonGroup} size="sm">
+                          <Button variant="secondary"><Form.Check inline /></Button>
+                          <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Mark As Read</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Delete</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Forward</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </th>
                       <th scope="col">Subject</th>
                       <th scope="col"> </th>
                     </tr>
@@ -245,7 +255,17 @@ const Inbox = () => {
                 <Table hover>
                   <thead>
                     <tr>
-                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">
+                        <Dropdown as={ButtonGroup} size="sm">
+                          <Button variant="secondary"><Form.Check inline /></Button>
+                          <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Mark As Read</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Delete</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Forward</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </th>
                       <th scope="col">Subject</th>
                       <th scope="col" className="d-flex flex-row-reverse">Date</th>
                     </tr>
@@ -261,7 +281,18 @@ const Inbox = () => {
                 <Table hover>
                   <thead>
                     <tr>
-                      <th scope="col"><Form.Check inline /> </th>
+                      <th scope="col">
+                        <Dropdown as={ButtonGroup} size="sm">
+                          <Button variant="secondary"><Form.Check inline /></Button>
+                          <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Mark As Read</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Delete</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Forward</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </th>
+                      <th scope="col">Sender</th>
                       <th scope="col">Subject</th>
                       <th scope="col" className="d-flex flex-row-reverse">Date</th>
                     </tr>
