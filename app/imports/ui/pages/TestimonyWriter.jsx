@@ -7,9 +7,9 @@ import { PAGE_IDS } from '../utilities/PageIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
-import SecretaryMeasureComponent from '../components/SecretaryMeasureComponent';
+import LoadingSpinner from "../components/LoadingSpinner";
 
-const Secretary = () => {
+const testimonyWriter = () => {
 
   const { user, ready, measures } = useTracker(() => {
     const currUser = Meteor.user() ? Meteor.user().username : '';
@@ -32,7 +32,7 @@ const Secretary = () => {
   });
 
   // eslint-disable-next-line no-nested-ternary
-  return (ready ? (user.position === 'Office Secretary' ? (
+  return (ready ? (user.position === 'Testimony Writer' ? (
     <Container id={PAGE_IDS.SECRETARY} className="py-3">
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row>
@@ -64,7 +64,6 @@ const Secretary = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              { _.where(measures, { mainOfficeType: office }).map((meas) => <SecretaryMeasureComponent measure={meas} userOffice={office} testimonyAssigner={user} />) }
                             </tbody>
                           </Table>
                         </Row>
@@ -79,6 +78,6 @@ const Secretary = () => {
       </Tab.Container>
     </Container>
 
-  ) : 'Must be a Secretary ') : <h1>Must be a Secretary</h1>);
+  ) : <h1>Must be a Testimony Writer</h1>) : <LoadingSpinner message="Loading Measures" />);
 };
-export default Secretary;
+export default testimonyWriter;
