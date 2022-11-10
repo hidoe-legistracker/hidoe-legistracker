@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
@@ -17,9 +16,9 @@ const newHearing = {
   year: '',
   measureType: '',
   measureNumber: '',
-  measureRelativeUrl: '',
   code: '',
-  officeType: '',
+  offices: [],
+  committees: [],
   recipients: [],
   committee: '',
   datetime: '',
@@ -31,14 +30,14 @@ const newHearing = {
 };
 
 const offices = [
-  { label: 'OCID' },
-  { label: 'OFO' },
-  { label: 'OFS' },
-  { label: 'OHE' },
-  { label: 'OITS' },
-  { label: 'OSIP' },
-  { label: 'OSSS' },
-  { label: 'OTM' },
+  { label: 'OCID', value: 'example-list1@mail.com' },
+  { label: 'OFO', value: 'example-list2@mail.com' },
+  { label: 'OFS', value: 'example-list3@mail.com' },
+  { label: 'OHE', value: 'example-list4@mail.com' },
+  { label: 'OITS', value: 'example-list5@mail.comv' },
+  { label: 'OSIP', value: 'example-list6@mail.comv' },
+  { label: 'OSSS', value: 'example-list7@mail.comv' },
+  { label: 'OTM', value: 'example-list8@mail.com' },
 ];
 
 const types = [
@@ -52,44 +51,43 @@ const types = [
 ];
 
 const committees = [
-  { label: 'JDC' },
-  { label: 'WAM' },
-  { label: 'CPN' },
-  { label: 'HTH' },
-  { label: 'HRE' },
-  { label: 'LCA' },
-  { label: 'PSM' },
-  { label: 'EEP' },
-  { label: 'CPC' },
-  { label: 'FIN' },
-  { label: 'AEN' },
-  { label: 'JHA' },
-  { label: 'WAL' },
-  { label: 'WTL' },
-  { label: 'AGR' },
-  { label: 'ECD' },
-  { label: 'LAT' },
-  { label: 'GVO' },
-  { label: 'HHH' },
-  { label: 'TRN' },
-  { label: 'EET' },
-  { label: 'HET' },
-  { label: 'CMV' },
-  { label: 'PSM' },
-  { label: 'TRS' },
-  { label: 'EDN' },
-  { label: 'HWN' },
-  { label: 'HMS' },
-  { label: 'HOU' },
-  { label: 'EDU' },
-  { label: 'GVR' },
-  { label: 'PDP' },
-  { label: 'HSG' },
+  { label: 'JDC', value: 'example-list1@mail.com' },
+  { label: 'WAM', value: 'example-list2@mail.com' },
+  { label: 'CPN', value: 'example-list3@mail.com' },
+  { label: 'HTH', value: 'example-list4@mail.com' },
+  { label: 'HRE', value: 'example-list5@mail.com' },
+  { label: 'LCA', value: 'example-list6@mail.com' },
+  { label: 'PSM', value: 'example-list7@mail.com' },
+  { label: 'EEP', value: 'example-list8@mail.com' },
+  { label: 'CPC', value: 'example-list9@mail.com' },
+  { label: 'FIN', value: 'example-list10@mail.com' },
+  { label: 'AEN', value: 'example-list11@mail.com' },
+  { label: 'JHA', value: 'example-list12@mail.com' },
+  { label: 'WAL', value: 'example-list13@mail.com' },
+  { label: 'WTL', value: 'example-list14@mail.com' },
+  { label: 'AGR', value: 'example-list15@mail.com' },
+  { label: 'ECD', value: 'example-list16@mail.com' },
+  { label: 'LAT', value: 'example-list17@mail.com' },
+  { label: 'GVO', value: 'example-list18@mail.com' },
+  { label: 'HHH', value: 'example-list19@mail.com' },
+  { label: 'TRN', value: 'example-list20@mail.com' },
+  { label: 'EET', value: 'example-list21@mail.com' },
+  { label: 'HET', value: 'example-list22@mail.com' },
+  { label: 'CMV', value: 'example-list23@mail.com' },
+  { label: 'PSM', value: 'example-list24@mail.com' },
+  { label: 'TRS', value: 'example-list25@mail.com' },
+  { label: 'EDN', value: 'example-list26@mail.com' },
+  { label: 'HWN', value: 'example-list27@mail.com' },
+  { label: 'HMS', value: 'example-list28@mail.com' },
+  { label: 'HOU', value: 'example-list29@mail.com' },
+  { label: 'EDU', value: 'example-list30@mail.com' },
+  { label: 'GVR', value: 'example-list31@mail.com' },
+  { label: 'PDP', value: 'example-list32@mail.com' },
+  { label: 'HSG', value: 'example-list33@mail.com' },
 ];
 
 const CreateHearingModal = ({ modal }) => {
-  const { thisUser, users, defaultUsers, ready, bills } = useTracker(() => {
-    const username = Meteor.user() ? Meteor.user().username : '';
+  const { users, ready } = useTracker(() => {
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const measureSubscription = Measures.subscribeMeasuresAdmin();
@@ -98,60 +96,51 @@ const CreateHearingModal = ({ modal }) => {
     const usrs = _.sortBy(UserProfiles.find({}, { }).fetch().concat(AdminProfiles.find({}, {}).fetch()), (obj) => obj.lastName);
     const formattedUsers = [];
 
-    let thisUsr = UserProfiles.findOne({ email: username }, {});
-    if (thisUsr === undefined) thisUsr = AdminProfiles.findOne({ email: username }, {});
-
-    const defaultUsrs = [];
-
     usrs.forEach(user => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
     });
 
-    const measures = Measures.find({}, {}).fetch();
-
     return {
       ready: isReady,
-      thisUser: thisUsr,
       users: formattedUsers,
-      defaultUsers: defaultUsrs,
-      bills: measures,
     };
   }, []);
-  console.log(thisUser);
 
   const updateHearing = (event, property) => {
     newHearing[property] = event;
   };
 
   const submit = () => {
-    const recipients = [];
+    let newOfficeType = '';
+    let newCommittee = '';
+    const { measureType, measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl } = newHearing;
     modal.setShow(false);
 
-    newHearing.recipients.forEach(recipient => {
-      recipients.push(recipient.value);
+    newHearing.committees.forEach(c => {
+      newCommittee += `${c.label} `;
     });
-    const currentDate = new Date();
+    newHearing.offices.forEach(o => {
+      newOfficeType += `${o.label} `;
+    });
 
     const collectionName = Hearings.getCollectionName();
     const definitionData = {
-      year: currentDate.getFullYear(),
-      measureType: newHearing.measureType,
-      measureNumber: newHearing.measureNumber,
-      measureRelativeUrl: newHearing.measureRelativeUrl,
-      code: newHearing.code,
-      officeType: newHearing.type,
-      committee: newHearing.committee,
-      datetime: newHearing.datetime,
-      description: newHearing.description,
-      room: newHearing.room,
-      notice: newHearing.notice,
-      noticeUrl: newHearing.noticeUrl,
-      noticePdfUrl: newHearing.noticePdfUrl,
+      measureType: measureType,
+      measureNumber: measureNumber,
+      code: code,
+      officeType: newOfficeType,
+      committee: newCommittee,
+      datetime: datetime,
+      description: description,
+      room: room,
+      notice: notice,
+      noticeUrl: noticeUrl,
+      noticePdfUrl: noticePdfUrl,
     };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => {
-        swal('Success', 'Email Sent!', 'success');
+        swal('Success', 'Hearing successfully created', 'success');
       });
   };
 
@@ -214,30 +203,19 @@ const CreateHearingModal = ({ modal }) => {
                   options={committees}
                   isMulti
                   closeMenuOnSelect={false}
-                  onChange={(e) => updateHearing(e, 'committee')}
+                  onChange={(e) => updateHearing(e, 'committees')}
                 />
               </Form.Group>
             </Col>
           </Row>
           <Form.Group className="to">
-            <Form.Label>To: *</Form.Label>
+            <Form.Label>Send Notice To: *</Form.Label>
             <Select
               id="email-to"
               options={users}
               isMulti
               closeMenuOnSelect={false}
-              onChange={(e) => newHearing(e, 'recipients')}
-              defaultValue={defaultUsers}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Hearing Type</Form.Label>
-            <Select
-              id="hearing-type"
-              options={types}
-              closeMenuOnSelect={false}
-              onChange={(e) => newHearing(e, 'measureType')}
-              defaultValue={defaultUsers}
+              onChange={(e) => updateHearing(e, 'recipients')}
             />
           </Form.Group>
         </Form>
@@ -257,29 +235,67 @@ const CreateHearingModal = ({ modal }) => {
                 <Form.Control
                   type="notice-pdf-url"
                   placeholder=""
-                  onChange={(e) => updateHearing(e.target.value, 'noticePdfUrl')}
+                  onChange={(e) => updateHearing(e, 'noticePdfUrl')}
                 />
               </Col>
             </Row>
           </Form.Group>
           <Form.Group className="body">
-            <Form.Label>Add Bills</Form.Label>
-            <Select
-              id="add-bills"
-              isMulti
-              options={bills}
-              closeMenuOnSelect={false}
-              onChange={(e) => updateHearing(e, 'measureNumber')}
-            />
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Bill Number</Form.Label>
+                  <Form.Control
+                    type="notice-bill-number"
+                    placeholder=""
+                    onChange={(e) => updateHearing(e, 'measureNumber')}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Bill Type</Form.Label>
+                  <Select
+                    id="notice-bill-type"
+                    options={types}
+                    onChange={(e) => updateHearing(e, 'measureType')}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  id="notice-description"
+                  onChange={(e) => updateHearing(e, 'description')}
+                />
+              </Form.Group>
+            </Row>
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Notice Label</Form.Label>
-            <Form.Control
-              type="notice-label"
-              placeholder="ie. HEARING_AEN_FIN_11_01_2022 (HEARING_COMMITTEES_MONTH_DAY_YEAR)"
-              onChange={(e) => updateHearing(e.target.value, 'notice')}
-            />
-          </Form.Group>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>Notice Label</Form.Label>
+                <Form.Control
+                  type="notice-label"
+                  placeholder="ie. HEARING_AEN_FIN_11_01_2022 (HEARING_COMMITTEES_MM_DD_YYYY)"
+                  onChange={(e) => updateHearing(e.target.value, 'notice')}
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group>
+                <Form.Label>Code</Form.Label>
+                <Form.Control
+                  type="notice-code"
+                  placeholder=""
+                  onChange={(e) => updateHearing(e.target.value, 'code')}
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
         </Form>
       </Modal.Body>
       <Modal.Footer>
