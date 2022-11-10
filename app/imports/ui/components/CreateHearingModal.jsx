@@ -125,17 +125,7 @@ const CreateHearingModal = ({ modal }) => {
 
     const collectionName = Hearings.getCollectionName();
     const definitionData = {
-      measureType: measureType,
-      measureNumber: measureNumber,
-      code: code,
-      officeType: newOfficeType,
-      committee: newCommittee,
-      datetime: datetime,
-      description: description,
-      room: room,
-      notice: notice,
-      noticeUrl: noticeUrl,
-      noticePdfUrl: noticePdfUrl,
+      measureType, measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl, officeType: newOfficeType, committee: newCommittee,
     };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'))
