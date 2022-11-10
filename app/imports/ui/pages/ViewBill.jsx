@@ -24,7 +24,7 @@ import { Hearings } from '../../api/hearing/HearingCollection';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user, hearings, emails } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, hearings, emails, allUsers } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
@@ -46,6 +46,8 @@ const ViewBill = () => {
       usr = AdminProfiles.findOne({ email: username });
     }
 
+    const users = AdminProfiles.find({}, {}).fetch().concat(UserProfiles.find({}, {}).fetch());
+
     return {
       currentUser: currUser,
       testimonies: testimonyCollection,
@@ -54,6 +56,7 @@ const ViewBill = () => {
       user: usr,
       hearings: hearingCollection,
       emails: emailCollection,
+      allUsers: users,
     };
   }, [_id]);
 
@@ -107,7 +110,27 @@ const ViewBill = () => {
   };
 
   const sendAssignedOfficeNotification = (bill, office) => {
-    console.log(`${bill.measureType.toUpperCase()}${bill.measureNumber} assigned to ${office}`);
+    const filteredUsers = allUsers.filter(u => u.offices !== undefined && u.offices.includes(office));
+    const filteredEmails = filteredUsers.map(u => u.email);
+    const notification = {
+      subject: `Bill Assigned: ${bill.measureType.toUpperCase()}${bill.measureNumber}`,
+      senderEmail: '[NOTIFICATION]',
+      recipients: filteredEmails,
+      ccs: [],
+      bccs: [],
+      date: new Date(),
+      body: "Please click on the 'View Bill' button below for more details.",
+      isDraft: false,
+    };
+    const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject);
+    const collectionName = Emails.getCollectionName();
+    const definitionData = notification;
+    if (duplicateEmails.length === 0) {
+      defineMethod.callPromise({ collectionName, definitionData });
+    } else if (duplicateEmails.length > 0) {
+      removeItMethod.callPromise({ collectionName, instance: duplicateEmails[0]._id });
+      defineMethod.callPromise({ collectionName, definitionData });
+    }
   };
 
   const [billOffices, setOffices] = useState('');
@@ -146,7 +169,7 @@ const ViewBill = () => {
   const sendHearingNotification = () => {
     if (filteredHearings.length > 0) {
       const notification = {
-        subject: `Hearing Notice ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
+        subject: `Hearing Notice: ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
         senderEmail: '[NOTIFICATION]',
         recipients: [currentUser],
         ccs: [],
