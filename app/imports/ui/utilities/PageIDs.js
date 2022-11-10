@@ -3,6 +3,7 @@ export const PAGE_IDS = {
   DIRECTORY: 'directory',
   MY_FOLDERS: 'my-folders',
   SECRETARY: 'secretary',
+  TESTIMONY_WRITER: 'testimony-writer',
   ADD_MEASURE: 'add-measure',
   VIEW_BILL: 'view-bill',
   ADD_TESTIMONY: 'add-testimony',

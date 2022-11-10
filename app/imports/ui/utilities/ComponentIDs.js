@@ -6,6 +6,7 @@ export const COMPONENT_IDS = {
   NAVBAR_CALENDAR: 'navbar-calendar',
   NAVBAR_MY_FOLDERS: 'navbar-my-folders',
   NAVBAR_SECRETARY: 'navbar-secretary',
+  NAVBAR_TESTIMONY_WRITER: 'navbar-testimony-writer',
   NAVBAR_INBOX: 'navbar-inbox',
   NAVBAR_PROFILE: 'navbar-profile',
   NAVBAR_VIEW_BILL: 'navbar-view-bill',

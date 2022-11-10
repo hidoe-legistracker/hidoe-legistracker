@@ -15,7 +15,7 @@ officeNames.forEach((name) => {
   offices.push({ label: name, value: name });
 });
 
-const positionNames = ['N/A','Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'];
+const positionNames = ['N/A', 'Testimony Writer', 'Office Secretary', 'Office Approver', 'PIPE', 'Final Approver'];
 
 /**
  * SignUp component is similar to signin component, but we create a new user instead.
