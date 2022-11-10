@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb } from 'react-bootstrap';
-import { FileEarmarkText, BookmarkPlus, ArrowLeftRight } from 'react-bootstrap-icons';
+import {Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal} from 'react-bootstrap';
+import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
@@ -21,10 +21,12 @@ import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseC
 import { ROLE } from '../../api/role/Role';
 import { Emails } from '../../api/email/EmailCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
+import {COMPONENT_IDS} from "../utilities/ComponentIDs";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user, hearings, emails } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, hearings, emails, allUsers } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
@@ -46,6 +48,8 @@ const ViewBill = () => {
       usr = AdminProfiles.findOne({ email: username });
     }
 
+    const users = AdminProfiles.find({}, {}).fetch().concat(UserProfiles.find({}, {}).fetch());
+
     return {
       currentUser: currUser,
       testimonies: testimonyCollection,
@@ -54,6 +58,7 @@ const ViewBill = () => {
       user: usr,
       hearings: hearingCollection,
       emails: emailCollection,
+      allUsers: users,
     };
   }, [_id]);
 
@@ -106,19 +111,41 @@ const ViewBill = () => {
       .then(() => swal('Success', 'Measure added', 'success'));
   };
 
+  const sendAssignedOfficeNotification = (bill, office) => {
+    const filteredUsers = allUsers.filter(u => u.offices !== undefined && u.offices.includes(office));
+    const filteredEmails = filteredUsers.map(u => u.email);
+    const notification = {
+      subject: `Bill Assigned: ${bill.measureType.toUpperCase()}${bill.measureNumber}`,
+      senderEmail: '[NOTIFICATION]',
+      recipients: filteredEmails,
+      ccs: [],
+      bccs: [],
+      date: new Date(),
+      body: "Please click on the 'View Bill' button below for more details.",
+      isDraft: false,
+    };
+    const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject);
+    const collectionName = Emails.getCollectionName();
+    const definitionData = notification;
+    if (duplicateEmails.length === 0) {
+      defineMethod.callPromise({ collectionName, definitionData });
+    } else if (duplicateEmails.length > 0) {
+      removeItMethod.callPromise({ collectionName, instance: duplicateEmails[0]._id });
+      defineMethod.callPromise({ collectionName, definitionData });
+    }
+  };
+
   const [billOffices, setOffices] = useState('');
-  const [billMainOffice, setMainOffice] = useState('');
+  const [showDead, setShowDead] = useState(false);
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
     const collectionName = Measures.getCollectionName();
-    if (!billMainOffice.includes(office)) {
-      setMainOffice(`${billMainOffice} ${office} `);
-      const updateData = { id: bill._id, mainOfficeType: `${billMainOffice} ${office} ` };
-      updateMethod.callPromise({ collectionName, updateData })
-        .catch()
-        .then();
-    }
+    const updateData = { id: bill._id, mainOfficeType: office };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch()
+      .then();
+    sendAssignedOfficeNotification(bill, office);
   };
 
   const assignSupOffice = (bill, office) => {
@@ -131,6 +158,7 @@ const ViewBill = () => {
         .catch()
         .then();
     }
+    sendAssignedOfficeNotification(bill, office);
   };
 
   const offices = ['OCID', 'OFO', 'OFS', 'OHE', 'OITS', 'OSIP', 'OSSS', 'OTM'];
@@ -141,19 +169,19 @@ const ViewBill = () => {
   const filteredHearings = hearings.filter(hearing => hearing.measureNumber === measure.measureNumber
     && hearing.measureType === measure.measureType);
 
-  const sendNotification = () => {
+  const sendHearingNotification = () => {
     if (filteredHearings.length > 0) {
       const notification = {
-        subject: `Hearing Notice ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
+        subject: `Hearing Notice: ${filteredHearings[0].notice}`, // filteredHearings.sort((a, b) => a.datetime > b.datetime)[0].notice,
         senderEmail: '[NOTIFICATION]',
         recipients: [currentUser],
         ccs: [],
         bccs: [],
         date: new Date(),
-        body: `HEARING DATE/TIME: ${filteredHearings[0].datetime} \n HEARING LOCATION: ${filteredHearings[0].room} \n\n Please click on the 'Hearing Notice' button below to view the complete hearing notice.`,
+        body: "Please click on the 'Hearing Notice' button below to view the complete hearing notice.",
         isDraft: false,
       };
-      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject && email.body === notification.body);
+      const duplicateEmails = emails.filter(email => email.senderEmail === notification.senderEmail && email.subject === notification.subject);
       const collectionName = Emails.getCollectionName();
       const definitionData = notification;
       if (duplicateEmails.length === 0) {
@@ -174,7 +202,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
-      sendNotification();
+      sendHearingNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }
@@ -184,6 +212,15 @@ const ViewBill = () => {
       .catch(error => swal('Error', error.message, 'error'))
       // eslint-disable-next-line no-unused-expressions
       .then(() => { checked ? swal('Success', 'You have been added to the email list for this bill', 'success') : swal('Success', 'You have been removed from the email list for this bill', 'success'); });
+  };
+
+  const dead = () => {
+    const collectionName = Measures.getCollectionName();
+    const updateData = { id: _id, active: false };
+    updateMethod.callPromise({ collectionName, updateData })
+      .catch(error => swal('Error', error.message, 'error'))
+      .then(() => swal('Bill is now dead', '', 'success'));
+    setShowDead(false);
   };
 
   return ready ? (
@@ -197,7 +234,7 @@ const ViewBill = () => {
         </Row>
       </Container>
       <Container id={PAGE_IDS.VIEW_BILL} className="view-bill-container" style={{ marginTop: 0 }}>
-        <Container>
+        <Container className="mb-5">
           <Row>
             <Col>
               <Button variant="secondary">
@@ -206,6 +243,13 @@ const ViewBill = () => {
                   Monitoring Report
                 </Link>
               </Button>
+              {' '}
+              {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
+                <Button variant="danger" onClick={() => setShowDead(true)} disabled={!measure.active}>
+                  <ExclamationTriangle style={{ marginRight: '0.5em', marginTop: '-5px' }} />
+                  {measure.active ? 'Mark as Dead' : 'Bill is Dead'}
+                </Button>
+              ) : ''}
               <Dropdown className="float-end">
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   <BookmarkPlus style={{ marginRight: '0.5em', marginTop: '-5px' }} />
@@ -293,12 +337,24 @@ const ViewBill = () => {
         </Row>
         <Row style={{ alignContent: 'center', justifyContent: 'center', margin: 0 }}>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>Archive URL</Row>
-            <Row>{measure.measureArchiveUrl}</Row>
+            <Row style={{ fontWeight: 'bold' }}>
+              Archive URL
+            </Row>
+            <Row>
+              <a href={`${measure.measureArchiveUrl}`} target="_blank" rel="noreferrer noopener">
+                {measure.measureArchiveUrl}
+              </a>
+            </Row>
           </Col>
           <Col className="view-bill-columns">
-            <Row style={{ fontWeight: 'bold' }}>PDF URL</Row>
-            <Row>{measure.measurePdfUrl}</Row>
+            <Row style={{ fontWeight: 'bold' }}>
+              PDF URL
+            </Row>
+            <Row>
+              <a href={`${measure.measurePdfUrl}`} target="_blank" rel="noreferrer noopener">
+                {measure.measurePdfUrl}
+              </a>
+            </Row>
           </Col>
         </Row>
         <Container className="view-testimony-container">
@@ -362,6 +418,16 @@ const ViewBill = () => {
           </Form>
         </Row>
       </Container>
+
+      <Modal show={showDead} onHide={() => setShowDead(false)} centered="true">
+        <Modal.Body className="text-center p-5">
+          <h2>Are you sure you want to mark this bill as dead?</h2>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDead(false)}>Cancel</Button>
+          <Button variant="danger" className="btn btn-success" onClick={dead}>Mark as Dead</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   ) : <LoadingSpinner message="Loading Bill Data" />;
 };
