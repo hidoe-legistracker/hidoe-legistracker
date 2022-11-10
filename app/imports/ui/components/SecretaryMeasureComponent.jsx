@@ -40,6 +40,7 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
   };
 
   const assignTestimony = (user, thisUserOffice, thisMeasure) => {
+    console.log(user.email);
     let createAssignedTestimony;
     if (user.assignedTestimony === undefined) {
       createAssignedTestimony = [{
@@ -47,6 +48,7 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
         assigner: testimonyAssigner.email,
         office: thisUserOffice,
         comment: 'test' }];
+      console.log(createAssignedTestimony);
     } else {
       user.assignedTestimony.push({
         measureID: thisMeasure._id,
@@ -61,6 +63,7 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
     } else {
       collectionName = AdminProfiles.getCollectionName();
     }
+
     let updateData;
     if (user.assignedTestimony === undefined) {
       updateData = { id: user._id, assignedTestimony: createAssignedTestimony };
