@@ -50,15 +50,20 @@ MeasureComponent.propTypes = {
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
+  const [directoryTab, setDirectoryTab] = useState('Active Bills');
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerDeadPage, setItemsPerDeadPage] = useState(10);
+  const [itemsPerHearingPage, setItemsPerHearingPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentDeadPage, setCurrentDeadPage] = useState(1);
+  const [currentHearingPage, setCurrentHearingPage] = useState(1);
   const [search, setSearch] = useState('');
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
   const { _id } = useParams();
 
-  const { currentUser, ready, init, measure, hearings } = useTracker(() => {
+  const { currentUser, ready, init, measure, deadMeasures, hearings } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -74,7 +79,8 @@ const Directory = () => {
     const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready() && hearingSub.ready();
-    const measureData = Measures.find({}, {}).fetch();
+    const measureData = Measures.find({ active: true }, {}).fetch();
+    const deadMeasureData = Measures.find({ active: false }, {}).fetch();
     const hearingData = Hearings.find({}, {}).fetch();
     if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
@@ -83,6 +89,7 @@ const Directory = () => {
       ready: isReady,
       init: rdy,
       measure: measureData,
+      deadMeasures: deadMeasureData,
     };
   }, []);
 
@@ -90,8 +97,13 @@ const Directory = () => {
 
   // Filter Measures
   let filteredMeasures;
+  let filteredDeadMeasures;
   let numMeasures;
+  let numDeadMeasures;
+  let numHearings;
   let numPages;
+  let numDeadPages;
+  let numHearingPages;
 
   if (ready) {
     if (defaultBills) {
@@ -145,6 +157,66 @@ const Directory = () => {
     }
   }
 
+  if (ready) {
+    if (defaultBills) {
+      filteredDeadMeasures = deadMeasures.filter(post => {
+        if (search === '') {
+          return post;
+        }
+        if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
+          return post;
+        }
+        if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        return undefined;
+      });
+    } else {
+      filteredDeadMeasures = bills.filter(post => {
+        if (search === '') {
+          return post;
+        }
+        if (post.measureNumber && parseInt(post.measureNumber, 10) === parseInt(search, 10)) {
+          return post;
+        }
+        if (post.measureTitle && post.measureTitle.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        } if (post.currentReferral && post.currentReferral.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        return undefined;
+      });
+    }
+    numDeadMeasures = _.size(filteredDeadMeasures);
+    numDeadPages = parseInt(numDeadMeasures / itemsPerDeadPage, 10);
+    if (numDeadMeasures % itemsPerDeadPage !== 0) {
+      numDeadPages++;
+    }
+  }
+
+  if (ready) {
+    numHearings = _.size(getHearings);
+    numHearingPages = parseInt(numHearings / itemsPerHearingPage, 10);
+    if (numHearings % itemsPerHearingPage !== 0) {
+      numHearingPages++;
+    }
+  }
+
   const getFilteredMeasures = () => {
     const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
     const endIndex = +startIndex + +itemsPerPage;
@@ -157,44 +229,129 @@ const Directory = () => {
     return ret;
   };
 
+  const getFilteredDeadMeasures = () => {
+    const startIndex = (+currentDeadPage * +itemsPerDeadPage) - +itemsPerDeadPage;
+    const endIndex = +startIndex + +itemsPerDeadPage;
+    let ret;
+    if (endIndex < numDeadMeasures) {
+      ret = filteredDeadMeasures.slice(startIndex, endIndex);
+    } else {
+      ret = filteredDeadMeasures.slice(startIndex, numMeasures);
+    }
+    return ret;
+  };
+
+  const getFilteredHearings = () => {
+    const startIndex = (+currentHearingPage * +itemsPerHearingPage) - +itemsPerHearingPage;
+    const endIndex = +startIndex + +itemsPerHearingPage;
+    let ret;
+    if (endIndex < numHearings) {
+      ret = getHearings.slice(startIndex, endIndex);
+    } else {
+      ret = getHearings.slice(startIndex, numHearings);
+    }
+    return ret;
+  };
+
   if (init && currentUser.newAccount) {
     return (<Navigate to="/change-password-user" />);
   }
 
   // Pagination stuff
+  const getNumPages = () => {
+    if (directoryTab === 'Active Bills') return [...Array(numPages)];
+    if (directoryTab === 'Inactive Bills') return [...Array(numDeadPages)];
+    if (directoryTab === 'Hearings') return [...Array(numHearingPages)];
+    return [];
+  };
+
   const getItemsPerPage = () => {
     const selection = document.getElementById('pagination-items-per-page').value;
-    setItemsPerPage(selection);
-    setCurrentPage(1);
+    if (directoryTab === 'Active Bills') {
+      setItemsPerPage(selection);
+      setCurrentPage(1);
+    }
+    if (directoryTab === 'Inactive Bills') {
+      setItemsPerDeadPage(selection);
+      setCurrentDeadPage(1);
+    }
+    if (directoryTab === 'Hearings') {
+      setItemsPerHearingPage(selection);
+      setCurrentHearingPage(1);
+    }
     document.getElementById('pagination-select-page').value = 1;
   };
   const getItemsInPage = () => {
     const selection = document.getElementById('pagination-select-page').value;
-    setCurrentPage(selection);
+    if (directoryTab === 'Active Bills') {
+      setCurrentPage(selection);
+    }
+    if (directoryTab === 'Inactive Bills') {
+      setCurrentDeadPage(selection);
+    }
+    if (directoryTab === 'Hearings') {
+      setCurrentHearingPage(selection);
+    }
   };
   const goToFirstPage = () => {
     document.getElementById('pagination-select-page').value = 1;
-    setCurrentPage(1);
+    if (directoryTab === 'Active Bills') {
+      setCurrentPage(1);
+    }
+    if (directoryTab === 'Inactive Bills') {
+      setCurrentDeadPage(1);
+    }
+    if (directoryTab === 'Hearings') {
+      setCurrentHearingPage(1);
+    }
   };
   const goToPrevPage = () => {
-    if (currentPage !== 1) {
+    if (directoryTab === 'Active Bills' && currentPage !== 1) {
       document.getElementById('pagination-select-page').value = currentPage - 1;
       setCurrentPage(currentPage - 1);
     }
+    if (directoryTab === 'Inactive Bills' && currentDeadPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentDeadPage - 1;
+      setCurrentDeadPage(currentDeadPage - 1);
+    }
+    if (directoryTab === 'Hearings' && currentHearingPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentHearingPage - 1;
+      setCurrentHearingPage(currentHearingPage - 1);
+    }
   };
   const goToLastPage = () => {
-    document.getElementById('pagination-select-page').value = numPages;
-    setCurrentPage(numPages);
+    if (directoryTab === 'Active Bills') {
+      setCurrentPage(numPages);
+      document.getElementById('pagination-select-page').value = numPages;
+    }
+    if (directoryTab === 'Inactive Bills') {
+      setCurrentDeadPage(numDeadPages);
+      document.getElementById('pagination-select-page').value = numDeadPages;
+    }
+    if (directoryTab === 'Hearings') {
+      setCurrentHearingPage(numHearingPages);
+      document.getElementById('pagination-select-page').value = numHearingPages;
+    }
   };
   const goToNextPage = () => {
-    if (currentPage !== numPages) {
+    if (directoryTab === 'Active Bills' && currentPage < numPages) {
       document.getElementById('pagination-select-page').value = currentPage + 1;
       setCurrentPage(currentPage + 1);
+    }
+    if (directoryTab === 'Inactive Bills' && currentDeadPage < numDeadPages) {
+      document.getElementById('pagination-select-page').value = currentDeadPage + 1;
+      setCurrentDeadPage(currentDeadPage + 1);
+    }
+    if (directoryTab === 'Hearings' && currentHearingPage < numHearingPages) {
+      document.getElementById('pagination-select-page').value = currentHearingPage + 1;
+      setCurrentHearingPage(currentHearingPage + 1);
     }
   };
   const handleSearch = (eventText) => {
     document.getElementById('pagination-select-page').value = 1;
     setCurrentPage(1);
+    setCurrentDeadPage(1);
+    setCurrentHearingPage(1);
     setSearch(eventText);
   };
 
@@ -293,8 +450,21 @@ const Directory = () => {
               onChange={event => handleSearch(event.target.value)}
             />
           </Form>
-          <Tabs defaultActiveKey="all-bills" id="fill-tab-example" className="mb-3" fill>
-            <Tab eventKey="all-bills" title="All Bills">
+          <Tabs
+            defaultActiveKey="all-bills"
+            id="fill-tab-example"
+            className="mb-3"
+            fill
+            onClick={(e) => {
+              setDirectoryTab(e.target.innerHTML);
+              setCurrentPage(1);
+              setCurrentDeadPage(1);
+              setItemsPerPage(10);
+              setItemsPerDeadPage(10);
+              document.getElementById('pagination-items-per-page').value = 10;
+            }}
+          >
+            <Tab eventKey="all-bills" title="Active Bills">
               <Row>
                 <Table className="directory-table">
                   <thead style={{ marginBottom: 10 }}>
@@ -319,7 +489,28 @@ const Directory = () => {
               </Row>
             </Tab>
             <Tab eventKey="inactive-bills" title="Inactive Bills">
-              ...
+              <Row>
+                <Table className="directory-table">
+                  <thead style={{ marginBottom: 10 }}>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Bill Title</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Offices</th>
+                      <th scope="col">Committees</th>
+                      <th scope="col">Actions</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody style={{ position: 'relative' }}>
+                    {
+                      getFilteredDeadMeasures().map((measures, key) => (
+                        <MeasureComponent measure={measures} key={key} />
+                      ))
+                    }
+                  </tbody>
+                </Table>
+              </Row>
             </Tab>
             <Tab eventKey="hearings" title="Hearings">
               <Table className="directory-table" striped>
@@ -331,9 +522,9 @@ const Directory = () => {
                   </tr>
                 </thead>
                 <tbody style={{ position: 'relative' }}>
-                  {getHearings.map(
-                    (hearing) => (
-                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`}>
+                  {getFilteredHearings().map(
+                    (hearing, key) => (
+                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
                         <td>
                           {hearing.datetime}
                         </td>
@@ -360,7 +551,7 @@ const Directory = () => {
           <ChevronRight />
         </Button>
         <Form.Select id="pagination-select-page" style={{ width: '90px' }} onChange={getItemsInPage}>
-          {[...Array(numPages)].map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
+          {getNumPages().map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
         </Form.Select>
         <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToPrevPage}>
           <ChevronLeft />

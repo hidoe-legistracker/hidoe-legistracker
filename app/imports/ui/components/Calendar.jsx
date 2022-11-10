@@ -72,8 +72,8 @@ const BillCalendar = () => {
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
               {events.map(
-                (event) => (
-                  <Card style={{ width: '18rem', margin: 5 }}>
+                (event, key) => (
+                  <Card style={{ width: '18rem', margin: 5 }} key={key}>
                     <Card.Body>
                       <Card.Title>{event.title}</Card.Title>
                       <Card.Text>Date & Time: {event.start} - {event.end}</Card.Text>
