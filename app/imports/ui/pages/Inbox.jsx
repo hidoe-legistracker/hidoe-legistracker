@@ -168,15 +168,15 @@ const Inbox = () => {
   // Check if subject field contains the keyword 'bill' or a valid measureType followed by a number. i.e. 'bill 124' or 'hb124' will return true
   const checkEmailItemBill = (subject) => !!subject.toLowerCase().match(/(bill|hb|sb|hr|sr|hcr|scr|gm).?[0-9]+/) && getBillID(subject) !== '';
 
-  const checkEmailItemNotice = (sender) => sender === '[NOTIFICATION]';
-
   const getHearingNotice = (subject) => {
-    const notice = subject.match(/Hearing Notice (HEARING_.*)/);
+    const notice = subject.match(/HEARING_[A-Z]{3}.*_[0-9]{2}-[0-9]{2}-[0-9]{2}_/);
     if (notice !== null) {
-      return notice[1];
+      return notice;
     }
     return '';
   };
+
+  const checkEmailItemNotice = (emailItem) => emailItem.senderEmail === '[NOTIFICATION]' && getHearingNotice(emailItem.subject) !== '';
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
@@ -207,7 +207,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItemBill(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isNotification: checkEmailItemNotice(emailItem.senderEmail), hearingNotice: getHearingNotice(emailItem.subject), isRead: emailItem.isRead }} />)}
+                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItemBill(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isNotification: checkEmailItemNotice(emailItem), hearingNotice: getHearingNotice(emailItem.subject), isRead: emailItem.isRead }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>

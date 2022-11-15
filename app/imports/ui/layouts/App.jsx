@@ -10,6 +10,7 @@ import Directory from '../pages/Directory';
 import AddMeasure from '../pages/AddMeasure';
 import MyFolders from '../pages/MyFolders';
 import Secretary from '../pages/Secretary';
+import TestimonyWriter from '../pages/TestimonyWriter';
 import Inbox from '../pages/Inbox';
 import CreateEmail from '../pages/CreateEmail';
 import NotFound from '../pages/NotFound';
@@ -73,6 +74,7 @@ const App = () => {
           <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
           <Route path="/secretary" element={<ProtectedRoute><Secretary /></ProtectedRoute>} />
+          <Route path="/testimonyWriter" element={<ProtectedRoute><TestimonyWriter /></ProtectedRoute>} />
           <Route path="/view-bill" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
           <Route path="/view-testimony" element={<ProtectedRoute><TestimonyPage /></ProtectedRoute>} />
           <Route path="/view-bill/:_id" element={<ProtectedRoute><ViewBill /></ProtectedRoute>} />
@@ -129,6 +131,5 @@ AdminProtectedRoute.propTypes = {
 AdminProtectedRoute.defaultProps = {
   children: <Landing />,
 };
-
 
 export default App;
