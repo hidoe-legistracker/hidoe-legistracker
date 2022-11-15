@@ -70,6 +70,9 @@ const NavBar = () => {
             { currentUser && user.position === 'Office Secretary' ?
               <Nav.Link id={COMPONENT_IDS.NAVBAR_SECRETARY} as={NavLink} to="/secretary" key="secretary">Secretary Duties</Nav.Link>
               : ''}
+            { currentUser && user.position === 'Testimony Writer' ?
+              <Nav.Link id={COMPONENT_IDS.NAVBAR_TESTIMONY_WRITER} as={NavLink} to="/testimonyWriter" key="testimony-writer">Assigned Testimonies</Nav.Link>
+              : ''}
           </Nav>
           <Nav className="justify-content-end">
             {currentUser === '' ? (

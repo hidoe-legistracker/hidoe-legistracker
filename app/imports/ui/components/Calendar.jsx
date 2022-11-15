@@ -8,32 +8,54 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useTracker } from 'meteor/react-meteor-data';
+import { useParams } from 'react-router';
+import { Hearings } from '../../api/hearing/HearingCollection';
 
 const BillCalendar = () => {
   const [show, setShow] = useState(false);
-  const events = [
-    {
-      id: 1,
-      title: 'event 1',
-      start: '2022-10-25T10:00:00',
-      end: '2022-10-25T12:00:00',
-    },
-    {
-      id: 2,
-      title: 'event 2',
-      start: '2022-10-22T13:00:00',
-      end: '2022-10-22T18:00:00',
-    },
-    { id: 3,
-      title: 'event 3',
-      start: '2022-10-25',
-      end: '2022-10-26',
-    },
-  ];
-
+  const { _id } = useParams();
+  const { hearings } = useTracker(() => {
+    const hearingSubscription = Hearings.subscribeHearings();
+    const ready = hearingSubscription.ready();
+    const hearingCollection = Hearings.find({}, {}).fetch();
+    return {
+      hearings: hearingCollection,
+      ready: ready,
+    };
+  }, [_id]);
+  const events = [];
+  const updateHearings = () => {
+    let str = '';
+    hearings.forEach(id => {
+      const newEvent = {
+        id: 0,
+        title: '',
+        start: '',
+        end: '',
+        date: '',
+        room: '',
+        type: '',
+      };
+      str = id.datetime;
+      const time = str.split(', ');
+      time.shift();
+      time.join().substring(0, -2);
+      const date = new Date(time);
+      newEvent.id = events.length;
+      newEvent.title = id.measureNumber.toString();
+      newEvent.start = date.toISOString();
+      newEvent.end = date.toISOString();
+      newEvent.room = id.room;
+      newEvent.type = id.measureType;
+      newEvent.date = date.toString();
+      events.push(newEvent);
+    });
+    return (events);
+  };
   return (
     <>
-      <Button variant="outline-secondary" onClick={() => setShow(true)} className="calendar-button">
+      <Button variant="outline-secondary" onClick={() => { setShow(true); }} className="calendar-button">
         <Calendar3 size={25} />
       </Button>
 
@@ -56,14 +78,14 @@ const BillCalendar = () => {
               customButtons={{
                 new: {
                   text: 'new',
-                  click: () => console.log('new event'),
+                  click: () => console.log(events.room),
                 },
               }}
-              events={events}
+              events={updateHearings()}
               eventColor="red"
               nowIndicator
               dateClick={(e) => console.log(e.dateStr)}
-              eventClick={(e) => console.log(e.event.id)}
+              eventClick={(e) => console.log(e.event.title)}
               contentHeight={450}
               selectable
               selectMirror
@@ -71,14 +93,14 @@ const BillCalendar = () => {
             />
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
-              {events.map(
+              {updateHearings().map(
                 (event, key) => (
                   <Card style={{ width: '18rem', margin: 5 }} key={key}>
                     <Card.Body>
-                      <Card.Title>{event.title}</Card.Title>
-                      <Card.Text>Date & Time: {event.start} - {event.end}</Card.Text>
-                      <Card.Text>Location: N/A</Card.Text>
-                      <Card.Text>Type: N/A</Card.Text>
+                      <Card.Title>Bill: {event.title}</Card.Title>
+                      <Card.Text>Date & Time: {event.date}</Card.Text>
+                      <Card.Text>Location: {event.room}</Card.Text>
+                      <Card.Text>Type: {event.type}</Card.Text>
                     </Card.Body>
                   </Card>
                 ),

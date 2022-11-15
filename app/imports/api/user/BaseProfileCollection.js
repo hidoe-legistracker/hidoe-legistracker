@@ -28,6 +28,24 @@ class BaseProfileCollection extends BaseCollection {
         type: String,
         optional: true,
       },
+      assignedTestimony: {
+        type: Array,
+        optional: true,
+      },
+      'assignedTestimony.$': {
+        type: new SimpleSchema({
+          measureID: String,
+          measureNumber: Number,
+          measureTitle: String,
+          measureDescription: String,
+          measureType: String,
+          assigner: String,
+          assignerFirst: String,
+          assignerLast: String,
+          office: String,
+          comment: String,
+        }),
+      },
       offices: {
         type: Array,
         optional: true,
