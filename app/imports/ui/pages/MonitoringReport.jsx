@@ -142,7 +142,7 @@ const MonitoringReport = () => {
                     <>
                       { testimony.testimonyProgress.length !== 6 && user.offices !== undefined && testimony.office === user.offices.find(element => element === testimony.office) ? (
                         <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
-                          <th scope="row">{getHearingDate() ? <Countdown daysInHours date={getHearingDate()} /> : '-'}</th>
+                          <th scope="row">{getHearingDate() ? <Countdown daysInHours date={getHearingDate()} /> : 'Hearing Date Not Set'}</th>
                           <td>{testimony.billNumber}</td>
                           <td>{testimony.testifier}</td>
                           <td>{testimony.office}</td>
