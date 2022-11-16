@@ -77,10 +77,12 @@ const Inbox = () => {
   const [selectedTab, setSelectedTab] = useState('inbox');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const [isCheck, setIsCheck] = useState([]);
 
-  let filteredEmails;
-  let numEmails;
-  let numPages;
+  let filteredEmails = [];
+  let numEmails = 0;
+  let numPages = 1;
 
   if (ready) {
     if (selectedTab === 'inbox') {
@@ -180,6 +182,7 @@ const Inbox = () => {
   };
 
   const checkEmailItemNotice = (emailItem) => emailItem.senderEmail === '[NOTIFICATION]' && getHearingNotice(emailItem.subject) !== '';
+  const emailList = getFilteredEmails();
 
   return (ready ? (
     <Container id={PAGE_IDS.INBOX} className="py-3">
@@ -221,7 +224,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {getFilteredEmails().map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItemBill(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isNotification: checkEmailItemNotice(emailItem), hearingNotice: getHearingNotice(emailItem.subject), isRead: emailItem.isRead }} />)}
+                    {emailList.map((emailItem, index) => <InboxItem key={index} email={{ _id: emailItem._id, from: emailItem.senderEmail, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), subject: emailItem.subject, body: emailItem.body, time: emailItem.date.toISOString(), hasBillReference: checkEmailItemBill(emailItem.subject), billNumber: getBillNumber(emailItem.subject), billID: getBillID(emailItem.subject), isNotification: checkEmailItemNotice(emailItem), hearingNotice: getHearingNotice(emailItem.subject), isRead: emailItem.isRead }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
@@ -246,7 +249,7 @@ const Inbox = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {getFilteredEmails().map((emailItem, index) => <DraftItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject }} />)}
+                    {emailList.map((emailItem, index) => <DraftItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
@@ -272,7 +275,7 @@ const Inbox = () => {
                   </thead>
                   <tbody>
                     {/* eslint-disable-next-line max-len */}
-                    {getFilteredEmails().map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
+                    {emailList.map((emailItem, index) => <SentItem key={index} email={{ _id: emailItem._id, subject: emailItem.subject, to: emailItem.recipients.toString(), cc: emailItem.ccs.toString(), bcc: emailItem.bccs.toString(), body: emailItem.body, time: emailItem.date.toISOString() }} />)}
                   </tbody>
                 </Table>
               </Tab.Pane>
