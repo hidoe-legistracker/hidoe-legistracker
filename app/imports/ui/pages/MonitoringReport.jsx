@@ -4,6 +4,7 @@ import { ArrowRight } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useParams } from 'react-router';
+import Countdown from 'react-countdown';
 import _ from 'underscore/underscore-node';
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
@@ -141,7 +142,7 @@ const MonitoringReport = () => {
                     <>
                       { testimony.testimonyProgress.length !== 6 && user.offices !== undefined && testimony.office === user.offices.find(element => element === testimony.office) ? (
                         <Link className="table-row" to={`/view-testimony/${measure._id}&${testimony._id}`}>
-                          <th scope="row">{testimony.hearingDate ? testimony.hearingDate.toLocaleDateString() : '-'}</th>
+                          <th scope="row">{getHearingDate() ? <Countdown daysInHours date={getHearingDate()} /> : 'Hearing Date Not Set'}</th>
                           <td>{testimony.billNumber}</td>
                           <td>{testimony.testifier}</td>
                           <td>{testimony.office}</td>
