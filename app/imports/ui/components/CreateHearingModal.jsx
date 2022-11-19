@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { _ } from 'meteor/underscore';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
+import { Button, Form, Modal, Row, Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import swal from 'sweetalert';
@@ -41,16 +41,6 @@ const offices = [
   { label: 'OTM', value: 'example-list8@mail.com' },
 ];
 
-const types = [
-  { label: 'hb' },
-  { label: 'sb' },
-  { label: 'hr' },
-  { label: 'sr' },
-  { label: 'hcr' },
-  { label: 'scr' },
-  { label: 'gm' },
-];
-
 const committees = [
   { label: 'JDC', value: 'example-list1@mail.com' },
   { label: 'WAM', value: 'example-list2@mail.com' },
@@ -88,7 +78,7 @@ const committees = [
 ];
 
 const CreateHearingModal = ({ modal }) => {
-  const { users, ready } = useTracker(() => {
+  const { users, ready, measures } = useTracker(() => {
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const measureSubscription = Measures.subscribeMeasuresAdmin();
@@ -101,20 +91,40 @@ const CreateHearingModal = ({ modal }) => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
     });
 
+    const measure = Measures.find({}, {}).fetch();
+
     return {
       ready: isReady,
       users: formattedUsers,
+      measures: measure,
     };
   }, []);
+  const [selectedBills, setselectedBills] = useState([
+    { bill: '' },
+  ]);
 
   const updateHearing = (event, property) => {
     newHearing[property] = event;
   };
 
+  const billCard = { marginTop: 15, marginBottom: 15, padding: 20 };
+
+  const billList = [];
+  const insertBills = () => {
+    // eslint-disable-next-line array-callback-return
+    measures.map(m => {
+      // eslint-disable-next-line no-unused-expressions
+      m.description === undefined ? (
+        billList.push({ label: `Bill #${m.measureNumber}: (no description)` })
+      ) : billList.push({ label: `Bill #${m.measureNumber}: ${m.description?.substring(0, 125)}...` });
+    });
+  };
+  insertBills();
+
   const submit = () => {
     let newOfficeType = '';
     let newCommittee = '';
-    const { measureType, measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl } = newHearing;
+    const { measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl } = newHearing;
     modal.setShow(false);
 
     newHearing.committees.forEach(c => {
@@ -127,7 +137,7 @@ const CreateHearingModal = ({ modal }) => {
     const collectionName = Hearings.getCollectionName();
     const date = new Date();
     const definitionData = {
-      year: date.getFullYear(), measureType, measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
+      year: date.getFullYear(), measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
       committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
       noticeUrl, noticePdfUrl,
     };
@@ -136,6 +146,25 @@ const CreateHearingModal = ({ modal }) => {
       .then(() => {
         swal('Success', 'Hearing successfully created', 'success');
       });
+  };
+
+  const handleFormChange = (index, event) => {
+    const data = [...selectedBills];
+    data[index][event.target.bill] = event.target.value;
+    setselectedBills(data);
+  };
+
+  const addBills = () => {
+    const newfield = { bill: '' };
+    setselectedBills([...selectedBills, newfield]);
+  };
+
+  const removeBills = (index) => {
+    if (selectedBills.length > 1) {
+      const data = [...selectedBills];
+      data.splice(index, 1);
+      setselectedBills(data);
+    }
   };
 
   return ready ? (
@@ -230,44 +259,39 @@ const CreateHearingModal = ({ modal }) => {
               </Col>
             </Row>
           </Form.Group>
-          <div style={{ borderColor: 'black', borderWidth: '1' }}>
-            <h4 style={{ textAlign: 'center' }}>Add Bills to Hearing</h4>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <h6>Bill Number</h6>
-                  <Form.Control
-                    placeholder="Enter a valid bill number (ie. 234)"
-                    onChange={(e) => updateHearing(e.target.value, 'measureNumber')}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <h6>Bill Type</h6>
-                  <Select
-                    id="notice-bill-type"
-                    options={types}
-                    onChange={(e) => updateHearing(e, 'measureType')}
-                  />
-                </Form.Group>
-              </Col>
-              <Col xs={2}>
-                <Row>
-                  <h6>Add or Remove Bills</h6>
-                  <Col>
-                    <Button variant="outline-secondary" className="calendar-button">
-                      <DashCircle size={25} />
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button variant="outline-secondary" className="calendar-button">
-                      <PlusCircle size={25} />
-                    </Button>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
+          <div>
+            <Card style={billCard}>
+              <h4 style={{ textAlign: 'center' }}>Add Bills to Hearing</h4>
+              {selectedBills.map((input, index) => (
+                <div key={index}>
+                  <Row style={{ marginTop: 5, marginBottom: 5 }}>
+                    <Col>
+                      <Select
+                        id="bills"
+                        options={billList}
+                        closeMenuOnSelect={false}
+                        value={input.bill}
+                        onChange={event => handleFormChange(index, event)}
+                      />
+                    </Col>
+                    <Col xs={2}>
+                      <Row>
+                        <Col>
+                          <Button variant="outline-secondary" className="calendar-button" onClick={() => removeBills(index)}>
+                            <DashCircle size={25} />
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button variant="outline-secondary" className="calendar-button" onClick={() => addBills()}>
+                            <PlusCircle size={25} />
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </Card>
             <Row>
               <Form.Group>
                 <Form.Label>Description</Form.Label>
