@@ -94,18 +94,18 @@ const HearingPage = () => {
       <Row>
         {getFilteredHearings().map(
           (hearing, key) => (
-            <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
-              <Card style={cardStyle}>
+            <Card style={cardStyle}>
+              <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
                 <Card.Title>{hearing.datetime}</Card.Title>
-                <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5 }}>{hearing.room}</Card.Subtitle>
-                <Card.Footer>
+                <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
+                <Card.Footer style={{ textAlign: 'center' }}>
                   <h6>Bills on Agenda</h6>
                   {getBills(hearing.notice).map(m => (
                     `${m} `
                   ))}
                 </Card.Footer>
-              </Card>
-            </Link>
+              </Link>
+            </Card>
           ),
         )}
       </Row>
