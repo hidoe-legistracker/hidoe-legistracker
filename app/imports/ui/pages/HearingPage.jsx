@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import _ from 'underscore';
 import { Link, NavLink } from 'react-router-dom';
-import Table from 'react-bootstrap/Table';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Button, Container, Form, Row } from 'react-bootstrap';
+import { Button, Container, Form, Row, Card } from 'react-bootstrap';
 import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
@@ -36,6 +35,8 @@ const HearingPage = () => {
       numHearingPages++;
     }
   }
+
+  const cardStyle = { padding: 15, margin: 10, width: '18rem' };
 
   const getNumPages = () => [...Array(numHearingPages)];
 
@@ -82,34 +83,32 @@ const HearingPage = () => {
     return ret;
   };
 
+  const getBills = (noticeID) => {
+    const notice = _.where(hearings, { notice: noticeID });
+    return _.pluck(notice, 'measureNumber');
+  };
+
   return (ready ? (
-    <Container>
-      <Table className="directory-table" striped>
-        <thead style={{ marginBottom: 10 }}>
-          <tr>
-            <th scope="col">Date/Time</th>
-            <th scope="col">Location</th>
-            <th scope="col">Notice ID</th>
-          </tr>
-        </thead>
-        <tbody style={{ position: 'relative' }}>
-          {getFilteredHearings().map(
-            (hearing, key) => (
-              <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
-                <td>
-                  {hearing.datetime}
-                </td>
-                <td>
-                  {hearing.room}
-                </td>
-                <td>
-                  {hearing.notice}
-                </td>
-              </Link>
-            ),
-          )}
-        </tbody>
-      </Table>
+    <Container className="py-3">
+      <h1>Hearing Notices</h1>
+      <Row>
+        {getFilteredHearings().map(
+          (hearing, key) => (
+            <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
+              <Card style={cardStyle}>
+                <Card.Title>{hearing.datetime}</Card.Title>
+                <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5 }}>{hearing.room}</Card.Subtitle>
+                <Card.Footer>
+                  <h6>Bills on Agenda</h6>
+                  {getBills(hearing.notice).map(m => (
+                    `${m} `
+                  ))}
+                </Card.Footer>
+              </Card>
+            </Link>
+          ),
+        )}
+      </Row>
       <Row className="d-flex flex-row-reverse">
         <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToLastPage}>
           <ChevronDoubleRight />

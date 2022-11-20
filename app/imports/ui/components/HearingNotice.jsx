@@ -94,7 +94,7 @@ const HearingNotice = () => {
       <Container>
         <Row>
           <Breadcrumb>
-            <Breadcrumb.Item href="/directory">Directory</Breadcrumb.Item>
+            <Breadcrumb.Item href="/hearings-page">Hearings</Breadcrumb.Item>
             <Breadcrumb.Item active>Hearing Notice</Breadcrumb.Item>
           </Breadcrumb>
         </Row>
