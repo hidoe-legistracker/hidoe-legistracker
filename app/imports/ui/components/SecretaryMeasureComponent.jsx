@@ -84,7 +84,7 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
     }
     updateMethod.callPromise({ collectionName, updateData })
       .catch(error => swal('Error', error.message, 'error'))
-      .then(() => swal('Success', 'Folder created', 'success'));
+      .then(() => swal('Success', 'Testimony Assigned', 'success'));
     console.log(user.assignedTestimony);
   };
 
