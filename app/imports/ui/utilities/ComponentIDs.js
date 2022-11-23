@@ -61,4 +61,7 @@ export const COMPONENT_IDS = {
   // INBOX PAGE
   INBOX_CREATE_EMAIL_BUTTON: 'inbox-create-email-button',
   INBOX_CREATE_EMAIL_MODAL: 'inbox-create-email-modal',
+
+  // CREATE HEARING MODAL
+  CREATE_HEARING_MODAL: 'create-hearing-modal',
 };

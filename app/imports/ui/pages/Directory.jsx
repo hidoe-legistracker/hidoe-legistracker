@@ -301,12 +301,17 @@ const Directory = () => {
     setSearch(eventText);
   };
 
-  const filter = (office) => {
-    if (office === 'ALL BILLS') {
+  const filter = (committee) => {
+    if (committee === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
     } else {
-      const filteredData = _.where(measure, { currentReferral: office });
+      const filteredData = [];
+      measure.forEach((m) => {
+        if (m.currentReferral && m.currentReferral.indexOf(committee) >= 0) {
+          filteredData.push(m);
+        }
+      });
       setDefaultBills(false);
       setBills(filteredData);
     }

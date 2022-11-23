@@ -7,10 +7,13 @@ import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+import CreateHearingModal from '../components/CreateHearingModal';
 
 const HearingPage = () => {
   const [itemsPerHearingPage, setItemsPerHearingPage] = useState(10);
   const [currentHearingPage, setCurrentHearingPage] = useState(1);
+  const [show, setShow] = useState(false);
 
   const { ready, hearings, measures } = useTracker(() => {
     const hearingSub = Hearings.subscribeHearings();
@@ -95,6 +98,9 @@ const HearingPage = () => {
   return (ready ? (
     <Container className="py-3">
       <h1>Hearing Notices</h1>
+      <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => setShow(true)}>
+        Create Hearing Notice
+      </Button>
       <Row>
         {getFilteredHearings().map(
           (hearing, key) => (
@@ -138,6 +144,7 @@ const HearingPage = () => {
         </Form.Select>
         <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
       </Row>
+      <CreateHearingModal modal={{ show: show, setShow: setShow }} />
     </Container>
 
   ) : <LoadingSpinner message="Loading Hearing Notices" />);
