@@ -38,7 +38,7 @@ const InboxItem = ({ email }) => {
     }
   };
   return ready ? (
-    <tr onClick={(event) => openEmail(event)} style={!emailRead ? { backgroundColor: 'lightgray' } : {}}>
+    <tr onClick={(event) => openEmail(event)} style={emailRead ? { backgroundColor: 'lightgray' } : {}}>
       <td style={{ width: '1em' }}><Form.Check inline /></td>
       <td>{email.from}</td>
       <td>{email.subject}</td>
