@@ -12,14 +12,16 @@ const HearingPage = () => {
   const [itemsPerHearingPage, setItemsPerHearingPage] = useState(10);
   const [currentHearingPage, setCurrentHearingPage] = useState(1);
 
-  const { ready, hearings } = useTracker(() => {
+  const { ready, hearings, measures } = useTracker(() => {
     const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready() && hearingSub.ready();
     const hearingData = Hearings.find({}, {}).fetch();
+    const measureData = Measures.find({}, {}).fetch();
     return {
       hearings: hearingData,
       ready: isReady,
+      measures: measureData,
     };
   }, []);
 
@@ -88,6 +90,14 @@ const HearingPage = () => {
     return _.pluck(notice, 'measureNumber');
   };
 
+  /*
+  <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${bill._id}`}>
+                      {`${bill.measureNumber} `}
+                    </Link>
+   */
+
+  const getBillInfo = (num) => _.find(measures, function (m) { return m.measureNumber === num; });
+
   return (ready ? (
     <Container className="py-3">
       <h1>Hearing Notices</h1>
@@ -98,13 +108,15 @@ const HearingPage = () => {
               <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
                 <Card.Title>{hearing.datetime}</Card.Title>
                 <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
-                <Card.Footer style={{ textAlign: 'center' }}>
-                  <h6>Bills on Agenda</h6>
-                  {getBills(hearing.notice).map(m => (
-                    `${m} `
-                  ))}
-                </Card.Footer>
               </Link>
+              <Card.Footer style={{ textAlign: 'center' }}>
+                <h6>Bills on Agenda</h6>
+                {getBills(hearing.notice).map(m => (
+                  <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`} target="_blank">
+                    {`${getBillInfo(m).measureNumber} `}
+                  </Link>
+                ))}
+              </Card.Footer>
             </Card>
           ),
         )}
