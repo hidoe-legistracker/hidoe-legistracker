@@ -117,7 +117,7 @@ const CreateHearingModal = ({ modal }) => {
   const submit = () => {
     let newOfficeType = '';
     let newCommittee = '';
-    const { code, datetime, description, room, notice, noticeUrl, noticePdfUrl, bills, offices, committees } = newHearing;
+    const { code, datetime, description, room, notice, noticeUrl, noticePdfUrl, bills } = newHearing;
 
     const testDate = new Date(datetime);
     if (testDate.toString() === 'Invalid Date') {
@@ -135,14 +135,6 @@ const CreateHearingModal = ({ modal }) => {
     });
     newHearing.offices.forEach(o => {
       newOfficeType += `${o.label} `;
-    });
-
-    offices.forEach(o => {
-      newOfficeType = `${newOfficeType + o.label} `;
-    });
-
-    committees.forEach(c => {
-      newCommittee = `${newCommittee + c.label} `;
     });
 
     const collectionName = Hearings.getCollectionName();
