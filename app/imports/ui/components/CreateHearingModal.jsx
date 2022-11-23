@@ -160,9 +160,9 @@ const CreateHearingModal = ({ modal }) => {
     swal('Success', 'Hearing successfully created', 'success');
 
     // Send emails
-    const subject = 'New Hearing Notification';
+    const subject = `New Hearing Notification: ${notice}`;
     const senderName = '[NOTIFICATION]';
-    const senderEmail = 'System';
+    const senderEmail = '[NOTIFICATION]';
     const emailDate = new Date();
     const body = `You have a new hearing notification for hearing notice[${notice}] on ${datetime} \n\n${description}\n\n${noticeUrl}`;
     newHearing.recipients.forEach(r => {
