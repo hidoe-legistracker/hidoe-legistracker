@@ -21,6 +21,7 @@
     "react-bootstrap-multiselect": "^2.4.1",
     "react-bootstrap-sweetalert": "^5.2.0",
     "react-calendar": "^3.9.0",
+    "react-countdown": "^2.3.3",
     "react-dom": "^18.2.0",
     "react-multi-email": "^0.5.3",
     "react-router": "^6.3.0",

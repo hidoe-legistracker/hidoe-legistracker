@@ -24,6 +24,7 @@ export const COMPONENT_IDS = {
   NAVBAR_CURRENT_USER: 'navbar-current-user',
   NAVBAR_CHANGE_PASSWORD_ADMIN: 'navbar-change-password-admin',
   NAVBAR_CHANGE_PASSWORD_USER: 'navbar-change-password-user',
+  NAVBAR_HEARINGS_PAGE: 'navbar-hearings-page',
 
   // SIGN IN PAGE
   SIGN_IN_FORM_EMAIL: 'sign-in-form-email',
