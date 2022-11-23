@@ -113,12 +113,14 @@ const MonitoringReport = () => {
             </Col>
           </Row>
           <Row className="mb-5">
-            <Form>
-              <Form.Group className="mb-2">
-                <CreateTestimonyModal testimonyDefaultData={{ measureNumber: measure.measureNumber }} />
-              </Form.Group>
+            { _.includes(user.offices, measure.mainOfficeType) && user.position === 'Testimony Writer' ? (
+              <Form>
+                <Form.Group className="mb-2">
+                  <CreateTestimonyModal testimonyDefaultData={{ measureNumber: measure.measureNumber }} />
+                </Form.Group>
 
-            </Form>
+              </Form>
+            ) : ''}
           </Row>
           <Container className="view-testimony-container">
             {/* eslint-disable-next-line no-nested-ternary */}
