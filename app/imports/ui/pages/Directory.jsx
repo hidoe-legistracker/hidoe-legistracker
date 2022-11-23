@@ -19,9 +19,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { ROLE } from '../../api/role/Role';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
-import { Hearings } from '../../api/hearing/HearingCollection';
-import CreateHearingModal from '../components/CreateHearingModal';
-import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
 const billProgress = 60;
 
@@ -52,21 +49,18 @@ MeasureComponent.propTypes = {
 
 /* Renders a table containing all of the Measure documents. */
 const Directory = () => {
-  const [show, setShow] = useState(false);
   const [directoryTab, setDirectoryTab] = useState('Active Bills');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [itemsPerDeadPage, setItemsPerDeadPage] = useState(10);
-  const [itemsPerHearingPage, setItemsPerHearingPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentDeadPage, setCurrentDeadPage] = useState(1);
-  const [currentHearingPage, setCurrentHearingPage] = useState(1);
   const [search, setSearch] = useState('');
   const [bills, setBills] = useState();
   const [defaultBills, setDefaultBills] = useState(true);
 
   const { _id } = useParams();
 
-  const { currentUser, ready, init, measure, deadMeasures, hearings } = useTracker(() => {
+  const { currentUser, ready, init, measure, deadMeasures } = useTracker(() => {
     const username = Meteor.user() ? Meteor.user().username : '';
     let rdy;
     let usr;
@@ -79,15 +73,12 @@ const Directory = () => {
       rdy = subscription.ready();
       usr = AdminProfiles.findByEmail(username);
     }
-    const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
-    const isReady = subscription.ready() && hearingSub.ready();
+    const isReady = subscription.ready();
     const measureData = Measures.find({ active: true }, {}).fetch();
     const deadMeasureData = Measures.find({ active: false }, {}).fetch();
-    const hearingData = Hearings.find({}, {}).fetch();
     if (usr === undefined) usr = AdminProfiles.findOne({ _id: _id }, {});
     return {
-      hearings: hearingData,
       currentUser: usr,
       ready: isReady,
       init: rdy,
@@ -96,17 +87,13 @@ const Directory = () => {
     };
   }, []);
 
-  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
-
   // Filter Measures
   let filteredMeasures;
   let filteredDeadMeasures;
   let numMeasures;
   let numDeadMeasures;
-  let numHearings;
   let numPages;
   let numDeadPages;
-  let numHearingPages;
 
   if (ready) {
     if (defaultBills) {
@@ -212,14 +199,6 @@ const Directory = () => {
     }
   }
 
-  if (ready) {
-    numHearings = _.size(getHearings);
-    numHearingPages = parseInt(numHearings / itemsPerHearingPage, 10);
-    if (numHearings % itemsPerHearingPage !== 0) {
-      numHearingPages++;
-    }
-  }
-
   const getFilteredMeasures = () => {
     const startIndex = (+currentPage * +itemsPerPage) - +itemsPerPage;
     const endIndex = +startIndex + +itemsPerPage;
@@ -244,18 +223,6 @@ const Directory = () => {
     return ret;
   };
 
-  const getFilteredHearings = () => {
-    const startIndex = (+currentHearingPage * +itemsPerHearingPage) - +itemsPerHearingPage;
-    const endIndex = +startIndex + +itemsPerHearingPage;
-    let ret;
-    if (endIndex < numHearings) {
-      ret = getHearings.slice(startIndex, endIndex);
-    } else {
-      ret = getHearings.slice(startIndex, numHearings);
-    }
-    return ret;
-  };
-
   if (init && currentUser.newAccount) {
     return (<Navigate to="/change-password-user" />);
   }
@@ -264,7 +231,6 @@ const Directory = () => {
   const getNumPages = () => {
     if (directoryTab === 'Active Bills') return [...Array(numPages)];
     if (directoryTab === 'Inactive Bills') return [...Array(numDeadPages)];
-    if (directoryTab === 'Hearings') return [...Array(numHearingPages)];
     return [];
   };
 
@@ -278,10 +244,6 @@ const Directory = () => {
       setItemsPerDeadPage(selection);
       setCurrentDeadPage(1);
     }
-    if (directoryTab === 'Hearings') {
-      setItemsPerHearingPage(selection);
-      setCurrentHearingPage(1);
-    }
     document.getElementById('pagination-select-page').value = 1;
   };
   const getItemsInPage = () => {
@@ -292,9 +254,6 @@ const Directory = () => {
     if (directoryTab === 'Inactive Bills') {
       setCurrentDeadPage(selection);
     }
-    if (directoryTab === 'Hearings') {
-      setCurrentHearingPage(selection);
-    }
   };
   const goToFirstPage = () => {
     document.getElementById('pagination-select-page').value = 1;
@@ -303,9 +262,6 @@ const Directory = () => {
     }
     if (directoryTab === 'Inactive Bills') {
       setCurrentDeadPage(1);
-    }
-    if (directoryTab === 'Hearings') {
-      setCurrentHearingPage(1);
     }
   };
   const goToPrevPage = () => {
@@ -317,10 +273,6 @@ const Directory = () => {
       document.getElementById('pagination-select-page').value = currentDeadPage - 1;
       setCurrentDeadPage(currentDeadPage - 1);
     }
-    if (directoryTab === 'Hearings' && currentHearingPage !== 1) {
-      document.getElementById('pagination-select-page').value = currentHearingPage - 1;
-      setCurrentHearingPage(currentHearingPage - 1);
-    }
   };
   const goToLastPage = () => {
     if (directoryTab === 'Active Bills') {
@@ -330,10 +282,6 @@ const Directory = () => {
     if (directoryTab === 'Inactive Bills') {
       setCurrentDeadPage(numDeadPages);
       document.getElementById('pagination-select-page').value = numDeadPages;
-    }
-    if (directoryTab === 'Hearings') {
-      setCurrentHearingPage(numHearingPages);
-      document.getElementById('pagination-select-page').value = numHearingPages;
     }
   };
   const goToNextPage = () => {
@@ -345,16 +293,11 @@ const Directory = () => {
       document.getElementById('pagination-select-page').value = currentDeadPage + 1;
       setCurrentDeadPage(currentDeadPage + 1);
     }
-    if (directoryTab === 'Hearings' && currentHearingPage < numHearingPages) {
-      document.getElementById('pagination-select-page').value = currentHearingPage + 1;
-      setCurrentHearingPage(currentHearingPage + 1);
-    }
   };
   const handleSearch = (eventText) => {
     document.getElementById('pagination-select-page').value = 1;
     setCurrentPage(1);
     setCurrentDeadPage(1);
-    setCurrentHearingPage(1);
     setSearch(eventText);
   };
 
@@ -519,40 +462,6 @@ const Directory = () => {
                   </tbody>
                 </Table>
               </Row>
-            </Tab>
-            <Tab eventKey="hearings" title="Hearings">
-              <Table className="directory-table" striped>
-                <thead style={{ marginBottom: 10 }}>
-                  <tr>
-                    <th scope="col">Date/Time</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Notice</th>
-                  </tr>
-                </thead>
-                <tbody style={{ position: 'relative' }}>
-                  {currentUser !== '' && Roles.userIsInRole(Meteor.userId(), [ROLE.ADMIN]) ? (
-                    <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => setShow(true)}>
-                      Create Hearing Notice
-                    </Button>
-                  ) : ''}
-                  {getFilteredHearings().map(
-                    (hearing, key) => (
-                      <Link className="table-row" style={{ border: 'none' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
-                        <td>
-                          {hearing.datetime}
-                        </td>
-                        <td>
-                          {hearing.room}
-                        </td>
-                        <td>
-                          {hearing.notice}
-                        </td>
-                      </Link>
-                    ),
-                  )}
-                </tbody>
-                <CreateHearingModal modal={{ show: show, setShow: setShow }} />
-              </Table>
             </Tab>
           </Tabs>
         </Col>

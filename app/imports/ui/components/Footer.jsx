@@ -13,7 +13,7 @@ const Footer = () => {
           <Col className="text-center">Hawaii State Department of Education</Col>
         </Row>
         <Row>
-          <Col className="text-center">Legislative Bill Tracker</Col>
+          <Col className="text-center">Ka ʻOihana Hoʻonaʻauao o ke Aupuni Hawaiʻi</Col>
         </Row>
       </Container>
     </footer>

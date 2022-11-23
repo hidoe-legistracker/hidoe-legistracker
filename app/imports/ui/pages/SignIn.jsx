@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
+import { Alert, Card, Container, Row, Col } from 'react-bootstrap';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { QuestionCircle } from 'react-bootstrap-icons';
 import { PAGE_IDS } from '../utilities/PageIDs';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 
@@ -40,24 +41,32 @@ const SignIn = () => {
   }
   // Otherwise return the Login form.
   return (
-    <Container id={PAGE_IDS.SIGN_IN} className="py-3">
+    <Container id={PAGE_IDS.SIGN_IN} className="content">
       <Row className="justify-content-center">
-        <Col xs={5}>
-          <Col className="text-center">
-            <h2>Login to your account</h2>
-          </Col>
+        <h2 style={{ textAlign: 'center' }}>Hawai`i State Department of Education Legislative Bill Tracker</h2>
+        <h5 style={{ textAlign: 'center' }}>Login to your account to get started</h5>
+        <Col xs={6}>
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
               <Card.Body>
-                <TextField id={COMPONENT_IDS.SIGN_IN_FORM_EMAIL} name="email" placeholder="E-mail address" />
-                <TextField id={COMPONENT_IDS.SIGN_IN_FORM_PASSWORD} name="password" placeholder="Password" type="password" />
-                <ErrorsField />
+                <TextField id={COMPONENT_IDS.SIGN_IN_FORM_EMAIL} name="email" />
+                <TextField id={COMPONENT_IDS.SIGN_IN_FORM_PASSWORD} name="password" type="password" />
                 <SubmitField id={COMPONENT_IDS.SIGN_IN_FORM_SUBMIT} />
               </Card.Body>
             </Card>
           </AutoForm>
           <Alert variant="secondary">
-            <Link to="/forgot-password">Forgot Password?</Link>
+            <Row>
+              <Col xs={1}>
+                <QuestionCircle size={45} style={{ margin: 10 }} />
+              </Col>
+              <Col style={{ marginLeft: 20 }}>
+                <Alert.Heading>
+                  Need help with your account?
+                </Alert.Heading>
+                <p>Please contact IT at admin@foo.com for further assistance.</p>
+              </Col>
+            </Row>
           </Alert>
           {error === '' ? (
             ''
