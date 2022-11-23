@@ -10,20 +10,33 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useParams } from 'react-router';
+import _ from 'underscore';
 import { Hearings } from '../../api/hearing/HearingCollection';
+import { Measures } from '../../api/measure/MeasureCollection';
 
 const BillCalendar = () => {
   const [show, setShow] = useState(false);
-  const { _id } = useParams();
-  const { hearings } = useTracker(() => {
+  const { n } = useParams();
+  const { hearings, measure } = useTracker(() => {
     const hearingSubscription = Hearings.subscribeHearings();
-    const ready = hearingSubscription.ready();
+    const measureSubscription = Measures.subscribeMeasures();
     const hearingCollection = Hearings.find({}, {}).fetch();
+    const measureItem = Measures.find({}, {}).fetch();
+    const isReady = hearingSubscription.ready() && measureSubscription.ready();
     return {
       hearings: hearingCollection,
-      ready: ready,
+      measure: measureItem,
+      ready: isReady,
     };
-  }, [_id]);
+  }, [n]);
+  //This part was crashing so I took it out previously (just to show u how it lookin)
+  const filterHearings = _.where(hearings, { notice: n.notice });
+  const getHearing = _.first(filterHearings);
+  const filteredHearings = [];
+  filterHearings.forEach(h => (
+    _.where(measure, { measureNumber: h.measureNumber }).forEach(m => {
+      filteredHearings.push(m);
+    })));
   const events = [];
   const updateHearings = () => {
     let str = '';
