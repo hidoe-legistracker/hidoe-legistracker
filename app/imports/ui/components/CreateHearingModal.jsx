@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { _ } from 'meteor/underscore';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Button, Form, Modal, Row, Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import swal from 'sweetalert';
-import { DashCircle, PlusCircle } from 'react-bootstrap-icons';
 import { COMPONENT_IDS } from '../utilities/ComponentIDs';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
@@ -28,6 +27,7 @@ const newHearing = {
   notice: '',
   noticeUrl: '',
   noticePdfUrl: '',
+  bills: [],
 };
 
 const offices = [
@@ -99,9 +99,6 @@ const CreateHearingModal = ({ modal }) => {
       measures: measure,
     };
   }, []);
-  const [selectedBills, setselectedBills] = useState([
-    { bill: '' },
-  ]);
 
   const updateHearing = (event, property) => {
     newHearing[property] = event;
@@ -110,22 +107,28 @@ const CreateHearingModal = ({ modal }) => {
   const billCard = { marginTop: 15, marginBottom: 15, padding: 20 };
 
   const billList = [];
-  const insertBills = () => {
-    // eslint-disable-next-line array-callback-return
-    measures.map(m => {
-      // eslint-disable-next-line no-unused-expressions
-      m.description === undefined ? (
-        billList.push({ label: `Bill #${m.measureNumber}: (no description)` })
-      ) : billList.push({ label: `Bill #${m.measureNumber}: ${m.description?.substring(0, 125)}...` });
-    });
-  };
-  insertBills();
+  measures.forEach(m => {
+    // eslint-disable-next-line no-unused-expressions
+    m.description === undefined ? (
+      billList.push({ label: `Bill #${m.measureNumber}: (no description)`, value: m.measureNumber })
+    ) : billList.push({ label: `Bill #${m.measureNumber}: ${m.description?.substring(0, 125)}...`, value: m.measureNumber });
+  });
 
   const submit = () => {
     let newOfficeType = '';
     let newCommittee = '';
-    const { measureNumber, code, datetime, description, room, notice, noticeUrl, noticePdfUrl } = newHearing;
-    modal.setShow(false);
+    const { code, datetime, description, room, notice, noticeUrl, noticePdfUrl, bills, offices, committees } = newHearing;
+
+    const testDate = new Date(datetime);
+    if (testDate.toString() === 'Invalid Date') {
+      swal('Error', 'Invalid Date', 'error');
+      return;
+    }
+
+    if (bills.length === 0) {
+      swal('Error', 'Please select at least one bill for this hearing.', 'error');
+      return;
+    }
 
     newHearing.committees.forEach(c => {
       newCommittee += `${c.label} `;
@@ -134,37 +137,32 @@ const CreateHearingModal = ({ modal }) => {
       newOfficeType += `${o.label} `;
     });
 
+    offices.forEach(o => {
+      newOfficeType = `${newOfficeType + o.label} `;
+    });
+
+    committees.forEach(c => {
+      newCommittee = `${newCommittee + c.label} `;
+    });
+
     const collectionName = Hearings.getCollectionName();
     const date = new Date();
-    const definitionData = {
-      year: date.getFullYear(), measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
-      committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
-      noticeUrl, noticePdfUrl,
-    };
-    defineMethod.callPromise({ collectionName, definitionData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => {
-        swal('Success', 'Hearing successfully created', 'success');
-      });
-  };
 
-  const handleFormChange = (index, event) => {
-    const data = [...selectedBills];
-    data[index][event.target.bill] = event.target.value;
-    setselectedBills(data);
-  };
-
-  const addBills = () => {
-    const newfield = { bill: '' };
-    setselectedBills([...selectedBills, newfield]);
-  };
-
-  const removeBills = (index) => {
-    if (selectedBills.length > 1) {
-      const data = [...selectedBills];
-      data.splice(index, 1);
-      setselectedBills(data);
-    }
+    bills.forEach(b => {
+      const some_measure = _.findWhere(measures, { measureNumber: b.value });
+      const definitionData = {
+        year: date.getFullYear(), measureType: some_measure.measureType, measureNumber: some_measure.measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
+        committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
+        noticeUrl, noticePdfUrl,
+      };
+      defineMethod.callPromise({ collectionName, definitionData })
+        .catch(error => {
+          swal('Error', error.message, 'error');
+          throw error;
+        });
+    });
+    swal('Success', 'Hearing successfully created', 'success');
+    modal.setShow(false);
   };
 
   return ready ? (
@@ -262,35 +260,17 @@ const CreateHearingModal = ({ modal }) => {
           <div>
             <Card style={billCard}>
               <h4 style={{ textAlign: 'center' }}>Add Bills to Hearing</h4>
-              {selectedBills.map((input, index) => (
-                <div key={index}>
-                  <Row style={{ marginTop: 5, marginBottom: 5 }}>
-                    <Col>
-                      <Select
-                        id="bills"
-                        options={billList}
-                        closeMenuOnSelect={false}
-                        value={input.bill}
-                        onChange={event => handleFormChange(index, event)}
-                      />
-                    </Col>
-                    <Col xs={2}>
-                      <Row>
-                        <Col>
-                          <Button variant="outline-secondary" className="calendar-button" onClick={() => removeBills(index)}>
-                            <DashCircle size={25} />
-                          </Button>
-                        </Col>
-                        <Col>
-                          <Button variant="outline-secondary" className="calendar-button" onClick={() => addBills()}>
-                            <PlusCircle size={25} />
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </div>
-              ))}
+              <Row style={{ marginTop: 5, marginBottom: 5 }}>
+                <Col>
+                  <Select
+                    id="bills"
+                    options={billList}
+                    closeMenuOnSelect={false}
+                    isMulti
+                    onChange={event => updateHearing(event, 'bills')}
+                  />
+                </Col>
+              </Row>
             </Card>
             <Row>
               <Form.Group>
