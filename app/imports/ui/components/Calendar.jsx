@@ -11,6 +11,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useTracker } from 'meteor/react-meteor-data';
 import { useParams } from 'react-router';
 import _ from 'underscore';
+import { Link, NavLink } from 'react-router-dom';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 
@@ -29,14 +30,7 @@ const BillCalendar = () => {
       ready: isReady,
     };
   }, [n]);
-  //This part was crashing so I took it out previously (just to show u how it lookin)
-  const filterHearings = _.where(hearings, { notice: n.notice });
-  const getHearing = _.first(filterHearings);
-  const filteredHearings = [];
-  filterHearings.forEach(h => (
-    _.where(measure, { measureNumber: h.measureNumber }).forEach(m => {
-      filteredHearings.push(m);
-    })));
+
   const events = [];
   const updateHearings = () => {
     let str = '';
@@ -66,6 +60,18 @@ const BillCalendar = () => {
     });
     return (events);
   };
+  console.log(updateHearings());
+
+  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
+  const cardStyle = { padding: 15, margin: 10, width: '18rem' };
+
+  const getBills = (noticeID) => {
+    const notice = _.where(hearings, { notice: noticeID });
+    return _.pluck(notice, 'measureNumber');
+  };
+
+  const getBillInfo = (num) => _.find(measure, function (m) { return m.measureNumber === num; });
+
   return (
     <>
       <Button variant="outline-secondary" onClick={() => { setShow(true); }} className="calendar-button">
@@ -94,7 +100,7 @@ const BillCalendar = () => {
                   click: () => console.log(events.room),
                 },
               }}
-              events={updateHearings()}
+              events={getHearings}
               eventColor="red"
               nowIndicator
               dateClick={(e) => console.log(e.dateStr)}
@@ -106,15 +112,21 @@ const BillCalendar = () => {
             />
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
-              {updateHearings().map(
-                (event, key) => (
-                  <Card style={{ width: '18rem', margin: 5 }} key={key}>
-                    <Card.Body>
-                      <Card.Title>Bill: {event.title}</Card.Title>
-                      <Card.Text>Date & Time: {event.date}</Card.Text>
-                      <Card.Text>Location: {event.room}</Card.Text>
-                      <Card.Text>Type: {event.type}</Card.Text>
-                    </Card.Body>
+              {getHearings.map(
+                (hearing, key) => (
+                  <Card style={cardStyle}>
+                    <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
+                      <Card.Title>{hearing.datetime}</Card.Title>
+                      <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
+                    </Link>
+                    <Card.Footer style={{ textAlign: 'center' }}>
+                      <h6>Bills on Agenda</h6>
+                      {getBills(hearing.notice).map(m => (
+                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`}>
+                          {`${getBillInfo(m).measureNumber} `}
+                        </Link>
+                      ))}
+                    </Card.Footer>
                   </Card>
                 ),
               )}

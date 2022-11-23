@@ -90,12 +90,6 @@ const HearingPage = () => {
     return _.pluck(notice, 'measureNumber');
   };
 
-  /*
-  <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${bill._id}`}>
-                      {`${bill.measureNumber} `}
-                    </Link>
-   */
-
   const getBillInfo = (num) => _.find(measures, function (m) { return m.measureNumber === num; });
 
   return (ready ? (
