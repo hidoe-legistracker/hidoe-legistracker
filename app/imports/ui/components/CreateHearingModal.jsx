@@ -11,6 +11,7 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
+import { Emails } from '../../api/email/EmailCollection';
 
 const newHearing = {
   year: '',
@@ -117,6 +118,7 @@ const CreateHearingModal = ({ modal }) => {
   const submit = () => {
     let newOfficeType = '';
     let newCommittee = '';
+    let bccs = [];
     const { code, datetime, description, room, notice, noticeUrl, noticePdfUrl, bills } = newHearing;
 
     const testDate = new Date(datetime);
@@ -137,11 +139,13 @@ const CreateHearingModal = ({ modal }) => {
       newOfficeType += `${o.label} `;
     });
 
-    const collectionName = Hearings.getCollectionName();
+    let collectionName = Hearings.getCollectionName();
     const date = new Date();
-
     bills.forEach(b => {
       const some_measure = _.findWhere(measures, { measureNumber: b.value });
+      some_measure.emailList.forEach(list => {
+        bccs.push(list);
+      });
       const definitionData = {
         year: date.getFullYear(), measureType: some_measure.measureType, measureNumber: some_measure.measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
         committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
@@ -154,6 +158,22 @@ const CreateHearingModal = ({ modal }) => {
         });
     });
     swal('Success', 'Hearing successfully created', 'success');
+
+    // Send emails
+    const subject = 'New Hearing Notification';
+    const senderName = '[NOTIFICATION]';
+    const senderEmail = 'System';
+    const emailDate = new Date();
+    const body = `You have a new hearing notification for hearing notice[${notice}] on ${datetime} \n\n${description}\n\n${noticeUrl}`;
+    newHearing.recipients.forEach(r => {
+      bccs.push(r.value);
+    });
+    bccs = _.uniq(bccs);
+    collectionName = Emails.getCollectionName();
+    const definitionData = { subject, senderEmail, senderName, recipients: [], bccs, ccs: [], date: emailDate, body, isDraft: false };
+    defineMethod.callPromise({ collectionName, definitionData })
+      .catch(error => swal('Error', error.message, 'error'));
+
     modal.setShow(false);
   };
 
