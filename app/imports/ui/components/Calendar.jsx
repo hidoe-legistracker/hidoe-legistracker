@@ -31,10 +31,19 @@ const BillCalendar = () => {
     };
   }, [n]);
 
+  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
+  const cardStyle = { padding: 15, margin: 10, width: '18rem' };
+
+  const getBills = (noticeID) => {
+    const notice = _.where(hearings, { notice: noticeID });
+    return _.pluck(notice, 'measureNumber');
+  };
+
+  const getBillInfo = (num) => _.find(measure, function (m) { return m.measureNumber === num; });
   const events = [];
-  const updateHearings = () => {
+  const updateEvent = () => {
     let str = '';
-    hearings.forEach(id => {
+    getHearings.forEach(id => {
       const newEvent = {
         id: 0,
         title: '',
@@ -50,7 +59,7 @@ const BillCalendar = () => {
       time.join().substring(0, -2);
       const date = new Date(time);
       newEvent.id = events.length;
-      newEvent.title = id.measureNumber.toString();
+      newEvent.title = id.room;
       newEvent.start = date.toISOString();
       newEvent.end = date.toISOString();
       newEvent.room = id.room;
@@ -60,18 +69,6 @@ const BillCalendar = () => {
     });
     return (events);
   };
-  console.log(updateHearings());
-
-  const getHearings = _.uniq(hearings, false, (hearing) => hearing.notice);
-  const cardStyle = { padding: 15, margin: 10, width: '18rem' };
-
-  const getBills = (noticeID) => {
-    const notice = _.where(hearings, { notice: noticeID });
-    return _.pluck(notice, 'measureNumber');
-  };
-
-  const getBillInfo = (num) => _.find(measure, function (m) { return m.measureNumber === num; });
-
   return (
     <>
       <Button variant="outline-secondary" onClick={() => { setShow(true); }} className="calendar-button">
@@ -100,7 +97,7 @@ const BillCalendar = () => {
                   click: () => console.log(events.room),
                 },
               }}
-              events={getHearings}
+              events={updateEvent()}
               eventColor="red"
               nowIndicator
               dateClick={(e) => console.log(e.dateStr)}
@@ -115,14 +112,14 @@ const BillCalendar = () => {
               {getHearings.map(
                 (hearing, key) => (
                   <Card style={cardStyle}>
-                    <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
+                    <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key} onClick={() => setShow(false)}>
                       <Card.Title>{hearing.datetime}</Card.Title>
                       <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
                     </Link>
                     <Card.Footer style={{ textAlign: 'center' }}>
                       <h6>Bills on Agenda</h6>
                       {getBills(hearing.notice).map(m => (
-                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`}>
+                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`} onClick={() => setShow(false)}>
                           {`${getBillInfo(m).measureNumber} `}
                         </Link>
                       ))}
