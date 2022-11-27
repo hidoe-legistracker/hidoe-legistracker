@@ -347,6 +347,13 @@ const Directory = () => {
           }
         });
       });
+      currentUser.offices.forEach((item) => {
+        measure.forEach(x => {
+          if (x.mainOfficeType && x.mainOfficeType.indexOf(item) >= 0) {
+            filteredData.push(x);
+          }
+        });
+      });
       const noDup = [];
       filteredData.forEach(element => {
         if (!noDup.includes(element)) {
@@ -359,6 +366,11 @@ const Directory = () => {
       const filteredData = [];
       measure.forEach((item) => {
         if (item.officeType && item.officeType.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
+      measure.forEach((item) => {
+        if (item.mainOfficeType && item.mainOfficeType.indexOf(office) >= 0) {
           filteredData.push(item);
         }
       });
