@@ -7,7 +7,15 @@
     { "email": "james@foo.com", "password": "changeme", "role": "ADMIN", "firstName": "James", "lastName": "MATRP", "employeeID": 6, "newAccount": false, "myFolders": [], "offices":  []},
     { "email": "martha@foo.com", "password": "changeme", "role": "USER", "firstName": "Martha", "lastName": "Doe", "employeeID": 7, "newAccount": false, "myFolders": [], "offices":  []},
     { "email": "maddison@foo.com", "password": "changeme", "role": "USER", "firstName": "Maddison", "lastName": "Doe", "employeeID": 8, "newAccount": false, "myFolders": [], "offices":  []},
-    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false, "myFolders": [], "offices": [] }
+    { "email": "john@foo.com", "password": "changeme", "role": "USER" , "firstName": "John", "lastName": "Doe", "employeeID": 2, "newAccount": false, "myFolders": [], "offices": [] },
+    { "email": "nick@foo.com", "password": "changeme", "role": "USER", "firstName": "Nick", "lastName": "Doe", "employeeID": 9, "newAccount": false, "myFolders": [], "offices":  ["OCID"], "position": "Testimony Writer"},
+    { "email": "mark@foo.com", "password": "changeme", "role": "USER", "firstName": "Mark", "lastName": "Doe", "employeeID": 10, "newAccount": false, "myFolders": [], "offices":  ["OFS"], "position": "Testimony Writer"},
+    { "email": "amy@foo.com", "password": "changeme", "role": "USER", "firstName": "Amy", "lastName": "Doe", "employeeID": 11, "newAccount": false, "myFolders": [], "offices":  ["OHE"], "position": "Testimony Writer"},
+    { "email": "sarah@foo.com", "password": "changeme", "role": "USER", "firstName": "Sarah", "lastName": "Doe", "employeeID": 12, "newAccount": false, "myFolders": [], "offices":  ["OITS"], "position": "Testimony Writer"},
+    { "email": "emma@foo.com", "password": "changeme", "role": "USER", "firstName": "Emma", "lastName": "Doe", "employeeID": 13, "newAccount": false, "myFolders": [], "offices":  ["OSIP"], "position": "Testimony Writer"},
+    { "email": "jack@foo.com", "password": "changeme", "role": "USER", "firstName": "Jack", "lastName": "Doe", "employeeID": 14, "newAccount": false, "myFolders": [], "offices":  ["OSSS"], "position": "Testimony Writer"},
+    { "email": "ben@foo.com", "password": "changeme", "role": "USER", "firstName": "Ben", "lastName": "Doe", "employeeID": 15, "newAccount": false, "myFolders": [], "offices":  ["OFO"], "position": "Testimony Writer"},
+    { "email": "martin@foo.com", "password": "changeme", "role": "USER", "firstName": "Martin", "lastName": "Doe", "employeeID": 16, "newAccount": false, "myFolders": [], "offices":  ["OTM"], "position": "Testimony Writer"}
   ],
   
   "loadAssetsFile":  true

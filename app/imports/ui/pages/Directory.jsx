@@ -34,6 +34,7 @@ const MeasureComponent = ({ measure }) => (
         ) : `${measure.description?.substring(0, 150)}...`
       }
     </td>
+    <td>{measure.mainOfficeType}</td>
     <td>{measure.officeType}</td>
     <td>{measure.currentReferral}</td>
     <td>Testimony/Monitor</td>
@@ -110,6 +111,9 @@ const Directory = () => {
         if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
+        if (post.mainOfficeType && post.mainOfficeType.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
         if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
@@ -130,6 +134,9 @@ const Directory = () => {
           return post;
         }
         if (post.description && post.description.toLowerCase().includes(search.toLowerCase())) {
+          return post;
+        }
+        if (post.mainOfficeType && post.mainOfficeType.toLowerCase().includes(search.toLowerCase())) {
           return post;
         }
         if (post.officeType && post.officeType.toLowerCase().includes(search.toLowerCase())) {
@@ -301,12 +308,17 @@ const Directory = () => {
     setSearch(eventText);
   };
 
-  const filter = (office) => {
-    if (office === 'ALL BILLS') {
+  const filter = (committee) => {
+    if (committee === 'ALL BILLS') {
       setDefaultBills(true);
       setBills(measure);
     } else {
-      const filteredData = _.where(measure, { currentReferral: office });
+      const filteredData = [];
+      measure.forEach((m) => {
+        if (m.currentReferral && m.currentReferral.indexOf(committee) >= 0) {
+          filteredData.push(m);
+        }
+      });
       setDefaultBills(false);
       setBills(filteredData);
     }
@@ -335,6 +347,13 @@ const Directory = () => {
           }
         });
       });
+      currentUser.offices.forEach((item) => {
+        measure.forEach(x => {
+          if (x.mainOfficeType && x.mainOfficeType.indexOf(item) >= 0) {
+            filteredData.push(x);
+          }
+        });
+      });
       const noDup = [];
       filteredData.forEach(element => {
         if (!noDup.includes(element)) {
@@ -347,6 +366,11 @@ const Directory = () => {
       const filteredData = [];
       measure.forEach((item) => {
         if (item.officeType && item.officeType.indexOf(office) >= 0) {
+          filteredData.push(item);
+        }
+      });
+      measure.forEach((item) => {
+        if (item.mainOfficeType && item.mainOfficeType.indexOf(office) >= 0) {
           filteredData.push(item);
         }
       });
@@ -418,7 +442,8 @@ const Directory = () => {
                       <th scope="col">#</th>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
-                      <th scope="col">Offices</th>
+                      <th scope="col">Main Office</th>
+                      <th scope="col">Supporting Offices</th>
                       <th scope="col">Committees</th>
                       <th scope="col">Actions</th>
                       <th scope="col">Status</th>
@@ -442,6 +467,7 @@ const Directory = () => {
                       <th scope="col">#</th>
                       <th scope="col">Bill Title</th>
                       <th scope="col">Description</th>
+                      <th scope="col">Main Office</th>
                       <th scope="col">Offices</th>
                       <th scope="col">Committees</th>
                       <th scope="col">Actions</th>
