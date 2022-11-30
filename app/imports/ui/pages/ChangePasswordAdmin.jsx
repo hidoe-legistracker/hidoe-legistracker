@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import SimpleSchema from 'simpl-schema';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import { AutoForm, ErrorsField, SubmitField, TextField } from 'uniforms-bootstrap5';
+import { InfoCircle } from 'react-bootstrap-icons';
 import swal from 'sweetalert';
 import { useTracker } from 'meteor/react-meteor-data';
 import { PAGE_IDS } from '../utilities/PageIDs';
@@ -93,6 +94,9 @@ const ChangePasswordUser = () => {
           </Col>
           <AutoForm schema={bridge} onSubmit={data => submit(data)}>
             <Card>
+              <Card.Header>
+                Please enter the employee&apos;s email address and new password.
+              </Card.Header>
               <Card.Body>
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_EMAIL} name="email" placeholder="E-mail address" />
                 <TextField id={COMPONENT_IDS.SIGN_UP_FORM_PASSWORD} name="password" placeholder="New password" type="password" />
@@ -100,6 +104,15 @@ const ChangePasswordUser = () => {
                 <ErrorsField />
                 <SubmitField id={COMPONENT_IDS.SIGN_UP_FORM_SUBMIT} />
               </Card.Body>
+              <Card.Footer>
+                <InfoCircle /> Password suggestions:
+                <br />
+                <ul>
+                  <li>Include at least 8 characters.</li>
+                  <li>Include lowercase and uppercase letters.</li>
+                  <li>Include numbers and special characters.</li>
+                </ul>
+              </Card.Footer>
             </Card>
           </AutoForm>
           {error === '' ? (
