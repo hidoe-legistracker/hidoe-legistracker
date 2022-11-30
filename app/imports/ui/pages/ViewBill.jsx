@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal} from 'react-bootstrap';
+import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal } from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -202,7 +202,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
-      sendHearingNotification();
+      // sendHearingNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }
