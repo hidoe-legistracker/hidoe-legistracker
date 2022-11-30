@@ -379,7 +379,7 @@ const Directory = () => {
     }
   };
 
-  return (ready ? (
+  return (ready ? filterOffices('MY BILLS' ? (
     <Container id={PAGE_IDS.DIRECTORY} className="py-3" style={{ overflow: 'auto' }}>
       <Row className="justify-content-center">
         <Col className="folder-section">
@@ -511,7 +511,7 @@ const Directory = () => {
         <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
       </Row>
     </Container>
-  ) : <LoadingSpinner message="Loading Measures" />);
+  ) : <h1>MY BILLS</h1>) : <LoadingSpinner message="Loading Measures" />);
 };
 
 export default Directory;
