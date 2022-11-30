@@ -79,7 +79,7 @@ const committees = [
 ];
 
 const CreateHearingModal = ({ modal }) => {
-  const { users, ready, measures } = useTracker(() => {
+  const { users, ready, measures, testimonyWriters } = useTracker(() => {
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const measureSubscription = Measures.subscribeMeasuresAdmin();
@@ -92,12 +92,15 @@ const CreateHearingModal = ({ modal }) => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
     });
 
+    const testimonyWritersList = _.sortBy(UserProfiles.find({ position: 'Testimony Writer' }, { }).fetch().concat(AdminProfiles.find({ position: 'Testimony Writer' }, {}).fetch()), (obj) => obj.lastName);
+
     const measure = Measures.find({}, {}).fetch();
 
     return {
       ready: isReady,
       users: formattedUsers,
       measures: measure,
+      testimonyWriters: testimonyWritersList,
     };
   }, []);
 
@@ -160,19 +163,33 @@ const CreateHearingModal = ({ modal }) => {
     swal('Success', 'Hearing successfully created', 'success');
 
     // Send emails
-    const subject = `New Hearing Notification: ${notice}`;
+    let subject = `New Hearing Notification: ${notice}`;
     const senderName = '[NOTIFICATION]';
     const senderEmail = '[NOTIFICATION]';
     const emailDate = new Date();
-    const body = `You have a new hearing notification for hearing notice[${notice}] on ${datetime} \n\n${description}\n\n${noticeUrl}`;
+    let body = `You have a new hearing notification for hearing notice[${notice}] on ${datetime}`;
     newHearing.recipients.forEach(r => {
       bccs.push(r.value);
     });
     bccs = _.uniq(bccs);
     collectionName = Emails.getCollectionName();
-    const definitionData = { subject, senderEmail, senderName, recipients: [], bccs, ccs: [], date: emailDate, body, isDraft: false };
+    let definitionData = { subject, senderEmail, senderName, recipients: [], bccs, ccs: [], date: emailDate, body, isDraft: false };
     defineMethod.callPromise({ collectionName, definitionData })
       .catch(error => swal('Error', error.message, 'error'));
+
+    newHearing.offices.forEach(o => {
+      const testimonyWriter = _.find(testimonyWriters, function (x) { return _.contains(x.offices, o.label); });
+      if (testimonyWriter !== undefined)
+      {
+        subject = `New Testimony Writer Task for Hearing: ${notice} for Office: ${o.label}`;
+        body = `You have been assigned a new testimony to write for hearing: ${notice}`;
+        const recipients = [];
+        recipients.push(testimonyWriter.email);
+        definitionData = { subject, senderEmail, senderName, recipients, bccs: [], ccs: [], date: emailDate, body, isDraft: false };
+        defineMethod.callPromise({ collectionName, definitionData })
+          .catch(error => swal('Error', error.message, 'error'));
+      }
+    });
 
     modal.setShow(false);
   };
