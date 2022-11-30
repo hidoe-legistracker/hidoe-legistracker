@@ -18,7 +18,7 @@ import { Measures } from '../../api/measure/MeasureCollection';
 const BillCalendar = () => {
   const [show, setShow] = useState(false);
   const { n } = useParams();
-  const { hearings, measure } = useTracker(() => {
+  const { hearings, measure, ready } = useTracker(() => {
     const hearingSubscription = Hearings.subscribeHearings();
     const measureSubscription = Measures.subscribeMeasures();
     const hearingCollection = Hearings.find({}, {}).fetch();
@@ -69,7 +69,7 @@ const BillCalendar = () => {
     });
     return (events);
   };
-  return (
+  return ready ? (
     <>
       <Button variant="outline-secondary" onClick={() => { setShow(true); }} className="calendar-button">
         <Calendar3 size={25} />
@@ -133,7 +133,7 @@ const BillCalendar = () => {
       </Container>
     </>
 
-  );
+  ) : '';
 };
 
 export default BillCalendar;
