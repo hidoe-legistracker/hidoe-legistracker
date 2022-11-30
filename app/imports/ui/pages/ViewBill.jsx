@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal } from 'react-bootstrap';
-import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
+import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle, ChevronDoubleRight, ChevronRight, ChevronLeft, ChevronDoubleLeft } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import Form from 'react-bootstrap/Form';
@@ -26,7 +26,7 @@ import { Hearings } from '../../api/hearing/HearingCollection';
 
 const ViewBill = () => {
   const { _id } = useParams();
-  const { currentUser, testimonies, measure, ready, user, hearings, emails, allUsers } = useTracker(() => {
+  const { currentUser, testimonies, measure, ready, user, emails, allUsers } = useTracker(() => {
     const measureSubscription = Measures.subscribeMeasures();
     const testimonySubscription = Testimonies.subscribeTestimony();
     const userSubscription = UserProfiles.subscribe();
@@ -137,6 +137,19 @@ const ViewBill = () => {
 
   const [billOffices, setOffices] = useState('');
   const [showDead, setShowDead] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  let numHearings;
+  let numPages;
+
+  if (ready) {
+    numHearings = _.size(testimonies);
+    numPages = parseInt(numHearings / itemsPerPage, 10);
+    if (numHearings % itemsPerPage !== 0) {
+      numPages++;
+    }
+  }
 
   const assignOffice = (bill, office) => {
     // eslint-disable-next-line no-param-reassign
@@ -166,6 +179,8 @@ const ViewBill = () => {
   const bill = measure;
 
   let userList;
+
+  /**
   const filteredHearings = hearings.filter(hearing => hearing.measureNumber === measure.measureNumber
     && hearing.measureType === measure.measureType);
 
@@ -192,6 +207,7 @@ const ViewBill = () => {
       }
     }
   };
+* */
 
   const isChecked = () => {
     userList = measure.emailList;
@@ -221,6 +237,38 @@ const ViewBill = () => {
       .catch(error => swal('Error', error.message, 'error'))
       .then(() => swal('Bill is now dead', '', 'success'));
     setShowDead(false);
+  };
+
+  // Pagination stuff
+  const getItemsPerPage = () => {
+    const selection = document.getElementById('pagination-items-per-page').value;
+    setItemsPerPage(selection);
+    setCurrentPage(1);
+    document.getElementById('pagination-select-page').value = 1;
+  };
+  const getItemsInPage = () => {
+    const selection = document.getElementById('pagination-select-page').value;
+    setCurrentPage(selection);
+  };
+  const goToFirstPage = () => {
+    document.getElementById('pagination-select-page').value = 1;
+    setCurrentPage(1);
+  };
+  const goToPrevPage = () => {
+    if (currentPage !== 1) {
+      document.getElementById('pagination-select-page').value = currentPage - 1;
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const goToLastPage = () => {
+    document.getElementById('pagination-select-page').value = numPages;
+    setCurrentPage(numPages);
+  };
+  const goToNextPage = () => {
+    if (currentPage !== numPages) {
+      document.getElementById('pagination-select-page').value = currentPage + 1;
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return ready ? (
@@ -394,6 +442,29 @@ const ViewBill = () => {
                       : '' }
                   </>
                 ))}
+                <td className="d-flex flex-row-reverse">
+                  <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToLastPage}>
+                    <ChevronDoubleRight />
+                  </Button>
+                  <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToNextPage}>
+                    <ChevronRight />
+                  </Button>
+                  <Form.Select id="pagination-select-page" style={{ width: '90px' }} onChange={getItemsInPage}>
+                    {[...Array(numPages)].map((e, i) => <option value={i + 1} key={i}>{i + 1}</option>)}
+                  </Form.Select>
+                  <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToPrevPage}>
+                    <ChevronLeft />
+                  </Button>
+                  <Button variant="outline-light" style={{ width: '50px', color: 'black' }} onClick={goToFirstPage}>
+                    <ChevronDoubleLeft />
+                  </Button>
+                  <Form.Select id="pagination-items-per-page" style={{ width: '80px', marginRight: '3em' }} onChange={getItemsPerPage}>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                  </Form.Select>
+                  <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
+                </td>
               </tbody>
             </Table>
           )}
