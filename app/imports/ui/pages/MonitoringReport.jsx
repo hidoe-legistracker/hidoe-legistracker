@@ -57,7 +57,7 @@ const MonitoringReport = () => {
   const getHearingDate = () => {
     const filteredHearings = hearings.filter(hearing => hearing.measureType === measure.measureType && hearing.measureNumber === measure.measureNumber);
     if (filteredHearings.length > 0) {
-      const date = filteredHearings[0].datetime.match(/\Bday, ((January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2}, [0-9]{4})/)[1];
+      const date = filteredHearings[0].datetime.toLowerCase().match(/\Bday, ((january|february|march|april|may|june|july|august|september|october|november|december) [0-9]{1,2}, [0-9]{4})/)[1];
       return formatDate(date);
     }
     return '';
@@ -65,7 +65,7 @@ const MonitoringReport = () => {
   const getHearingTime = () => {
     const filteredHearings = hearings.filter(hearing => hearing.measureType === measure.measureType && hearing.measureNumber === measure.measureNumber);
     if (filteredHearings.length > 0) {
-      return filteredHearings[0].datetime.match(/[0-9]{1,2}:[0-9]{1,2} (am|pm)/)[0].replace(' ', '').toUpperCase();
+      return filteredHearings[0].datetime.toLowerCase().match(/[0-9]{1,2}:[0-9]{1,2} (am|pm)/)[0].replace(' ', '').toUpperCase();
     }
     return '';
   };
@@ -113,12 +113,14 @@ const MonitoringReport = () => {
             </Col>
           </Row>
           <Row className="mb-5">
-            <Form>
-              <Form.Group className="mb-2">
-                <CreateTestimonyModal testimonyDefaultData={{ measureNumber: measure.measureNumber }} />
-              </Form.Group>
+            { _.includes(user.offices, measure.mainOfficeType) && user.position === 'Testimony Writer' ? (
+              <Form>
+                <Form.Group className="mb-2">
+                  <CreateTestimonyModal testimonyDefaultData={{ measureNumber: measure.measureNumber }} />
+                </Form.Group>
 
-            </Form>
+              </Form>
+            ) : ''}
           </Row>
           <Container className="view-testimony-container">
             {/* eslint-disable-next-line no-nested-ternary */}

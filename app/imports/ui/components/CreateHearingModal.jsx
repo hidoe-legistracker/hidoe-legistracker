@@ -11,6 +11,7 @@ import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { defineMethod } from '../../api/base/BaseCollection.methods';
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
+import { Emails } from '../../api/email/EmailCollection';
 
 const newHearing = {
   year: '',
@@ -78,7 +79,7 @@ const committees = [
 ];
 
 const CreateHearingModal = ({ modal }) => {
-  const { users, ready, measures } = useTracker(() => {
+  const { users, ready, measures, testimonyWriters } = useTracker(() => {
     const userSubscription = UserProfiles.subscribe();
     const adminSubscription = AdminProfiles.subscribe();
     const measureSubscription = Measures.subscribeMeasuresAdmin();
@@ -91,12 +92,15 @@ const CreateHearingModal = ({ modal }) => {
       formattedUsers.push({ label: `${user.firstName} ${user.lastName} (${user.email})`, value: user.email });
     });
 
+    const testimonyWritersList = _.sortBy(UserProfiles.find({ position: 'Testimony Writer' }, { }).fetch().concat(AdminProfiles.find({ position: 'Testimony Writer' }, {}).fetch()), (obj) => obj.lastName);
+
     const measure = Measures.find({}, {}).fetch();
 
     return {
       ready: isReady,
       users: formattedUsers,
       measures: measure,
+      testimonyWriters: testimonyWritersList,
     };
   }, []);
 
@@ -117,6 +121,7 @@ const CreateHearingModal = ({ modal }) => {
   const submit = () => {
     let newOfficeType = '';
     let newCommittee = '';
+    let bccs = [];
     const { code, datetime, description, room, notice, noticeUrl, noticePdfUrl, bills } = newHearing;
 
     const testDate = new Date(datetime);
@@ -137,11 +142,13 @@ const CreateHearingModal = ({ modal }) => {
       newOfficeType += `${o.label} `;
     });
 
-    const collectionName = Hearings.getCollectionName();
+    let collectionName = Hearings.getCollectionName();
     const date = new Date();
-
     bills.forEach(b => {
       const some_measure = _.findWhere(measures, { measureNumber: b.value });
+      some_measure.emailList.forEach(list => {
+        bccs.push(list);
+      });
       const definitionData = {
         year: date.getFullYear(), measureType: some_measure.measureType, measureNumber: some_measure.measureNumber, officeType: newOfficeType, measureRelativeUrl: '', code,
         committee: newCommittee, lastUpdated: date.getDay(), timestamp: date.getDay(), datetime, description, room, notice,
@@ -154,6 +161,36 @@ const CreateHearingModal = ({ modal }) => {
         });
     });
     swal('Success', 'Hearing successfully created', 'success');
+
+    // Send emails
+    let subject = `New Hearing Notification: ${notice}`;
+    const senderName = '[NOTIFICATION]';
+    const senderEmail = '[NOTIFICATION]';
+    const emailDate = new Date();
+    let body = `You have a new hearing notification for hearing notice[${notice}] on ${datetime}`;
+    newHearing.recipients.forEach(r => {
+      bccs.push(r.value);
+    });
+    bccs = _.uniq(bccs);
+    collectionName = Emails.getCollectionName();
+    let definitionData = { subject, senderEmail, senderName, recipients: [], bccs, ccs: [], date: emailDate, body, isDraft: false };
+    defineMethod.callPromise({ collectionName, definitionData })
+      .catch(error => swal('Error', error.message, 'error'));
+
+    newHearing.offices.forEach(o => {
+      const testimonyWriter = _.find(testimonyWriters, function (x) { return _.contains(x.offices, o.label); });
+      if (testimonyWriter !== undefined)
+      {
+        subject = `New Testimony Writer Task for Hearing: ${notice} for Office: ${o.label}`;
+        body = `You have been assigned a new testimony to write for hearing: ${notice}`;
+        const recipients = [];
+        recipients.push(testimonyWriter.email);
+        definitionData = { subject, senderEmail, senderName, recipients, bccs: [], ccs: [], date: emailDate, body, isDraft: false };
+        defineMethod.callPromise({ collectionName, definitionData })
+          .catch(error => swal('Error', error.message, 'error'));
+      }
+    });
+
     modal.setShow(false);
   };
 

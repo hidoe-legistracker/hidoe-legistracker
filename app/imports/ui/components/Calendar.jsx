@@ -18,7 +18,7 @@ import { Measures } from '../../api/measure/MeasureCollection';
 const BillCalendar = () => {
   const [show, setShow] = useState(false);
   const { n } = useParams();
-  const { hearings, measure } = useTracker(() => {
+  const { hearings, measure, ready } = useTracker(() => {
     const hearingSubscription = Hearings.subscribeHearings();
     const measureSubscription = Measures.subscribeMeasures();
     const hearingCollection = Hearings.find({}, {}).fetch();
@@ -69,7 +69,7 @@ const BillCalendar = () => {
     });
     return (events);
   };
-  return (
+  return ready ? (
     <>
       <Button variant="outline-secondary" onClick={() => { setShow(true); }} className="calendar-button">
         <Calendar3 size={25} />
@@ -103,13 +103,14 @@ const BillCalendar = () => {
               dateClick={(e) => console.log(e.dateStr)}
               eventClick={(e) => console.log(e.event.title)}
               contentHeight={450}
+              timeZone="local"
               selectable
               selectMirror
               dragScroll
             />
 
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
-              {getHearings.map(
+              {getHearings?.map(
                 (hearing, key) => (
                   <Card style={cardStyle}>
                     <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key} onClick={() => setShow(false)}>
@@ -119,8 +120,8 @@ const BillCalendar = () => {
                     <Card.Footer style={{ textAlign: 'center' }}>
                       <h6>Bills on Agenda</h6>
                       {getBills(hearing.notice).map(m => (
-                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`} onClick={() => setShow(false)}>
-                          {`${getBillInfo(m).measureNumber} `}
+                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)?._id}`} onClick={() => setShow(false)}>
+                          {`${getBillInfo(m)?.measureNumber} `}
                         </Link>
                       ))}
                     </Card.Footer>
@@ -133,7 +134,7 @@ const BillCalendar = () => {
       </Container>
     </>
 
-  );
+  ) : '';
 };
 
 export default BillCalendar;
