@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal} from 'react-bootstrap';
+import { Col, Container, Row, Button, Badge, Dropdown, Breadcrumb, Modal } from 'react-bootstrap';
 import { FileEarmarkText, BookmarkPlus, ArrowLeftRight, ExclamationTriangle } from 'react-bootstrap-icons';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -21,8 +21,8 @@ import { defineMethod, removeItMethod, updateMethod } from '../../api/base/BaseC
 import { ROLE } from '../../api/role/Role';
 import { Emails } from '../../api/email/EmailCollection';
 import { Hearings } from '../../api/hearing/HearingCollection';
-import {COMPONENT_IDS} from "../utilities/ComponentIDs";
-import ConfirmationModal from "../components/ConfirmationModal";
+// import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+// import ConfirmationModal from "../components/ConfirmationModal";
 
 const ViewBill = () => {
   const { _id } = useParams();
@@ -202,7 +202,7 @@ const ViewBill = () => {
     userList = measure.emailList;
     if (checked && !userList.includes(currentUser)) {
       userList.push(currentUser);
-      sendHearingNotification();
+      // sendHearingNotification();
     } else if (!checked && userList.includes(currentUser)) {
       userList = userList.filter(u => u !== currentUser);
     }

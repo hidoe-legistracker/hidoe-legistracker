@@ -7,19 +7,24 @@ import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from
 import { Hearings } from '../../api/hearing/HearingCollection';
 import { Measures } from '../../api/measure/MeasureCollection';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { COMPONENT_IDS } from '../utilities/ComponentIDs';
+import CreateHearingModal from '../components/CreateHearingModal';
 
 const HearingPage = () => {
   const [itemsPerHearingPage, setItemsPerHearingPage] = useState(10);
   const [currentHearingPage, setCurrentHearingPage] = useState(1);
+  const [show, setShow] = useState(false);
 
-  const { ready, hearings } = useTracker(() => {
+  const { ready, hearings, measures } = useTracker(() => {
     const hearingSub = Hearings.subscribeHearings();
     const subscription = Measures.subscribeMeasures();
     const isReady = subscription.ready() && hearingSub.ready();
     const hearingData = Hearings.find({}, {}).fetch();
+    const measureData = Measures.find({}, {}).fetch();
     return {
       hearings: hearingData,
       ready: isReady,
+      measures: measureData,
     };
   }, []);
 
@@ -88,9 +93,14 @@ const HearingPage = () => {
     return _.pluck(notice, 'measureNumber');
   };
 
+  const getBillInfo = (num) => _.find(measures, function (m) { return m.measureNumber === num; });
+
   return (ready ? (
     <Container className="py-3">
       <h1>Hearing Notices</h1>
+      <Button id={COMPONENT_IDS.INBOX_CREATE_EMAIL_BUTTON} size="md" variant="primary" onClick={() => setShow(true)}>
+        Create Hearing Notice
+      </Button>
       <Row>
         {getFilteredHearings().map(
           (hearing, key) => (
@@ -98,13 +108,15 @@ const HearingPage = () => {
               <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key}>
                 <Card.Title>{hearing.datetime}</Card.Title>
                 <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
-                <Card.Footer style={{ textAlign: 'center' }}>
-                  <h6>Bills on Agenda</h6>
-                  {getBills(hearing.notice).map(m => (
-                    `${m} `
-                  ))}
-                </Card.Footer>
               </Link>
+              <Card.Footer style={{ textAlign: 'center' }}>
+                <h6>Bills on Agenda</h6>
+                {getBills(hearing.notice).map(m => (
+                  <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)._id}`} target="_blank">
+                    {`${getBillInfo(m).measureNumber} `}
+                  </Link>
+                ))}
+              </Card.Footer>
             </Card>
           ),
         )}
@@ -132,6 +144,7 @@ const HearingPage = () => {
         </Form.Select>
         <Form.Label style={{ width: 'fit-content', marginTop: '0.5em', color: 'gray' }}>Items Per Page:</Form.Label>
       </Row>
+      <CreateHearingModal modal={{ show: show, setShow: setShow }} />
     </Container>
 
   ) : <LoadingSpinner message="Loading Hearing Notices" />);

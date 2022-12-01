@@ -10,7 +10,7 @@ import swal from 'sweetalert';
 import { UserProfiles } from '../../api/user/UserProfileCollection';
 import { AdminProfiles } from '../../api/user/AdminProfileCollection';
 import { ROLE } from '../../api/role/Role';
-import { updateMethod } from '../../api/base/BaseCollection.methods';
+import { updateMethod, removeItMethod, defineMethod } from '../../api/base/BaseCollection.methods';
 
 const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) => {
   const { ready, users } = useTracker(() => {
@@ -40,6 +40,14 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
   };
 
   const assignTestimony = (user, thisUserOffice, thisMeasure) => {
+    let duplicateTestimonies;
+    if (user.assignedTestimony !== undefined) {
+      duplicateTestimonies = user.assignedTestimony.filter(testimony => testimony.measureID === thisMeasure._id);
+      console.log(user.assignedTestimony);
+    } else {
+      duplicateTestimonies = [];
+    }
+
     console.log(user.email);
     let createAssignedTestimony;
     if (user.assignedTestimony === undefined) {
@@ -82,10 +90,21 @@ const SecretaryMeasureComponent = ({ measure, userOffice, testimonyAssigner }) =
     } else {
       updateData = { id: user._id, assignedTestimony: user.assignedTestimony };
     }
-    updateMethod.callPromise({ collectionName, updateData })
-      .catch(error => swal('Error', error.message, 'error'))
-      .then(() => swal('Success', 'Folder created', 'success'));
-    console.log(user.assignedTestimony);
+
+    console.log(thisMeasure._id);
+    console.log(duplicateTestimonies);
+    const definitionData = user.assignedTestimony;
+
+    if (duplicateTestimonies.length === 0) {
+      updateMethod.callPromise({ collectionName, updateData })
+        .catch(error => swal('Error', error.message, 'error'))
+        .then(() => swal('Success', 'Testimony Assigned', 'success'));
+      console.log(user.assignedTestimony);
+    } else {
+      removeItMethod.callPromise({ collectionName, instance: duplicateTestimonies[0]._id });
+      defineMethod.callPromise({ collectionName, definitionData });
+      swal('Error', 'Testimony Already Assigned', 'error');
+    }
   };
 
   return ready ? (

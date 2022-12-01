@@ -120,9 +120,9 @@ const HearingNotice = () => {
             <Row style={{ fontWeight: 'bold' }}>Office(s)</Row>
             <Row>
               {
-                getHearing.committee === undefined ? (
+                getHearing.officeType === undefined ? (
                   '-'
-                ) : getHearing.noticeUrl
+                ) : getHearing.officeType
               }
             </Row>
           </Col>
