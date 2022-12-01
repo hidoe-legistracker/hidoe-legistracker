@@ -112,15 +112,15 @@ const BillCalendar = () => {
             <Row style={{ marginTop: 10, justifyContent: 'center' }}>
               {getHearings?.map(
                 (hearing, key) => (
-                  <Card style={cardStyle}>
-                    <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} key={key} onClick={() => setShow(false)}>
+                  <Card style={cardStyle} key={key}>
+                    <Link style={{ color: 'black' }} as={NavLink} exact="true" to={`/hearing-notice/${hearing.notice}`} onClick={() => setShow(false)}>
                       <Card.Title>{hearing.datetime}</Card.Title>
                       <Card.Subtitle style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 'normal' }}>{hearing.room}</Card.Subtitle>
                     </Link>
                     <Card.Footer style={{ textAlign: 'center' }}>
                       <h6>Bills on Agenda</h6>
-                      {getBills(hearing.notice).map(m => (
-                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)?._id}`} onClick={() => setShow(false)}>
+                      {getBills(hearing.notice).map((m, key2) => (
+                        <Link style={{ color: 'black' }} as={NavLink} exact to={`/view-bill/${getBillInfo(m)?._id}`} onClick={() => setShow(false)} key={key + key2}>
                           {`${getBillInfo(m)?.measureNumber} `}
                         </Link>
                       ))}

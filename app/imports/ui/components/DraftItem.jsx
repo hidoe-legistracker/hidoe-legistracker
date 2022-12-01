@@ -4,7 +4,6 @@ import swal from 'sweetalert';
 import { Button, Form, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Trash } from 'react-bootstrap-icons';
-import { Navigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import { Emails } from '../../api/email/EmailCollection';
 import { removeItMethod } from '../../api/base/BaseCollection.methods';

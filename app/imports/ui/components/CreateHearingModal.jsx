@@ -179,8 +179,7 @@ const CreateHearingModal = ({ modal }) => {
 
     newHearing.offices.forEach(o => {
       const testimonyWriter = _.find(testimonyWriters, function (x) { return _.contains(x.offices, o.label); });
-      if (testimonyWriter !== undefined)
-      {
+      if (testimonyWriter !== undefined) {
         subject = `New Testimony Writer Task for Hearing: ${notice} for Office: ${o.label}`;
         body = `You have been assigned a new testimony to write for hearing: ${notice}`;
         const recipients = [];

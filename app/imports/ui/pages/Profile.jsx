@@ -1,5 +1,4 @@
 import React from 'react';
-import { _ } from 'meteor/underscore';
 import { Meteor } from 'meteor/meteor';
 import { Roles } from 'meteor/alanning:roles';
 import { useParams } from 'react-router';

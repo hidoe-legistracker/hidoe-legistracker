@@ -25,7 +25,6 @@ import { ROLE } from '../../api/role/Role';
 import ChangePasswordAdmin from '../pages/ChangePasswordAdmin';
 import ChangePasswordUser from '../pages/ChangePasswordUser';
 import MonitoringReport from '../pages/MonitoringReport';
-import AddTestimony from '../pages/AddTestimony';
 import TestimonyPage from '../pages/TestimonyPage';
 import EditTestimony from '../pages/EditTestimony';
 import EmployeeList from '../pages/EmployeeList';
@@ -71,7 +70,6 @@ const App = () => {
           <Route path="/hearings-page" element={<ProtectedRoute><HearingPage /></ProtectedRoute>} />
           <Route path="/edit-draft/:_id" element={<ProtectedRoute><EditEmailDraft /></ProtectedRoute>} />
           <Route path="/create-measure" element={<ProtectedRoute><AddMeasure /></ProtectedRoute>} />
-          <Route path="/create-testimony/" element={<ProtectedRoute><AddTestimony /></ProtectedRoute>} />
           <Route path="/monitoring-report/:_id" element={<ProtectedRoute><MonitoringReport /></ProtectedRoute>} />
           <Route path="/edit-testimony/:measureID&:testimonyID" element={<ProtectedRoute><EditTestimony /></ProtectedRoute>} />
           <Route path="/myfolders" element={<ProtectedRoute><MyFolders /></ProtectedRoute>} />
